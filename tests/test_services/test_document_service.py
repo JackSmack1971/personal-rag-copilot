@@ -85,6 +85,23 @@ def test_chunk_and_ingest(tmp_path, mocks):
     assert lexical.index_documents.call_args[0][0] == expected_chunks
     assert result["dense"]["count"] == 2
     assert result["lexical"]["count"] == 2
+    assert result["chunk_count"] == 2
+
+
+def test_ingest_progress_callback(tmp_path, mocks):
+    dense, lexical = mocks
+    service = DocumentService(dense, lexical, chunk_size=3, overlap=1)
+    file = tmp_path / "text.txt"
+    file.write_text("one two three four five")
+    steps: list[str] = []
+
+    def cb(pct: float, desc: str) -> None:
+        steps.append(desc)
+
+    service.ingest([str(file)], progress=cb)
+    assert any("Parsing" in s for s in steps)
+    assert any("Indexing dense" in s for s in steps)
+    assert any("Indexing lexical" in s for s in steps)
 
 
 def test_update_delete_and_audit(mocks):

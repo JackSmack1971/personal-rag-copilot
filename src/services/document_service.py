@@ -1,7 +1,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List
 
 from src.monitoring.performance import MetricsDashboard, PerformanceTracker
 from src.retrieval.dense import DenseRetriever
@@ -104,27 +104,48 @@ class DocumentService:
         return chunks
 
     # Ingestion
-    def ingest(self, file_paths: List[str]) -> Dict[str, Any]:
+    def ingest(
+        self,
+        file_paths: List[str],
+        progress: Callable[[float, str], None] | None = None,
+    ) -> Dict[str, Any]:
         """Parse files, chunk text, and update both indexes."""
+        total_steps = len(file_paths) + 2
+        step = 0
+        if progress:
+            progress(0, "Starting ingestion")
         with PerformanceTracker() as perf:
             all_chunks: List[str] = []
             metadatas: List[Dict[str, Any]] = []
             for file_path in file_paths:
+                if progress:
+                    progress(step / total_steps, f"Parsing {file_path}")
                 text = self.parse_document(file_path)
+                if progress:
+                    progress(step / total_steps, f"Chunking {file_path}")
                 chunks = self.chunk_text(text)
                 for idx, chunk in enumerate(chunks):
                     all_chunks.append(chunk)
                     metadatas.append({"source": str(file_path), "chunk": idx})
+                step += 1
+            if progress:
+                progress(step / total_steps, "Indexing dense embeddings")
             dense_ids, dense_meta = self.dense_retriever.index_corpus(
                 all_chunks, metadatas
             )
+            step += 1
+            if progress:
+                progress(step / total_steps, "Indexing lexical documents")
             lexical_ids, lexical_meta = self.lexical_retriever.index_documents(all_chunks)
+        if progress:
+            progress(1.0, "Ingestion complete")
         metrics = perf.metrics()
         self.dashboard.log({"operation": "ingest", **metrics})
         return {
             "dense": {"ids": dense_ids, **dense_meta},
             "lexical": {"ids": lexical_ids, **lexical_meta},
             "metrics": metrics,
+            "chunk_count": len(all_chunks),
         }
 
     # Index management
