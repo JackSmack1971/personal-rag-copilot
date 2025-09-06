@@ -104,3 +104,27 @@ class DenseRetriever:
         except Exception as exc:  # pragma: no cover
             self._logger.error("Pinecone index validation failed: %s", exc)
             return False, {"status": "error", "error": str(exc)}
+
+    # Index management helpers
+    def delete_document(self, doc_id: str) -> Dict[str, Any]:
+        """Delete a document from the Pinecone index."""
+        try:
+            delete = getattr(self.pinecone_client, "delete_embeddings", None)
+            if delete:
+                delete(self.index_name, [doc_id])
+            return {"status": "success"}
+        except Exception as exc:  # pragma: no cover
+            self._logger.error("Failed to delete %s: %s", doc_id, exc)
+            return {"status": "error", "error": str(exc)}
+
+    def update_document(
+        self, doc_id: str, content: str, metadata: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Update a document by re-indexing its content."""
+        try:
+            self.delete_document(doc_id)
+            ids, _ = self.index_corpus([content], [metadata])
+            return {"status": "success", "id": ids[0] if ids else doc_id}
+        except Exception as exc:  # pragma: no cover
+            self._logger.error("Failed to update %s: %s", doc_id, exc)
+            return {"status": "error", "error": str(exc)}
