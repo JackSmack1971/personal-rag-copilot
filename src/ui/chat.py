@@ -7,8 +7,10 @@ from typing import Generator, List, Tuple
 import gradio as gr
 
 from .navbar import render_navbar
+from ..evaluation.ragas_integration import RagasEvaluator
 
 HISTORY_PATH = Path("chat_history.jsonl")
+EVALUATOR = RagasEvaluator()
 
 
 def _sanitize(text: str) -> str:
@@ -37,6 +39,7 @@ def _generate_response(
     for token in reply.split():
         yield token + " "
     _append_history(sanitized, reply)
+    EVALUATOR.evaluate(sanitized, reply, [sanitized])
 
 
 def chat_page() -> gr.Blocks:
