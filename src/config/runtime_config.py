@@ -6,6 +6,7 @@ from copy import deepcopy
 from typing import Any, Callable, Dict, List, Tuple
 import os
 
+from src.utils.hardware import detect_device
 from .settings import load_default_settings
 from .validate import validate_settings
 
@@ -84,7 +85,8 @@ class ConfigManager:
         self.chain.set_layer("defaults", base)
         self.chain.set_layer("environment", self._load_env())
         self.chain.set_layer("cli", {})
-        self.chain.set_layer("runtime", {})
+        device = detect_device(self.chain.resolve().get("device_preference", "auto"))
+        self.chain.set_layer("runtime", {"device": device})
 
         self.validator = ValidationEngine()
         self.tracker = ChangeTracker()
@@ -101,6 +103,12 @@ class ConfigManager:
                     overrides[key] = int(value)
                 except ValueError:
                     continue
+        device_pref = os.getenv("DEVICE_PREFERENCE")
+        if device_pref is not None:
+            overrides["device_preference"] = device_pref.lower()
+        precision = os.getenv("PRECISION")
+        if precision is not None:
+            overrides["precision"] = precision.lower()
         return overrides
 
     def as_dict(self) -> Dict[str, Any]:
