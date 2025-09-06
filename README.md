@@ -133,6 +133,8 @@ Key parameters can be configured via YAML files:
 |-----------|---------|-------------|
 | `top_k` | 5 | Number of results to retrieve [[EVID: config/default_settings.yaml:1-2 | top_k: 5]] |
 | `rrf_k` | 60 | RRF fusion parameter [[EVID: config/default_settings.yaml:1-2 | rrf_k: 60]] |
+| `device_preference` | auto | Compute backend preference (auto, cpu, gpu_openvino, gpu_xpu). Override with `DEVICE_PREFERENCE` [[EVID: config/default_settings.yaml:5 | device_preference: auto]] |
+| `precision` | fp32 | Numerical precision (fp32, fp16, int8). Override with `PRECISION` [[EVID: config/default_settings.yaml:7 | precision: fp32]] |
 
 ### API Usage
 
