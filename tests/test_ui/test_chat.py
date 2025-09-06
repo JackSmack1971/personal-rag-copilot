@@ -40,9 +40,11 @@ def test_generate_response_streams(tmp_path):
     original_eval_path = chat.EVALUATOR.history_path
     chat.EVALUATOR.history_path = tmp_path / "eval.jsonl"
     gen = _generate_response("hello world", [])
-    tokens = list(gen)
+    outputs = list(gen)
+    tokens = [t for t, _ in outputs]
     assert len(tokens) > 1
     assert "You said:" in "".join(tokens)
+    assert "citations" in outputs[0][1]
     chat.HISTORY_PATH = HISTORY_PATH
     chat.EVALUATOR.history_path = original_eval_path
 
