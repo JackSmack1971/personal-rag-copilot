@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+import asyncio
 
 import gradio as gr
 
@@ -101,6 +102,24 @@ def _validate_files(
     return records, alert_update
 
 
+async def _ingest_files(
+    files: list[gr.File],
+    progress: gr.Progress | None = gr.Progress(),
+) -> Dict[str, Any]:
+    """Run DocumentService.ingest asynchronously with progress updates."""
+    if not files:
+        return {}
+    paths = [str(_sanitize_path(f.name)) for f in files]
+    result = await asyncio.to_thread(
+        _document_service.ingest,
+        paths,
+        progress,
+    )
+    metrics = result.get("metrics", {})
+    metrics["chunk_count"] = result.get("chunk_count", 0)
+    return metrics
+
+
 # ---------------------------------------------------------------------------
 # Page Definition
 # ---------------------------------------------------------------------------
@@ -123,9 +142,16 @@ def ingest_page() -> gr.Blocks:
             datatype=["str", "str", "str"],
             interactive=False,
         )
+        ingest_btn = gr.Button("Start Ingestion")
+        metrics = gr.JSON(label="Ingestion Metrics")
         file_input.upload(
             fn=_validate_files,
             inputs=file_input,
             outputs=[summary, alert],
+        )
+        ingest_btn.click(
+            fn=_ingest_files,
+            inputs=file_input,
+            outputs=metrics,
         )
     return demo
