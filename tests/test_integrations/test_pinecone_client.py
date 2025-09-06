@@ -55,9 +55,7 @@ def test_create_index_retries(monkeypatch):
         create_index=fake_create_index,
         delete_index=lambda name: None,
         Index=lambda name: FakeIndex(),
-        describe_index=lambda name: types.SimpleNamespace(
-            dimension=EMBEDDING_DIMENSION
-        ),
+        describe_index=lambda name: types.SimpleNamespace(dimension=EMBEDDING_DIMENSION),
     )
     monkeypatch.setattr(pinecone_client, "pinecone", fake_pinecone)
 
@@ -81,9 +79,7 @@ def test_delete_index_retries(monkeypatch):
         delete_index=fake_delete_index,
         Index=lambda name: FakeIndex(),
         create_index=lambda **kwargs: None,
-        describe_index=lambda name: types.SimpleNamespace(
-            dimension=EMBEDDING_DIMENSION
-        ),
+        describe_index=lambda name: types.SimpleNamespace(dimension=EMBEDDING_DIMENSION),
     )
     monkeypatch.setattr(pinecone_client, "pinecone", fake_pinecone)
 
@@ -98,9 +94,7 @@ def test_upsert_batches_and_retries(monkeypatch):
     fake_pinecone = types.SimpleNamespace(
         init=lambda api_key=None, environment=None: None,
         Index=lambda name: index,
-        describe_index=lambda name: types.SimpleNamespace(
-            dimension=EMBEDDING_DIMENSION
-        ),
+        describe_index=lambda name: types.SimpleNamespace(dimension=EMBEDDING_DIMENSION),
         list_indexes=lambda: [],
         create_index=lambda **kwargs: None,
         delete_index=lambda name: None,
@@ -132,9 +126,7 @@ def test_query_retries(monkeypatch):
     fake_pinecone = types.SimpleNamespace(
         init=lambda api_key=None, environment=None: None,
         Index=lambda name: index,
-        describe_index=lambda name: types.SimpleNamespace(
-            dimension=EMBEDDING_DIMENSION
-        ),
+        describe_index=lambda name: types.SimpleNamespace(dimension=EMBEDDING_DIMENSION),
         list_indexes=lambda: [],
         create_index=lambda **kwargs: None,
         delete_index=lambda name: None,

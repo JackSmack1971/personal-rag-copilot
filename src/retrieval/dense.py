@@ -61,6 +61,7 @@ class DenseRetriever:
                     ids,
                     embeddings,
                     metadatas,
+                    strict=False,
                 )
             ]
             self.pinecone_client.upsert_embeddings(self.index_name, vectors)
@@ -84,9 +85,7 @@ class DenseRetriever:
         """Query the Pinecone index with a text string."""
         try:
             embedding, _ = self.embed_query(query)
-            response = self.pinecone_client.query(
-                self.index_name, embedding, top_k=top_k
-            )
+            response = self.pinecone_client.query(self.index_name, embedding, top_k=top_k)
             matches = getattr(response, "matches", [])
             results = [(m["id"], m["score"]) for m in matches]
             return results, {"retrieved": len(results)}

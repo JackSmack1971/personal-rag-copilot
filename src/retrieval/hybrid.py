@@ -88,7 +88,7 @@ class HybridRetriever:
             text_lookup = {
                 doc_id: text
                 for doc_id, text in zip(  # noqa: E501
-                    self.lexical.doc_ids, self.lexical.documents
+                    self.lexical.doc_ids, self.lexical.documents, strict=False
                 )
             }
         for doc in merged:

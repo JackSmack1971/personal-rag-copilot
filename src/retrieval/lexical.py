@@ -77,7 +77,7 @@ class LexicalBM25:
             tokens = self._preprocess(query)
             scores = self.bm25.get_scores(tokens)
             ranked = sorted(
-                zip(self.doc_ids, scores), key=lambda x: x[1], reverse=True
+                zip(self.doc_ids, scores, strict=False), key=lambda x: x[1], reverse=True
             )[:top_k]
             return ranked, {"retrieved": len(ranked)}
         except Exception as exc:  # pragma: no cover

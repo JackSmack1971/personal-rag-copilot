@@ -33,9 +33,7 @@ class RagasEvaluator:
         self.history_path = Path(history_path)
         self.history: List[EvaluationResult] = []
 
-    def evaluate(
-        self, query: str, answer: str, contexts: List[str]
-    ) -> EvaluationResult:
+    def evaluate(self, query: str, answer: str, contexts: List[str]) -> EvaluationResult:
         """Evaluate an answer's faithfulness against contexts."""
         data = {
             "question": [query],

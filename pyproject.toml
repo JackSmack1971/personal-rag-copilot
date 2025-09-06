@@ -47,7 +47,15 @@ dev = [
 
 [tool.black]
 line-length = 90
-target-version = ["py311"]  # adjust to your floor; optional
+target-version = ["py312"]  # adjust to your floor; optional
+
+[tool.ruff]
+target-version = "py312"
+line-length = 90
+
+[tool.ruff.lint]
+select = ["E", "F", "B"]
+ignore = ["E402", "E501"]
 
 [tool.flake8]               # Flake8 ≥ 7.0 supports pyproject
 max-line-length = 90
