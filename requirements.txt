@@ -52,3 +52,13 @@ python-dotenv>=1.0.0
 
 # Logging & Monitoring
 structlog>=23.2.0
+
+# Future Reranking Support (not yet implemented)
+# transformers[torch]>=4.35.0  # For BGE-Reranker-v2-m3
+
+# Enhanced BM25 Performance (alternative to rank-bm25)
+# bm25s>=0.1.0  # Mentioned in PRD as faster sparse-matrix option
+
+# Advanced Document Processing
+# python-pptx>=0.6.21  # PowerPoint support
+# openpyxl>=3.1.0      # Excel file support
