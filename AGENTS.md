@@ -36,6 +36,7 @@ The application follows a modular Python architecture with clear separation of c
 ## Development Environment & Commands
 
 The application is built using Python 3.12 with Gradio 5 as the primary UI framework. All dependencies should already be installed in the environment.
+CPU remains the default execution target, though optional OpenVINO/XPU acceleration paths may be used when available.
 
 **Core Development Commands:**
 - To run the multipage application: `python app.py`
@@ -186,7 +187,6 @@ The application is built using Python 3.12 with Gradio 5 as the primary UI frame
 - Do not modify core Gradio routing structure in `app.py` without architectural review
 - Do not change default RRF k=60 value without performance validation and approval
 - Do not implement alternative evaluation frameworks beyond Ragas without justification
-- Do not add GPU-specific optimizations; maintain CPU-only deployment capability
 - Do not modify the established retrieval modes (dense, lexical, hybrid) without architectural discussion
 - Do not hardcode model paths; use configuration management for all model specifications
 - Do not implement custom embedding models; stick to Sentence-Transformers all-MiniLM-L6-v2 (384-dim)
