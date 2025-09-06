@@ -14,6 +14,7 @@ A hybrid retrieval-augmented generation platform combining dense vector search a
 - **Multipage Interface**: Gradio 5 application with Chat, Ingest, Evaluate, and Settings pages [[EVID: app.py:8-12 | FastAPI with Gradio mounting]]
 - **Document Processing**: Multi-format ingestion (PDF, DOCX, TXT, MD, HTML) with intelligent chunking [[EVID: src/services/document_service.py:22-75 | DocumentService with format support]]
 - **Transparency**: Retrieval audit trails with component scores and source attribution [[EVID: src/ranking/rrf_fusion.py:56-61 | metadata with fusion_method and component_scores]]
+- **Optional GPU Acceleration**: Intel Iris Xe via OpenVINO for faster inference (see [GPU Support Guide](docs/gpu_support.md))
 
 ### Tech Stack
 
@@ -81,6 +82,7 @@ The user interface provides four main workflows: querying the knowledge base, in
 - Python 3.12 [[EVID: requirements.txt:1-48 | Python dependencies specified]]
 - Pinecone API account and API key
 - 8GB+ RAM for model loading
+- (Optional) Intel Iris Xe drivers and OpenVINO runtime for GPU acceleration (see [GPU Support Guide](docs/gpu_support.md))
 
 ### Setup
 
@@ -221,6 +223,7 @@ python scripts/validate_rrf.py
 - [Functional Requirements](FRD.md) - Detailed technical requirements  
 - [Architecture Guide](project_architecture_diagram.md) - System design overview
 - [Development Guidelines](AGENTS.md) - Coding standards and contribution guide
+- [GPU Support Guide](docs/gpu_support.md) - Intel Iris Xe acceleration and configuration
 
 ## Troubleshooting
 
