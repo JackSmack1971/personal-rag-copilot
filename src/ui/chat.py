@@ -10,6 +10,26 @@ from .components.transparency import TransparencyPanel
 from ..monitoring.performance import PerformanceTracker
 from .navbar import render_navbar
 from ..evaluation.ragas_integration import RagasEvaluator
+from ..query_service import QueryService
+
+
+class _StubHybridRetriever:
+    """Fallback retriever returning no results.
+
+    The real application wires a proper ``HybridRetriever`` instance at
+    runtime.  Tests can monkeypatch ``QUERY_SERVICE`` with a mock service to
+    provide deterministic retrieval behaviour.
+    """
+
+    def query(self, query: str, mode: str = "hybrid", top_k: int = 5):
+        return [], {
+            "retrieval_mode": mode,
+            "rrf_weights": {},
+            "component_scores": {},
+        }
+
+
+QUERY_SERVICE = QueryService(_StubHybridRetriever())
 
 HISTORY_PATH = Path("chat_history.jsonl")
 EVALUATOR = RagasEvaluator()
@@ -38,21 +58,33 @@ def _generate_response(
     """Stream an echo response with retrieval metadata."""
     with PerformanceTracker() as perf:
         sanitized = _sanitize(message)
+        results, retrieval_meta = QUERY_SERVICE.query(sanitized)
         reply = f"You said: {sanitized}"
+
     metrics = perf.metrics()
+
+    citations = []
+    for doc in results:
+        raw_source = doc.get("source", "")
+        source = "FUSED" if "+" in raw_source else raw_source.upper()
+        citations.append({"label": doc.get("id", ""), "source": source})
+
+    details = {
+        "retrieval_mode": retrieval_meta.get("retrieval_mode"),
+        "rrf_weights": retrieval_meta.get("rrf_weights", {}),
+        "component_scores": retrieval_meta.get("component_scores", {}),
+    }
+
     metadata = {
-        "citations": [
-            {
-                "label": "input",
-                "link": "https://example.com",
-            }
-        ],
+        "citations": citations,
         "latency": metrics["latency"],
         "memory": metrics["memory"],
-        "details": {"echo": True, "tokens": len(reply.split())},
+        "details": details,
     }
+
     for token in reply.split():
         yield token + " ", metadata
+
     _append_history(sanitized, reply)
     EVALUATOR.evaluate(sanitized, reply, [sanitized])
 
