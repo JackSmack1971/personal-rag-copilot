@@ -1,6 +1,8 @@
 from unittest.mock import MagicMock, patch
 
 import numpy as np
+import sys
+import types
 
 from src.retrieval.dense import EMBEDDING_DIMENSION, DenseRetriever
 
@@ -51,3 +53,32 @@ def test_index_corpus_upserts_vectors(mock_model):
     assert len(ids) == 2
     assert meta["status"] == "success"
     assert len(client.vectors) == 2
+
+
+@patch("src.retrieval.dense.SentenceTransformer")
+def test_xpu_device_uses_xpu_backend(mock_model):
+    mock_instance = MagicMock()
+    mock_instance.get_sentence_embedding_dimension.return_value = EMBEDDING_DIMENSION
+    mock_model.return_value = mock_instance
+
+    client = MockPineconeClient()
+    DenseRetriever(client, "test-index", device="gpu_xpu")
+    mock_model.assert_called_with("all-MiniLM-L6-v2", device="xpu")
+
+
+def test_openvino_device_uses_compile(monkeypatch):
+    core_instance = MagicMock()
+    core_instance.compile_model.return_value = MagicMock()
+    core_cls = MagicMock(return_value=core_instance)
+    runtime_module = types.SimpleNamespace(Core=core_cls)
+    openvino_module = types.SimpleNamespace(runtime=runtime_module)
+    monkeypatch.setitem(sys.modules, "openvino", openvino_module)
+    monkeypatch.setitem(sys.modules, "openvino.runtime", runtime_module)
+
+    with patch("src.retrieval.dense.SentenceTransformer") as mock_model:
+        mock_instance = MagicMock()
+        mock_instance.get_sentence_embedding_dimension.return_value = EMBEDDING_DIMENSION
+        mock_model.return_value = mock_instance
+        client = MockPineconeClient()
+        DenseRetriever(client, "test-index", device="gpu_openvino")
+        core_instance.compile_model.assert_called()
