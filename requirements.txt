@@ -1,0 +1,54 @@
+# Core Framework & Application
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+gradio>=5.0.0
+
+# AI/ML Core Dependencies
+sentence-transformers>=2.2.2
+transformers>=4.35.0
+torch>=2.0.0
+numpy>=1.24.0
+
+# Retrieval & Search
+rank-bm25>=0.2.2
+pinecone-client>=2.2.0
+
+# Evaluation Framework
+ragas>=0.1.0
+datasets>=2.14.0
+
+# Document Processing
+pypdf>=3.16.0
+python-docx>=0.8.11
+beautifulsoup4>=4.12.0
+markdown>=3.5.0
+
+# Optional NLP Enhancement
+nltk>=3.8.0
+
+# Testing Framework
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-benchmark>=4.0.0
+pytest-cov>=4.1.0
+
+# Development Tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# PDF Generation (for test fixtures)
+fpdf2>=2.7.0
+
+# HTTP Testing
+httpx>=0.25.0
+
+# Data Validation & Types
+pydantic>=2.4.0
+typing-extensions>=4.8.0
+
+# Environment Management
+python-dotenv>=1.0.0
+
+# Logging & Monitoring
+structlog>=23.2.0
