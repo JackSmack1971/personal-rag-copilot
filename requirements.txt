@@ -22,6 +22,7 @@ pypdf>=3.16.0
 python-docx>=0.8.11
 beautifulsoup4>=4.12.0
 markdown>=3.5.0
+plotly==6.3.0
 
 # Optional NLP Enhancement
 nltk>=3.8.0
