@@ -42,9 +42,7 @@ def test_reranker_timeout_fallback(monkeypatch):
 
 def test_reranker_benchmark(benchmark):
     reranker = CrossEncoderReranker(load_model=False)
-    reranker._score_pairs = (
-        lambda q, texts: [0.0 for _ in texts]
-    )  # type: ignore
+    reranker._score_pairs = lambda q, texts: [0.0 for _ in texts]  # type: ignore
 
     def run():
         docs = _build_docs(["d1", "d2", "d3"])

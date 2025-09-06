@@ -44,9 +44,7 @@ def load_default_settings() -> Dict[str, Any]:
     return settings
 
 
-def save_settings(
-    settings: Dict[str, Any], path: Optional[str] = None
-) -> Dict[str, str]:
+def save_settings(settings: Dict[str, Any], path: Optional[str] = None) -> Dict[str, str]:
     """Persist ``settings`` to ``path``.
 
     If ``path`` is ``None`` a temporary file is created and its path returned

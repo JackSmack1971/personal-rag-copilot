@@ -24,9 +24,7 @@ class QueryService:
     ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
         retrieval_mode = mode or self.default_mode
         with PerformanceTracker() as perf:
-            results, meta = self.retriever.query(
-                query, mode=retrieval_mode, top_k=top_k
-            )
+            results, meta = self.retriever.query(query, mode=retrieval_mode, top_k=top_k)
         metrics = perf.metrics()
         meta.update(metrics)
         self.dashboard.log(metrics)

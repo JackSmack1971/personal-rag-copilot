@@ -24,10 +24,8 @@ class CrossEncoderReranker:
         self.executor = ThreadPoolExecutor(max_workers=1)
         if load_model:
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-            self.model = (
-                AutoModelForSequenceClassification.from_pretrained(  # noqa: E501
-                    model_name
-                )
+            self.model = AutoModelForSequenceClassification.from_pretrained(  # noqa: E501
+                model_name
             )
             self.model.to("cpu")
         else:  # pragma: no cover - used in tests to avoid heavy model load
@@ -97,7 +95,10 @@ class CrossEncoderReranker:
             }
 
         ranked = sorted(
-            ({**doc, "score": score} for doc, score in zip(top_docs, scores)),
+            (
+                {**doc, "score": score}
+                for doc, score in zip(top_docs, scores, strict=False)
+            ),
             key=lambda x: x["score"],
             reverse=True,
         )

@@ -53,9 +53,7 @@ class PineconeClient:
                 return func(*args, **kwargs)
             except Exception as exc:  # pragma: no cover
                 if attempt == MAX_RETRIES - 1:
-                    self._logger.error(
-                        "Operation failed after %s attempts", MAX_RETRIES
-                    )
+                    self._logger.error("Operation failed after %s attempts", MAX_RETRIES)
                     raise
                 self._logger.warning(
                     "Operation failed (%s/%s): %s",

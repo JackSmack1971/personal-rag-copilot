@@ -16,9 +16,7 @@ class HuggingFaceModelManager:
     def __init__(self, cache_dir: Optional[str] = None) -> None:
         self._logger = logging.getLogger(__name__)
         self.cache_dir = Path(
-            cache_dir
-            or os.getenv("HF_HOME")
-            or (Path.home() / ".cache" / "huggingface")
+            cache_dir or os.getenv("HF_HOME") or (Path.home() / ".cache" / "huggingface")
         )
         if snapshot_download is None:  # pragma: no cover
             message = f"huggingface_hub library missing: {_import_error}"
