@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import gradio as gr
 from html import escape
@@ -17,17 +17,31 @@ class CitationBadge:
 
     label: str
     link: Optional[str] = None
+    source: Optional[str] = None
+    rank: Optional[int] = None
+    score: Optional[float] = None
 
     def render(self) -> str:
         """Return HTML for the badge."""
         safe_label = escape(self.label)
+        parts = []
+        if self.source and self.rank is not None:
+            parts.append(f"{self.source} rank {self.rank}")
+        elif self.source:
+            parts.append(self.source)
+        elif self.rank is not None:
+            parts.append(f"rank {self.rank}")
+        if self.score is not None:
+            parts.append(f"score {self.score:.2f}")
+        title = escape(", ".join(parts)) if parts else ""
+        title_attr = f' title="{title}"' if title else ""
         if self.link:
             safe_link = escape(self.link)
             return (
                 f'<a href="{safe_link}" target="_blank" '
-                f'class="citation-badge">{safe_label}</a>'
+                f'class="citation-badge"{title_attr}>{safe_label}</a>'
             )
-        return f'<span class="citation-badge">{safe_label}</span>'
+        return f'<span class="citation-badge"{title_attr}>{safe_label}</span>'
 
     def on_click(self, event: EventData) -> str:
         """Return the target label when clicked."""
@@ -41,7 +55,7 @@ class CitationBadge:
 class DetailsDrawer:
     """Expandable drawer to show retrieval metadata."""
 
-    content: Dict[str, Any] = field(default_factory=dict)
+    content: Any = field(default_factory=dict)
     open: bool = False
 
     def render(self) -> gr.Accordion:
@@ -53,7 +67,7 @@ class DetailsDrawer:
         self.open = not self.open
         return self.open
 
-    def update(self, content: Dict[str, Any]) -> Dict[str, Any]:
+    def update(self, content: Any) -> Dict[str, Any]:
         self.content = content
         return gr.update(value=content)
 
@@ -111,16 +125,43 @@ class TransparencyPanel:
         )
 
     def update(self, meta: Dict[str, Any]):
-        citations = [
-            CitationBadge(c.get("label", str(i + 1)), c.get("link")).render()
-            for i, c in enumerate(meta.get("citations", []))
-        ]
+        comp_scores = meta.get("component_scores")
+        if not comp_scores:
+            comp_scores = meta.get("details", {}).get("component_scores", {})
+
+        table: List[Dict[str, Any]] = []
+        for doc_id, retrievers in comp_scores.items():
+            for retriever, data in retrievers.items():
+                table.append(
+                    {
+                        "doc": doc_id,
+                        "retriever": retriever,
+                        "rank": data.get("rank"),
+                        "score": data.get("score"),
+                        "snippet": data.get("snippet"),
+                    }
+                )
+
+        citations = []
+        for i, c in enumerate(meta.get("citations", [])):
+            label = c.get("label", str(i + 1))
+            link = c.get("link")
+            source = c.get("source")
+            entry = comp_scores.get(label, {}).get((source or "").lower(), {})
+            badge = CitationBadge(
+                label,
+                link,
+                source.title() if source else None,
+                entry.get("rank"),
+                entry.get("score"),
+            ).render()
+            citations.append(badge)
+
         badges_html = " ".join(citations)
         latency = meta.get("latency", 0.0)
         memory = meta.get("memory", 0.0)
-        details = meta.get("details", {})
         return [
             gr.update(value=badges_html),
             self.performance.update(latency, memory),
-            self.drawer.update(details),
+            self.drawer.update(table),
         ]

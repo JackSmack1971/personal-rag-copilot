@@ -26,11 +26,13 @@ def test_transparency_panel_update_renders_metadata():
         panel = TransparencyPanel().render()
         panel.bind()
     meta = {
-        "citations": [{"label": "Doc1"}],
+        "citations": [{"label": "Doc1", "source": "dense"}],
+        "component_scores": {
+            "Doc1": {"dense": {"rank": 1, "score": 0.42, "snippet": "s"}}
+        },
         "latency": 12.3,
-        "details": {"a": 1},
     }
     updates = panel.update(meta)
-    assert "Doc1" in updates[0]["value"]
-    assert "Latency" in updates[1]["value"]
-    assert updates[2]["value"] == meta["details"]
+    assert 'title="Dense rank 1, score 0.42"' in updates[0]["value"]
+    assert updates[2]["value"][0]["rank"] == 1
+    assert updates[2]["value"][0]["score"] == 0.42
