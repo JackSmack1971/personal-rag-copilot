@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List
 
+from src.monitoring.performance import MetricsDashboard, PerformanceTracker
 from src.retrieval.dense import DenseRetriever
 from src.retrieval.lexical import LexicalBM25
 from src.services.index_management import IndexManagement
@@ -17,13 +18,17 @@ class DocumentService:
         lexical_retriever: LexicalBM25,
         chunk_size: int = 500,
         overlap: int = 50,
+        dashboard: MetricsDashboard | None = None,
     ) -> None:
         self._logger = logging.getLogger(__name__)
         self.dense_retriever = dense_retriever
         self.lexical_retriever = lexical_retriever
         self.chunk_size = chunk_size
         self.overlap = overlap
-        self.index_management = IndexManagement(dense_retriever, lexical_retriever)
+        self.index_management = IndexManagement(
+            dense_retriever, lexical_retriever
+        )
+        self.dashboard = dashboard or MetricsDashboard()
 
     # Parsing helpers
     def parse_document(self, file_path: str) -> str:
@@ -35,10 +40,14 @@ class DocumentService:
                 try:
                     from pypdf import PdfReader
                 except Exception as exc:  # pragma: no cover
-                    raise RuntimeError("pypdf is required for PDF parsing") from exc
+                    raise RuntimeError(
+                        "pypdf is required for PDF parsing"
+                    ) from exc
                 with path.open("rb") as fh:
                     reader = PdfReader(fh)
-                    text = "\n".join(page.extract_text() or "" for page in reader.pages)
+                    text = "\n".join(
+                        page.extract_text() or "" for page in reader.pages
+                    )
             elif suffix == ".docx":
                 try:
                     from docx import Document  # type: ignore
@@ -103,19 +112,27 @@ class DocumentService:
     # Ingestion
     def ingest(self, file_paths: List[str]) -> Dict[str, Any]:
         """Parse files, chunk text, and update both indexes."""
-        all_chunks: List[str] = []
-        metadatas: List[Dict[str, Any]] = []
-        for file_path in file_paths:
-            text = self.parse_document(file_path)
-            chunks = self.chunk_text(text)
-            for idx, chunk in enumerate(chunks):
-                all_chunks.append(chunk)
-                metadatas.append({"source": str(file_path), "chunk": idx})
-        dense_ids, dense_meta = self.dense_retriever.index_corpus(all_chunks, metadatas)
-        lexical_ids, lexical_meta = self.lexical_retriever.index_documents(all_chunks)
+        with PerformanceTracker() as perf:
+            all_chunks: List[str] = []
+            metadatas: List[Dict[str, Any]] = []
+            for file_path in file_paths:
+                text = self.parse_document(file_path)
+                chunks = self.chunk_text(text)
+                for idx, chunk in enumerate(chunks):
+                    all_chunks.append(chunk)
+                    metadatas.append({"source": str(file_path), "chunk": idx})
+            dense_ids, dense_meta = self.dense_retriever.index_corpus(
+                all_chunks, metadatas
+            )
+            lexical_ids, lexical_meta = self.lexical_retriever.index_documents(
+                all_chunks
+            )
+        metrics = perf.metrics()
+        self.dashboard.log({"operation": "ingest", **metrics})
         return {
             "dense": {"ids": dense_ids, **dense_meta},
             "lexical": {"ids": lexical_ids, **lexical_meta},
+            "metrics": metrics,
         }
 
     # Index management
@@ -129,7 +146,9 @@ class DocumentService:
         """Delegate document deletion to index management."""
         return self.index_management.delete_document(doc_id)
 
-    def bulk_operations(self, operations: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def bulk_operations(
+        self, operations: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """Delegate bulk operations to index management."""
         return self.index_management.bulk_operations(operations)
 

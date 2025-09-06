@@ -7,6 +7,7 @@ from typing import Any, Dict, Generator, List, Tuple
 import gradio as gr
 
 from .components.transparency import TransparencyPanel
+from ..monitoring.performance import PerformanceTracker
 from .navbar import render_navbar
 from ..evaluation.ragas_integration import RagasEvaluator
 
@@ -35,8 +36,10 @@ def _generate_response(
     message: str, history: List[Tuple[str, str]]
 ) -> Generator[Tuple[str, Dict[str, Any]], None, None]:
     """Stream an echo response with retrieval metadata."""
-    sanitized = _sanitize(message)
-    reply = f"You said: {sanitized}"
+    with PerformanceTracker() as perf:
+        sanitized = _sanitize(message)
+        reply = f"You said: {sanitized}"
+    metrics = perf.metrics()
     metadata = {
         "citations": [
             {
@@ -44,7 +47,8 @@ def _generate_response(
                 "link": "https://example.com",
             }
         ],
-        "latency": 0.0,
+        "latency": metrics["latency"],
+        "memory": metrics["memory"],
         "details": {"echo": True, "tokens": len(reply.split())},
     }
     for token in reply.split():
