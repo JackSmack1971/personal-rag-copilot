@@ -17,6 +17,40 @@ DEFAULT_CONFIG_PATH = (
     Path(__file__).resolve().parents[2] / "config" / "default_settings.yaml"
 )
 
+# Supported options for enumerated configuration fields
+DEVICE_OPTIONS = {"auto", "cpu", "gpu_openvino", "gpu_xpu"}
+PRECISION_OPTIONS = {"fp32", "fp16", "int8"}
+
+
+def validate_options(
+    settings: Dict[str, Any], *, require_fields: bool = False
+) -> Dict[str, str]:
+    """Validate enumerated option fields in ``settings``.
+
+    Parameters
+    ----------
+    settings:
+        Configuration dictionary to validate.
+    require_fields:
+        When ``True`` missing fields are treated as errors.
+
+    Returns
+    -------
+    Dict[str, str]
+        Mapping of invalid field names to error messages. An empty dictionary
+        indicates that all options are valid.
+    """
+    errors: Dict[str, str] = {}
+    device = settings.get("device_preference")
+    if device not in DEVICE_OPTIONS:
+        if require_fields or device is not None:
+            errors["device_preference"] = "invalid_option"
+    precision = settings.get("precision")
+    if precision not in PRECISION_OPTIONS:
+        if require_fields or precision is not None:
+            errors["precision"] = "invalid_option"
+    return errors
+
 
 def load_settings(path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """Load YAML configuration from ``path``.
@@ -41,6 +75,9 @@ def load_settings(path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
 def load_default_settings() -> Dict[str, Any]:
     """Load repository default configuration."""
     settings, _ = load_settings(str(DEFAULT_CONFIG_PATH))
+    errors = validate_options(settings, require_fields=True)
+    if errors:
+        raise ValueError(f"invalid default configuration: {errors}")
     return settings
 
 
