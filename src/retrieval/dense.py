@@ -78,6 +78,22 @@ class DenseRetriever:
             self._logger.error("Failed to embed query: %s", exc)
             return [], {"status": "error", "error": str(exc)}
 
+    def query(
+        self, query: str, top_k: int = 5
+    ) -> Tuple[List[Tuple[str, float]], Dict[str, Any]]:
+        """Query the Pinecone index with a text string."""
+        try:
+            embedding, _ = self.embed_query(query)
+            response = self.pinecone_client.query(
+                self.index_name, embedding, top_k=top_k
+            )
+            matches = getattr(response, "matches", [])
+            results = [(m["id"], m["score"]) for m in matches]
+            return results, {"retrieved": len(results)}
+        except Exception as exc:  # pragma: no cover
+            self._logger.error("Dense query failed: %s", exc)
+            return [], {"status": "error", "error": str(exc)}
+
     def validate_index(self) -> Tuple[bool, Dict[str, Any]]:
         """Validate Pinecone index dimension."""
         try:
