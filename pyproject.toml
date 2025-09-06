@@ -1,4 +1,50 @@
-# pyproject.toml
+ # pyproject.toml
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "personal-rag-copilot"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "gradio>=5.0.0",
+    "sentence-transformers>=2.2.2",
+    "transformers>=4.35.0",
+    "torch>=2.0.0",
+    "numpy>=1.24.0",
+    "rank-bm25>=0.2.2",
+    "pinecone-client>=2.2.0",
+    "ragas>=0.1.0",
+    "datasets>=2.14.0",
+    "pypdf>=3.16.0",
+    "python-docx>=0.8.11",
+    "beautifulsoup4>=4.12.0",
+    "markdown>=3.5.0",
+    "plotly==6.3.0",
+    "nltk>=3.8.0",
+    "pydantic>=2.4.0",
+    "typing-extensions>=4.8.0",
+    "python-dotenv>=1.0.0",
+    "structlog>=23.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-benchmark>=4.0.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "flake8>=7.0.0",
+    "mypy>=1.5.0",
+    "fpdf2>=2.7.0",
+    "httpx>=0.25.0",
+]
+
 [tool.black]
 line-length = 90
 target-version = ["py311"]  # adjust to your floor; optional
