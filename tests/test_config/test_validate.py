@@ -12,3 +12,9 @@ def test_validate_settings_errors() -> None:
     assert valid is False
     assert errors["top_k"].startswith("out_of_bounds")
     assert errors["rrf_k"] == "not_numeric"
+
+
+def test_validate_settings_missing() -> None:
+    valid, errors = validate_settings({})
+    assert valid is False
+    assert errors["top_k"] == "missing"
