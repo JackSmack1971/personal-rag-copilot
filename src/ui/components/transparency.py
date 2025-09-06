@@ -60,20 +60,25 @@ class DetailsDrawer:
 
 @dataclass
 class PerformanceIndicator:
-    """Display simple performance metrics such as latency."""
+    """Display simple performance metrics such as latency and memory."""
 
     latency_ms: float = 0.0
+    memory_mb: float = 0.0
 
     def render(self) -> gr.Markdown:
-        self.md = gr.Markdown(self.format_latency())
+        self.md = gr.Markdown(self.format_metrics())
         return self.md
 
-    def format_latency(self) -> str:
-        return f"**Latency:** {self.latency_ms:.2f} ms"
+    def format_metrics(self) -> str:
+        return (
+            f"**Latency:** {self.latency_ms:.2f} ms | "
+            f"**Memory:** {self.memory_mb:.2f} MB"
+        )
 
-    def update(self, latency_ms: float) -> Dict[str, str]:
+    def update(self, latency_ms: float, memory_mb: float) -> Dict[str, str]:
         self.latency_ms = latency_ms
-        return gr.update(value=self.format_latency())
+        self.memory_mb = memory_mb
+        return gr.update(value=self.format_metrics())
 
 
 class TransparencyPanel:
@@ -112,9 +117,10 @@ class TransparencyPanel:
         ]
         badges_html = " ".join(citations)
         latency = meta.get("latency", 0.0)
+        memory = meta.get("memory", 0.0)
         details = meta.get("details", {})
         return [
             gr.update(value=badges_html),
-            self.performance.update(latency),
+            self.performance.update(latency, memory),
             self.drawer.update(details),
         ]
