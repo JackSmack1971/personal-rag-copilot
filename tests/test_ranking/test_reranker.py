@@ -42,10 +42,24 @@ def test_reranker_timeout_fallback(monkeypatch):
 
 def test_reranker_benchmark(benchmark):
     reranker = CrossEncoderReranker(load_model=False)
-    reranker._score_pairs = lambda q, texts: [0.0 for _ in texts]  # type: ignore
+
+    def zero_scores(q, texts):
+        return [0.0 for _ in texts]
+
+    reranker._score_pairs = zero_scores  # type: ignore
 
     def run():
         docs = _build_docs(["d1", "d2", "d3"])
         reranker.rerank("q", docs, top_k=3, session_id="s3")
 
     benchmark(run)
+
+
+def test_reranker_falls_back_to_cpu_when_xpu_missing():
+    reranker = CrossEncoderReranker(load_model=False, device="gpu_xpu")
+    assert reranker.device == "cpu"
+
+
+def test_reranker_falls_back_to_cpu_when_openvino_missing():
+    reranker = CrossEncoderReranker(load_model=False, device="gpu_openvino")
+    assert reranker.device == "cpu"
