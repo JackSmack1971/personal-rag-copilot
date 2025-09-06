@@ -88,7 +88,8 @@ The user interface provides four main workflows: querying the knowledge base, in
 ```bash
 git clone <repository-url>
 cd personal-rag-copilot
-pip install -r requirements.txt
+pip install pip-tools
+pip-sync requirements.txt
 ```
 
 2. **Configure environment**:
@@ -167,7 +168,8 @@ personal-rag-copilot/
 
 ```bash
 # Install development dependencies
-pip install -r requirements.txt
+pip install pip-tools
+pip-sync requirements.txt
 
 # Run tests with coverage
 python -m pytest tests/ --cov=src --cov-report=html
