@@ -33,10 +33,14 @@ class DocumentService:
                 try:
                     from pypdf import PdfReader
                 except Exception as exc:  # pragma: no cover
-                    raise RuntimeError("pypdf is required for PDF parsing") from exc
+                    raise RuntimeError(
+                        "pypdf is required for PDF parsing"
+                    ) from exc
                 with path.open("rb") as fh:
                     reader = PdfReader(fh)
-                    text = "\n".join(page.extract_text() or "" for page in reader.pages)
+                    text = "\n".join(
+                        page.extract_text() or "" for page in reader.pages
+                    )
             elif suffix == ".docx":
                 try:
                     from docx import Document  # type: ignore
@@ -67,9 +71,11 @@ class DocumentService:
             from bs4 import BeautifulSoup
 
             soup = BeautifulSoup(data, "html.parser")
-            return soup.get_text(separator=" ")
+            text = soup.get_text(separator=" ")
+            return " ".join(text.split())
         except Exception:  # pragma: no cover
-            return re.sub(r"<[^>]+>", " ", data)
+            stripped = re.sub(r"<[^>]+>", " ", data)
+            return " ".join(stripped.split())
 
     def _markdown_to_text(self, data: str) -> str:
         try:
@@ -107,8 +113,12 @@ class DocumentService:
             for idx, chunk in enumerate(chunks):
                 all_chunks.append(chunk)
                 metadatas.append({"source": str(file_path), "chunk": idx})
-        dense_ids, dense_meta = self.dense_retriever.index_corpus(all_chunks, metadatas)
-        lexical_ids, lexical_meta = self.lexical_retriever.index_documents(all_chunks)
+        dense_ids, dense_meta = self.dense_retriever.index_corpus(
+            all_chunks, metadatas
+        )
+        lexical_ids, lexical_meta = self.lexical_retriever.index_documents(
+            all_chunks
+        )
         return {
             "dense": {"ids": dense_ids, **dense_meta},
             "lexical": {"ids": lexical_ids, **lexical_meta},

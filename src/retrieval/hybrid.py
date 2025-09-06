@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Tuple
 from ..ranking.rrf_fusion import DEFAULT_RRF_K, rrf_fusion
 from .dense import DenseRetriever
 from .lexical import LexicalBM25
+from .query_analysis import analyze_query
 
 
 class HybridRetriever:
@@ -55,10 +56,17 @@ class HybridRetriever:
             lexical_future = executor.submit(self.lexical.query, query, top_k)
             dense_results, _ = dense_future.result()
             lexical_results, _ = lexical_future.result()
+        weights, analysis_meta = analyze_query(
+            query, self.lexical, w_dense=w_dense, w_lexical=w_lexical
+        )
         merged, meta = rrf_fusion(
             {"dense": dense_results, "lexical": lexical_results},
             k=k,
-            weights={"dense": w_dense, "lexical": w_lexical},
+            weights={
+                "dense": weights["w_dense"],
+                "lexical": weights["w_lexical"],
+            },
         )
+        meta.update(analysis_meta)
         meta.update({"retrieval_mode": "hybrid"})
         return merged[:top_k], meta

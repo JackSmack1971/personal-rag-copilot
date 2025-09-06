@@ -11,7 +11,10 @@ from src.services.document_service import DocumentService
 def mocks():
     dense = MagicMock()
     lexical = MagicMock()
-    dense.index_corpus.return_value = (["1", "2"], {"status": "success", "count": 2})
+    dense.index_corpus.return_value = (
+        ["1", "2"],
+        {"status": "success", "count": 2},
+    )
     lexical.index_documents.return_value = (
         ["1", "2"],
         {"status": "success", "count": 2},
