@@ -6,7 +6,6 @@ import json
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
-import asyncio
 
 import gradio as gr
 
@@ -66,59 +65,69 @@ def _sanitize_name(name: str) -> str:
     return re.sub(r"[^\w\-.]", "_", Path(name).name)
 
 
-def _validate_files(
+def _queue_files(
     files: list[gr.File],
-) -> Tuple[List[Dict[str, str]], Dict[str, Any]]:
-    """Validate uploaded files via DocumentService.parse_document."""
-    records: list[dict[str, str]] = []
+    table: List[List[Any]] | None,
+    contents: Dict[str, str] | None,
+) -> Tuple[List[List[Any]], Dict[str, str], Dict[str, Any]]:
+    """Parse files and append them to a processing queue."""
+    table = table or []
+    contents = contents or {}
     if not files:
-        return records, gr.update(value="", visible=False)
+        return table, contents, gr.update(value="", visible=False)
     for file in files:
-        display_name = _sanitize_name(file.name)
+        doc_id = _sanitize_name(file.name)
         try:
             safe_path = _sanitize_path(file.name)
-            _document_service.parse_document(str(safe_path))
-            records.append(
-                {
-                    "file": display_name,
-                    "status": "accepted",
-                    "error": "",
-                }
-            )
+            text = _document_service.parse_document(str(safe_path))
+            contents[doc_id] = text
+            table.append([doc_id, "update", "pending", ""])
         except Exception as exc:  # pragma: no cover
-            records.append(
+            table.append([doc_id, "update", "error", str(exc)])
+    return table, contents, gr.update(value="Files queued", visible=True)
+
+
+def _process_all(
+    table: List[List[Any]] | None,
+    contents: Dict[str, str] | None,
+) -> Tuple[List[List[Any]], Dict[str, Any]]:
+    """Execute queued operations via DocumentService.bulk_operations."""
+    table = table or []
+    contents = contents or {}
+    operations: List[Dict[str, Any]] = []
+    for row in table:
+        doc_id, action, status, _ = row
+        if status != "pending":
+            continue
+        if action == "update":
+            operations.append(
                 {
-                    "file": display_name,
-                    "status": "rejected",
-                    "error": str(exc),
+                    "action": "update",
+                    "doc_id": doc_id,
+                    "content": contents.get(doc_id, ""),
                 }
             )
-    if any(r["status"] == "rejected" for r in records):
-        alert_update = gr.update(
-            value="Some files were rejected. See table for details.",
-            visible=True,
+        elif action == "delete":
+            operations.append({"action": "delete", "doc_id": doc_id})
+    if not operations:
+        return table, {"results": []}
+    result = _document_service.bulk_operations(operations)
+    results = result.get("results", [])
+    for row, res in zip(table, results, strict=False):
+        outcome = res.get("result", {})
+        status = (
+            outcome.get("dense", {}).get("status")
+            or outcome.get("lexical", {}).get("status")
+            or outcome.get("status", "unknown")
         )
-    else:
-        alert_update = gr.update(value="All files accepted.", visible=True)
-    return records, alert_update
-
-
-async def _ingest_files(
-    files: list[gr.File],
-    progress: gr.Progress | None = gr.Progress(),
-) -> Dict[str, Any]:
-    """Run DocumentService.ingest asynchronously with progress updates."""
-    if not files:
-        return {}
-    paths = [str(_sanitize_path(f.name)) for f in files]
-    result = await asyncio.to_thread(
-        _document_service.ingest,
-        paths,
-        progress,
-    )
-    metrics = result.get("metrics", {})
-    metrics["chunk_count"] = result.get("chunk_count", 0)
-    return metrics
+        error = (
+            outcome.get("dense", {}).get("error")
+            or outcome.get("lexical", {}).get("error")
+            or outcome.get("error", "")
+        )
+        row[2] = status
+        row[3] = error
+    return table, result
 
 
 def _update_document(table: List[List[Any]], content: str) -> Dict[str, Any]:
@@ -164,22 +173,23 @@ def ingest_page() -> gr.Blocks:
             file_count="multiple",
             file_types=["pdf", "docx", "txt", "html", "md"],
         )
-        summary = gr.Dataframe(
-            headers=["file", "status", "error"],
-            datatype=["str", "str", "str"],
-            interactive=False,
+        queue = gr.Dataframe(
+            headers=["doc_id", "action", "status", "error"],
+            datatype=["str", "str", "str", "str"],
+            interactive=True,
         )
-        ingest_btn = gr.Button("Start Ingestion")
-        metrics = gr.JSON(label="Ingestion Metrics")
+        contents_state = gr.State({})
+        process_btn = gr.Button("Process All")
+        report = gr.JSON(label="Completion Report")
         file_input.upload(
-            fn=_validate_files,
-            inputs=file_input,
-            outputs=[summary, alert],
+            fn=_queue_files,
+            inputs=[file_input, queue, contents_state],
+            outputs=[queue, contents_state, alert],
         )
-        ingest_btn.click(
-            fn=_ingest_files,
-            inputs=file_input,
-            outputs=metrics,
+        process_btn.click(
+            fn=_process_all,
+            inputs=[queue, contents_state],
+            outputs=[queue, report],
         )
         with gr.Accordion("Index Management", open=False):
             metadata_table = gr.Dataframe(
