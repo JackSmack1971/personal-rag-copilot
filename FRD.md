@@ -740,7 +740,7 @@ User Query → Retrieval Engine → RRF Fusion → [Optional Reranking] → LLM 
 #### CON-TECH-002: External Dependencies
 - **Pinecone vector database required**
 - **Internet connectivity for model downloads**
-- **Python 3.8+ runtime environment**
+- **Python 3.12 runtime environment**
 
 ### 7.2 Business Constraints
 

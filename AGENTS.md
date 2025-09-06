@@ -35,7 +35,7 @@ The application follows a modular Python architecture with clear separation of c
 
 ## Development Environment & Commands
 
-The application is built using Python 3.8+ with Gradio 5 as the primary UI framework. All dependencies should already be installed in the environment.
+The application is built using Python 3.12 with Gradio 5 as the primary UI framework. All dependencies should already be installed in the environment.
 
 **Core Development Commands:**
 - To run the multipage application: `python app.py`
