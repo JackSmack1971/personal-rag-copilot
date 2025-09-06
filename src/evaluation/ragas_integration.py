@@ -6,7 +6,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Optional
 
 from ragas import evaluate
 from ragas.metrics import faithfulness
@@ -63,3 +63,24 @@ class RagasEvaluator:
         with self.history_path.open("a", encoding="utf-8") as file:
             file.write(json.dumps(record.__dict__) + "\n")
         return record
+
+    def load_history(
+        self,
+        start: Optional[datetime] = None,
+        end: Optional[datetime] = None,
+    ) -> List[EvaluationResult]:
+        """Load evaluation history filtered by optional time range."""
+        if not self.history_path.exists():
+            return []
+        records: List[EvaluationResult] = []
+        with self.history_path.open("r", encoding="utf-8") as file:
+            for line in file:
+                data = json.loads(line)
+                record = EvaluationResult(**data)
+                ts = datetime.fromisoformat(record.timestamp)
+                if start and ts < start:
+                    continue
+                if end and ts > end:
+                    continue
+                records.append(record)
+        return records
