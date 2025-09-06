@@ -1,0 +1,15 @@
+# pyproject.toml
+[tool.black]
+line-length = 90
+target-version = ["py311"]  # adjust to your floor; optional
+
+[tool.flake8]               # Flake8 ≥ 7.0 supports pyproject
+max-line-length = 90
+# If you use flake8-bugbear, choose ONE of the two strategies below:
+
+# Strategy A (simplest): rely on E501 with max-line-length=90
+# (do nothing else)
+
+# Strategy B (bugbear-style soft limit at 90):
+# extend-select = ["B950"]
+# extend-ignore = ["E501"]
