@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -120,6 +121,32 @@ async def _ingest_files(
     return metrics
 
 
+def _update_document(table: List[List[Any]], content: str) -> Dict[str, Any]:
+    """Update a document using table metadata and provided content."""
+    if not table or not table[0]:
+        return {"error": "No document specified"}
+    doc_id = str(table[0][0])
+    metadata_raw = table[0][1] if len(table[0]) > 1 else "{}"
+    try:
+        metadata = json.loads(metadata_raw) if metadata_raw else {}
+    except Exception:
+        metadata = {}
+    return _document_service.update_document(doc_id, content, metadata)
+
+
+def _delete_document(table: List[List[Any]]) -> Dict[str, Any]:
+    """Delete a document by ID from the table."""
+    if not table or not table[0]:
+        return {"error": "No document specified"}
+    doc_id = str(table[0][0])
+    return _document_service.delete_document(doc_id)
+
+
+def _health_check() -> Dict[str, Any]:
+    """Run an index health check."""
+    return _document_service.index_health_check()
+
+
 # ---------------------------------------------------------------------------
 # Page Definition
 # ---------------------------------------------------------------------------
@@ -154,4 +181,28 @@ def ingest_page() -> gr.Blocks:
             inputs=file_input,
             outputs=metrics,
         )
+        with gr.Accordion("Index Management", open=False):
+            metadata_table = gr.Dataframe(
+                headers=["doc_id", "metadata"],
+                datatype=["str", "str"],
+            )
+            chunk_preview = gr.Textbox(label="Chunk Preview", lines=5)
+            with gr.Row():
+                update_btn = gr.Button("Update")
+                delete_btn = gr.Button("Delete")
+                health_btn = gr.Button("Health Check")
+            update_result = gr.JSON(label="Update Result")
+            delete_result = gr.JSON(label="Delete Result")
+            health_result = gr.JSON(label="Index Health")
+            update_btn.click(
+                fn=_update_document,
+                inputs=[metadata_table, chunk_preview],
+                outputs=update_result,
+            )
+            delete_btn.click(
+                fn=_delete_document,
+                inputs=metadata_table,
+                outputs=delete_result,
+            )
+            health_btn.click(fn=_health_check, outputs=health_result)
     return demo
