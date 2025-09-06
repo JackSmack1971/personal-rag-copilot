@@ -1,4 +1,4 @@
-"""Settings page UI with real-time validation and YAML import/export."""
+"""Settings page UI with real-time validation and dynamic updates."""
 
 from __future__ import annotations
 
@@ -6,19 +6,16 @@ from typing import Any, Dict, Tuple
 
 import gradio as gr
 
-from src.config.settings import (
-    load_default_settings,
-    load_settings,
-    save_settings,
-)
+from src.config.settings import load_settings, save_settings
 from src.config.validate import validate_settings
+from src.config.runtime_config import config_manager
 
 from .navbar import render_navbar
 
 
 def settings_page() -> gr.Blocks:
     """Build the settings page with tabbed layout."""
-    defaults = load_default_settings()
+    defaults = config_manager.as_dict()
 
     with gr.Blocks() as demo:
         render_navbar()
@@ -29,8 +26,11 @@ def settings_page() -> gr.Blocks:
             field: str, value: float, settings: Dict[str, Any]
         ) -> Tuple[Dict[str, Any], str]:
             new_settings = {**settings, field: value}
-            _, errors = validate_settings(new_settings)
-            return new_settings, errors.get(field, "")
+            valid, errors = validate_settings(new_settings)
+            if valid:
+                config_manager.set_runtime_overrides(new_settings)
+                return config_manager.as_dict(), ""
+            return settings, errors.get(field, "")
 
         def import_settings(file, settings: Dict[str, Any]):
             if file is None:
@@ -49,15 +49,18 @@ def settings_page() -> gr.Blocks:
                     settings.get("top_k"),
                     settings.get("rrf_k"),
                 )
-            return (
-                new_settings,
-                "",
-                new_settings.get("top_k"),
-                new_settings.get("rrf_k"),
-            )
+            config_manager.set_runtime_overrides(new_settings)
+            cfg = config_manager.as_dict()
+            return (cfg, "", cfg.get("top_k"), cfg.get("rrf_k"))
 
         def reset_defaults():
-            return defaults, "", defaults.get("top_k"), defaults.get("rrf_k")
+            config_manager.set_runtime_overrides({})
+            cfg = config_manager.as_dict()
+            return cfg, "", cfg.get("top_k"), cfg.get("rrf_k")
+
+        def rollback_cb():
+            cfg = config_manager.rollback()
+            return cfg, "", cfg.get("top_k"), cfg.get("rrf_k")
 
         def export_settings_cb(settings: Dict[str, Any]):
             meta = save_settings(settings)
@@ -66,11 +69,13 @@ def settings_page() -> gr.Blocks:
         with gr.Tabs():
             with gr.Tab("Retrieval"):
                 top_k = gr.Number(
-                    label="Top K", value=defaults.get("top_k", 5)
+                    label="Top K",
+                    value=defaults.get("top_k", 5),
                 )
                 top_k_error = gr.Markdown()
                 rrf_k = gr.Number(
-                    label="RRF k", value=defaults.get("rrf_k", 60)
+                    label="RRF k",
+                    value=defaults.get("rrf_k", 60),
                 )
                 rrf_k_error = gr.Markdown()
 
@@ -94,11 +99,13 @@ def settings_page() -> gr.Blocks:
             with gr.Tab("Advanced"):
                 status = gr.Markdown()
                 import_file = gr.File(
-                    label="Import YAML", file_types=[".yaml", ".yml"]
+                    label="Import YAML",
+                    file_types=[".yaml", ".yml"],
                 )
                 export_file = gr.File(label="Exported YAML", interactive=False)
                 export_btn = gr.Button("Export YAML")
                 reset_btn = gr.Button("Reset to defaults")
+                rollback_btn = gr.Button("Rollback")
 
                 import_file.change(
                     import_settings,
@@ -114,6 +121,11 @@ def settings_page() -> gr.Blocks:
                     export_settings_cb,
                     inputs=settings_state,
                     outputs=export_file,
+                )
+                rollback_btn.click(
+                    rollback_cb,
+                    inputs=None,
+                    outputs=[settings_state, status, top_k, rrf_k],
                 )
 
     return demo
