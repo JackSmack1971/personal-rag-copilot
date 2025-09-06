@@ -17,7 +17,7 @@ A hybrid retrieval-augmented generation platform combining dense vector search a
 
 ### Tech Stack
 
-- **Backend**: Python 3.8+, FastAPI, Gradio 5
+- **Backend**: Python 3.12, FastAPI, Gradio 5
 - **ML/AI**: Sentence-Transformers, HuggingFace Transformers, Ragas
 - **Search**: Pinecone (vector), rank-bm25 (lexical)
 - **Testing**: pytest, pytest-asyncio, pytest-cov
@@ -78,17 +78,21 @@ The user interface provides four main workflows: querying the knowledge base, in
 
 ### Prerequisites
 
-- Python 3.8+ [[EVID: requirements.txt:1-48 | Python dependencies specified]]
+- Python 3.12 [[EVID: requirements.txt:1-48 | Python dependencies specified]]
 - Pinecone API account and API key
 - 8GB+ RAM for model loading
 
 ### Setup
 
-1. **Clone and install dependencies**:
+1. **Clone and set up the environment**:
 ```bash
 git clone <repository-url>
 cd personal-rag-copilot
-pip install pip-tools
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install setuptools wheel pip-tools
+pip-compile requirements.in  # generates requirements.txt
 pip-sync requirements.txt
 ```
 
@@ -167,8 +171,12 @@ personal-rag-copilot/
 ### Environment Setup
 
 ```bash
-# Install development dependencies
-pip install pip-tools
+# Create virtual environment
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install setuptools wheel pip-tools
+pip-compile requirements.in  # generates requirements.txt
 pip-sync requirements.txt
 
 # Run tests with coverage
