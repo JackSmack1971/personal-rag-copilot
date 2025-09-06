@@ -83,3 +83,37 @@ class LexicalBM25:
         except Exception as exc:  # pragma: no cover
             self._logger.error("BM25 query failed: %s", exc)
             return [], {"status": "error", "error": str(exc)}
+
+    # Index management helpers
+    def update_document(self, doc_id: str, content: str) -> Dict[str, Any]:
+        """Update existing document content."""
+        try:
+            idx = self.doc_ids.index(doc_id)
+            self.documents[idx] = content
+            self.corpus_tokens[idx] = self._preprocess(content)
+            if self.corpus_tokens:
+                self.bm25 = BM25Okapi(self.corpus_tokens)
+            return {"status": "success"}
+        except ValueError:
+            return {"status": "not_found"}
+        except Exception as exc:  # pragma: no cover
+            self._logger.error("Failed to update %s: %s", doc_id, exc)
+            return {"status": "error", "error": str(exc)}
+
+    def delete_document(self, doc_id: str) -> Dict[str, Any]:
+        """Remove a document from the index."""
+        try:
+            idx = self.doc_ids.index(doc_id)
+            del self.doc_ids[idx]
+            del self.documents[idx]
+            del self.corpus_tokens[idx]
+            if self.corpus_tokens:
+                self.bm25 = BM25Okapi(self.corpus_tokens)
+            else:
+                self.bm25 = None
+            return {"status": "success"}
+        except ValueError:
+            return {"status": "not_found"}
+        except Exception as exc:  # pragma: no cover
+            self._logger.error("Failed to delete %s: %s", doc_id, exc)
+            return {"status": "error", "error": str(exc)}

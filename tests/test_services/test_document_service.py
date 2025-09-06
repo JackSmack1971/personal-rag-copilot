@@ -19,6 +19,11 @@ def mocks():
         ["1", "2"],
         {"status": "success", "count": 2},
     )
+    dense.update_document.return_value = {"status": "success"}
+    dense.delete_document.return_value = {"status": "success"}
+    dense.validate_index.return_value = (True, {})
+    lexical.update_document.return_value = {"status": "success"}
+    lexical.delete_document.return_value = {"status": "success"}
     return dense, lexical
 
 
@@ -80,3 +85,37 @@ def test_chunk_and_ingest(tmp_path, mocks):
     assert lexical.index_documents.call_args[0][0] == expected_chunks
     assert result["dense"]["count"] == 2
     assert result["lexical"]["count"] == 2
+
+
+def test_update_delete_and_audit(mocks):
+    dense, lexical = mocks
+    service = DocumentService(dense, lexical)
+
+    service.update_document("1", "new content")
+    service.delete_document("1")
+
+    dense.update_document.assert_called_with("1", "new content", {})
+    lexical.update_document.assert_called_with("1", "new content")
+    dense.delete_document.assert_called_with("1")
+    lexical.delete_document.assert_called_with("1")
+
+    audit = service.audit_operations()
+    assert [entry["action"] for entry in audit] == ["update", "delete"]
+
+
+def test_bulk_operations_audit(mocks):
+    dense, lexical = mocks
+    service = DocumentService(dense, lexical)
+
+    ops = [
+        {"action": "update", "doc_id": "1", "content": "a"},
+        {"action": "delete", "doc_id": "2"},
+    ]
+    service.bulk_operations(ops)
+
+    dense.update_document.assert_called_with("1", "a", {})
+    lexical.update_document.assert_called_with("1", "a")
+    dense.delete_document.assert_called_with("2")
+    lexical.delete_document.assert_called_with("2")
+    audit = service.audit_operations()
+    assert len(audit) == 2

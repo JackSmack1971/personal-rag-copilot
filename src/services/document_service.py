@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 
 from src.retrieval.dense import DenseRetriever
 from src.retrieval.lexical import LexicalBM25
+from src.services.index_management import IndexManagement
 
 
 class DocumentService:
@@ -22,6 +23,7 @@ class DocumentService:
         self.lexical_retriever = lexical_retriever
         self.chunk_size = chunk_size
         self.overlap = overlap
+        self.index_management = IndexManagement(dense_retriever, lexical_retriever)
 
     # Parsing helpers
     def parse_document(self, file_path: str) -> str:
@@ -33,14 +35,10 @@ class DocumentService:
                 try:
                     from pypdf import PdfReader
                 except Exception as exc:  # pragma: no cover
-                    raise RuntimeError(
-                        "pypdf is required for PDF parsing"
-                    ) from exc
+                    raise RuntimeError("pypdf is required for PDF parsing") from exc
                 with path.open("rb") as fh:
                     reader = PdfReader(fh)
-                    text = "\n".join(
-                        page.extract_text() or "" for page in reader.pages
-                    )
+                    text = "\n".join(page.extract_text() or "" for page in reader.pages)
             elif suffix == ".docx":
                 try:
                     from docx import Document  # type: ignore
@@ -113,13 +111,32 @@ class DocumentService:
             for idx, chunk in enumerate(chunks):
                 all_chunks.append(chunk)
                 metadatas.append({"source": str(file_path), "chunk": idx})
-        dense_ids, dense_meta = self.dense_retriever.index_corpus(
-            all_chunks, metadatas
-        )
-        lexical_ids, lexical_meta = self.lexical_retriever.index_documents(
-            all_chunks
-        )
+        dense_ids, dense_meta = self.dense_retriever.index_corpus(all_chunks, metadatas)
+        lexical_ids, lexical_meta = self.lexical_retriever.index_documents(all_chunks)
         return {
             "dense": {"ids": dense_ids, **dense_meta},
             "lexical": {"ids": lexical_ids, **lexical_meta},
         }
+
+    # Index management
+    def update_document(
+        self, doc_id: str, content: str, metadata: Dict[str, Any] | None = None
+    ) -> Dict[str, Any]:
+        """Delegate document update to index management."""
+        return self.index_management.update_document(doc_id, content, metadata)
+
+    def delete_document(self, doc_id: str) -> Dict[str, Any]:
+        """Delegate document deletion to index management."""
+        return self.index_management.delete_document(doc_id)
+
+    def bulk_operations(self, operations: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Delegate bulk operations to index management."""
+        return self.index_management.bulk_operations(operations)
+
+    def index_health_check(self) -> Dict[str, Any]:
+        """Delegate health check to index management."""
+        return self.index_management.index_health_check()
+
+    def audit_operations(self) -> List[Dict[str, Any]]:
+        """Return audit log from index management."""
+        return self.index_management.audit_operations()
