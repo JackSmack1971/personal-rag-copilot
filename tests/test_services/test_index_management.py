@@ -1,3 +1,4 @@
+import json
 from typing import Any, Dict
 
 from src.services.index_management import IndexManagement
@@ -65,3 +66,29 @@ def test_index_health_check_reports_status():
     health = mgr.index_health_check()
     assert health["dense"]["valid"]
     assert health["lexical"]["ready"]
+
+
+def test_log_retrieval_records_and_exports(tmp_path):
+    mgr = build_manager()
+    meta = {
+        "retrieval_mode": "hybrid",
+        "rrf_weights": {"dense": 0.7, "lexical": 0.3},
+        "component_scores": {"dense": 1.0, "lexical": 0.5},
+        "reranked": True,
+    }
+    mgr.log_retrieval("hello", meta)
+    log = mgr.audit_operations()
+    entry = log[-1]
+    assert entry["action"] == "retrieval"
+    assert entry["query"] == "hello"
+    assert entry["retrieval_mode"] == "hybrid"
+    assert entry["rrf_weights"] == meta["rrf_weights"]
+    assert entry["component_scores"] == meta["component_scores"]
+    assert entry["reranked"] is True
+
+    export_path = tmp_path / "audit.json"
+    exported = mgr.audit_operations(export_path)
+    assert export_path.exists()
+    with export_path.open() as f:
+        data = json.load(f)
+    assert data == exported

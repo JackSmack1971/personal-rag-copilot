@@ -1,5 +1,7 @@
+import json
 import logging
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List
 
 from src.retrieval.dense import DenseRetriever
@@ -42,7 +44,28 @@ class IndexManagement:
         self._audit_log.append(entry)
         return {"dense": dense_result, "lexical": lexical_result}
 
-    def bulk_operations(self, operations: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def log_retrieval(
+        self,
+        query: str,
+        meta: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Record a retrieval action and associated metadata."""
+        entry = {
+            "action": "retrieval",
+            "query": query,
+            "retrieval_mode": meta.get("retrieval_mode"),
+            "rrf_weights": meta.get("rrf_weights"),
+            "component_scores": meta.get("component_scores"),
+            "reranked": meta.get("reranked", False),
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+        self._audit_log.append(entry)
+        return entry
+
+    def bulk_operations(
+        self,
+        operations: List[Dict[str, Any]],
+    ) -> Dict[str, Any]:
         """Execute bulk update/delete operations."""
         results: List[Dict[str, Any]] = []
         for op in operations:
@@ -69,6 +92,12 @@ class IndexManagement:
             "lexical": {"ready": lexical_ready},
         }
 
-    def audit_operations(self) -> List[Dict[str, Any]]:
-        """Return audit log entries."""
+    def audit_operations(
+        self, export_path: str | Path | None = None
+    ) -> List[Dict[str, Any]]:
+        """Return audit log entries and optionally export to JSON."""
+        if export_path is not None:
+            path = Path(export_path)
+            with path.open("w", encoding="utf-8") as f:
+                json.dump(self._audit_log, f, indent=2)
         return list(self._audit_log)
