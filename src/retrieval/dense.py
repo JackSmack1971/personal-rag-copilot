@@ -16,11 +16,27 @@ class DenseRetriever:
         self,
         pinecone_client: PineconeClient,
         index_name: str,
+        device: str = "cpu",
+        precision: str = "fp32",
     ) -> None:
         self._logger = logging.getLogger(__name__)
         self.pinecone_client = pinecone_client
         self.index_name = index_name
-        self.model = SentenceTransformer("all-MiniLM-L6-v2")
+        self.device = device
+        self.precision = precision
+        st_device = "xpu" if device == "gpu_xpu" else "cpu"
+        self.model = SentenceTransformer("all-MiniLM-L6-v2", device=st_device)
+        self.ov_model = None
+        if device == "gpu_openvino":
+            try:
+                from openvino.runtime import Core  # type: ignore
+
+                core = Core()
+                self.ov_model = core.compile_model(
+                    self.model, "GPU", {"INFERENCE_PRECISION_HINT": precision}
+                )
+            except Exception as exc:  # pragma: no cover
+                self._logger.warning("OpenVINO load failed: %s", exc)
         dimension = self.model.get_sentence_embedding_dimension()
         if dimension != EMBEDDING_DIMENSION:
             self._logger.warning(
@@ -32,11 +48,22 @@ class DenseRetriever:
     def _embed_documents(
         self, documents: List[str], batch_size: int = 32
     ) -> List[List[float]]:
-        embeddings = self.model.encode(
-            documents,
-            batch_size=batch_size,
-            show_progress_bar=False,
-        )
+        if self.device == "gpu_openvino" and self.ov_model is not None:
+            encode = getattr(self.ov_model, "encode", None)
+            if callable(encode):
+                embeddings = encode(documents)
+            else:
+                embeddings = self.model.encode(
+                    documents,
+                    batch_size=batch_size,
+                    show_progress_bar=False,
+                )
+        else:
+            embeddings = self.model.encode(
+                documents,
+                batch_size=batch_size,
+                show_progress_bar=False,
+            )
         return embeddings.tolist()
 
     def index_corpus(
