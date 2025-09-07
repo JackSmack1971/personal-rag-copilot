@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 from src.config.runtime_config import ConfigManager, ValidationEngine
@@ -7,7 +9,7 @@ def invalid_validator(cfg):
     return False, {"top_k": "invalid"}
 
 
-def test_invalid_runtime_overrides_raise():
+def test_invalid_runtime_overrides_raise() -> None:
     cm = ConfigManager(
         base_config={
             "top_k": 1,
