@@ -14,6 +14,8 @@ A hybrid retrieval-augmented generation platform combining dense vector search a
 - **Multipage Interface**: Gradio 5 application with Chat, Ingest, Evaluate, and Settings pages [[EVID: app.py:8-12 | FastAPI with Gradio mounting]]
 - **Document Processing**: Multi-format ingestion (PDF, DOCX, TXT, MD, HTML) with intelligent chunking [[EVID: src/services/document_service.py:22-75 | DocumentService with format support]]
 - **Transparency**: Retrieval audit trails with component scores and source attribution [[EVID: src/ranking/rrf_fusion.py:56-61 | metadata with fusion_method and component_scores]]
+- **Performance Policy Management**: Enforces latency targets and can auto-tune retrieval parameters [[EVID: src/config/default_settings.yaml:14-20 | performance_policy defaults]]
+- **Recommendation Logging & Monitoring Endpoints**: Captures quality suggestions and serves metrics via `/api/v1/monitoring` and `/api/v1/recommendations` [[EVID: src/monitoring/performance.py:1-200 | Performance tracking utilities]]
 - **Optional GPU Acceleration**: Intel Iris Xe via OpenVINO for faster inference (see [GPU Support Guide](docs/gpu_support.md))
 
 ### Tech Stack
@@ -137,6 +139,48 @@ Key parameters can be configured via YAML files:
 | `rrf_k` | 60 | RRF fusion parameter [[EVID: config/default_settings.yaml:1-2 | rrf_k: 60]] |
 | `device_preference` | auto | Compute backend preference (auto, cpu, gpu_openvino, gpu_xpu). Override with `DEVICE_PREFERENCE` [[EVID: config/default_settings.yaml:5 | device_preference: auto]] |
 | `precision` | fp32 | Numerical precision (fp32, fp16, int8). Override with `PRECISION` [[EVID: config/default_settings.yaml:7 | precision: fp32]] |
+
+### Performance Policy Management
+
+The system enforces a performance policy to maintain latency objectives and tune retrieval settings.
+
+```yaml
+performance_policy:
+  target_p95_ms: 2000
+  auto_tune_enabled: false
+  max_top_k: 50
+  rerank_disable_threshold: 1500
+```
+
+Equivalent environment variables:
+
+```bash
+export PERF_TARGET_P95_MS=2000
+export PERF_AUTO_TUNE_ENABLED=false
+export PERF_MAX_TOP_K=50
+export PERF_RERANK_DISABLE_THRESHOLD=1500
+```
+
+### Monitoring & Recommendation API
+
+Performance metrics and logged recommendations are available via REST endpoints:
+
+```http
+GET /api/v1/monitoring
+Response 200
+{
+  "p95_ms": 1800,
+  "throughput_qps": 8.2
+}
+
+GET /api/v1/recommendations
+Response 200
+{
+  "items": [
+    {"timestamp": "2025-01-27T12:00:00Z", "recommendation": "Expand top-K"}
+  ]
+}
+```
 
 ### API Usage
 
