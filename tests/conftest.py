@@ -1,53 +1,80 @@
 """
-Pytest configuration file to capture all warnings and save them to a Markdown report.
+Pytest configuration to capture all warnings and always write a Markdown report.
 
-This conftest implements the pytest_warning_recorded hook to record
-every warning emitted during collection and test execution. At the end of the
-test session (pytest_sessionfinish), it writes a human-readable report
-in Markdown format to `warnings_report.md` in the repository root.
+- Collects every warning via `pytest_warning_recorded`.
+- ALWAYS writes `<repo_root>/warnings_report.md` at session end (even if zero warnings),
+  which is helpful for CI artifact collection.
 
-Inspired by: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+Reference: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 """
 
+from __future__ import annotations
+
 import os
+from datetime import datetime
 import pytest
 
-# Store warnings in memory
-all_warnings = []
+# In-memory store of all warnings seen during the run
+_ALL_WARNINGS: list[dict[str, object]] = []
 
 
 def pytest_warning_recorded(warning_message, when, nodeid, location):
-    """Hook to record each warning emitted by pytest."""
-    all_warnings.append({
-        "message": str(warning_message.message),
-        "category": warning_message.category.__name__,
-        "filename": warning_message.filename,
-        "lineno": warning_message.lineno,
-        "when": when,
-        "nodeid": nodeid,
-    })
+    """
+    Called by pytest whenever a warning is captured.
+
+    Parameters (per hookspec):
+      - warning_message: warnings.WarningMessage
+      - when: "config" | "collect" | "runtest"
+      - nodeid: str ("" if not tied to a specific node)
+      - location: Optional[tuple[str, int, str]] (filename, lineno, funcname)
+    """
+    _ALL_WARNINGS.append(
+        {
+            "message": str(warning_message.message),
+            "category": warning_message.category.__name__,
+            "filename": warning_message.filename,
+            "lineno": warning_message.lineno,
+            "when": when,
+            "nodeid": nodeid,
+        }
+    )
 
 
 def pytest_sessionfinish(session, exitstatus):
-    """Write all captured warnings to a markdown file at session end."""
-    if not all_warnings:
-        return
+    """
+    Always write a Markdown report to `<repo_root>/warnings_report.md`,
+    even if there were no warnings (empty report for CI).
+    """
+    report_path = os.path.join(str(session.config.rootdir), "warnings_report.md")
 
-    report_path = os.path.join(session.config.rootdir, "warnings_report.md")
+    # Header + metadata
+    lines: list[str] = []
+    lines.append("# Test Warnings Report")
+    lines.append("")
+    lines.append(f"- Generated: {datetime.utcnow().isoformat(timespec='seconds')}Z")
+    lines.append(f"- Pytest exit status: {exitstatus}")
+    lines.append(f"- Total warnings: {len(_ALL_WARNINGS)}")
+    lines.append("")
 
+    if not _ALL_WARNINGS:
+        lines.append("> No warnings were captured during this test session.")
+        lines.append("")
+    else:
+        for idx, w in enumerate(_ALL_WARNINGS, start=1):
+            lines.append(f"## Warning {idx}")
+            lines.append(f"- **File:** `{w['filename']}`")
+            lines.append(f"- **Line:** {w['lineno']}")
+            lines.append(f"- **When:** `{w['when']}`")
+            lines.append(f"- **NodeID:** `{w['nodeid']}`")
+            lines.append(f"- **Category:** `{w['category']}`")
+            lines.append(f"- **Message:** {w['message']}")
+            lines.append("")
+
+    # Write the report (always)
     with open(report_path, "w", encoding="utf-8") as f:
-        f.write("# Test Warnings Report\n\n")
-        f.write(f"Total warnings: {len(all_warnings)}\n\n")
+        f.write("\n".join(lines))
 
-        for idx, w in enumerate(all_warnings, start=1):
-            f.write(f"## Warning {idx}\n")
-            f.write(f"- **File:** `{w['filename']}`\n")
-            f.write(f"- **Line:** {w['lineno']}\n")
-            f.write(f"- **When:** {w['when']}\n")
-            f.write(f"- **NodeID:** {w['nodeid']}\n")
-            f.write(f"- **Category:** {w['category']}\n")
-            f.write(f"- **Message:** {w['message']}\n\n")
-
-    session.config.pluginmanager.get_plugin("terminalreporter").write(
-        f"\n[pytest] Warnings report saved to {report_path}\n"
-    )
+    # Best-effort console notice (guard if terminalreporter isn't present)
+    tr = session.config.pluginmanager.get_plugin("terminalreporter")
+    if tr:
+        tr.write_line(f"[pytest] Warnings report saved to {report_path}")
