@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 import json
 import datetime
+from pathlib import Path
 from typing import Any, Dict
 
 from src.services.index_management import IndexManagement
@@ -78,7 +79,7 @@ def test_index_health_check_reports_status() -> None:
     assert health["lexical"]["ready"]
 
 
-def test_log_retrieval_records_and_exports(tmp_path) -> None:
+def test_log_retrieval_records_and_exports(tmp_path: Path) -> None:
     mgr = build_manager()
     meta = {
         "retrieval_mode": "hybrid",

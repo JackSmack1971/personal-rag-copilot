@@ -4,11 +4,12 @@ import pytest
 import json
 import datetime
 from unittest.mock import patch
+from pathlib import Path
 
 from src.evaluation.ragas_integration import RagasEvaluator
 
 
-def test_evaluate_records_history(tmp_path) -> None:
+def test_evaluate_records_history(tmp_path: Path) -> None:
     file_path = tmp_path / "history.jsonl"
     evaluator = RagasEvaluator(history_path=file_path)
 

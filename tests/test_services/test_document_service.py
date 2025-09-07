@@ -47,7 +47,7 @@ def create_docx(path: Path) -> None:
     doc.save(path)
 
 
-def test_parse_various_formats(tmp_path, mocks) -> None:
+def test_parse_various_formats(tmp_path: Path, mocks) -> None:
     dense, lexical = mocks
     service = DocumentService(dense, lexical)
 
@@ -75,7 +75,7 @@ def test_parse_various_formats(tmp_path, mocks) -> None:
         assert "Hello DOCX" in service.parse_document(str(docx_file))
 
 
-def test_chunk_and_ingest(tmp_path, mocks) -> None:
+def test_chunk_and_ingest(tmp_path: Path, mocks) -> None:
     dense, lexical = mocks
     service = DocumentService(dense, lexical, chunk_size=3, overlap=1)
     file = tmp_path / "text.txt"
@@ -90,7 +90,7 @@ def test_chunk_and_ingest(tmp_path, mocks) -> None:
     assert result["chunk_count"] == 2
 
 
-def test_ingest_progress_callback(tmp_path, mocks) -> None:
+def test_ingest_progress_callback(tmp_path: Path, mocks) -> None:
     dense, lexical = mocks
     service = DocumentService(dense, lexical, chunk_size=3, overlap=1)
     file = tmp_path / "text.txt"
