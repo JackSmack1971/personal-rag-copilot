@@ -94,3 +94,52 @@ def test_callbacks_invoked(monkeypatch, tmp_path):
     ingest_module._update_document([["doc", "{}"]], "content")
     ingest_module._delete_document([["doc"]])
     assert "update" in calls and "delete" in calls
+
+
+def test_failed_ingest_shows_error(monkeypatch, tmp_path):
+    class FailingService:
+        def parse_document(self, _path):
+            raise ValueError("bad file")
+
+    monkeypatch.setattr(ingest_module, "_document_service", FailingService())
+    file_path = tmp_path / "bad.txt"
+    file_path.write_text("oops")
+
+    table, _, alert = ingest_module._queue_files(
+        [DummyFile(str(file_path))],
+        [],
+        {},
+    )
+    assert table[0][2] == "error"
+    assert "bad file" in table[0][3]
+    assert alert["visible"] is True
+
+
+def test_progress_callback_updates_components(tmp_path):
+    from unittest.mock import MagicMock
+
+    dense = MagicMock()
+    lexical = MagicMock()
+    dense.index_corpus.return_value = (["id"], {"count": 1})
+    lexical.index_documents.return_value = (["id"], {"count": 1})
+
+    service = ingest_module.DocumentService(dense, lexical)
+
+    progress_bar = gr.Slider(value=0, minimum=0, maximum=1)
+    progress_text = gr.Markdown()
+
+    updates: list[tuple[float, str]] = []
+
+    def cb(pct: float, msg: str) -> None:
+        updates.append((pct, msg))
+        progress_bar.value = pct
+        progress_text.value = msg
+
+    file_path = tmp_path / "doc.txt"
+    file_path.write_text("hello world")
+
+    service.ingest([str(file_path)], progress=cb)
+
+    assert updates
+    assert progress_bar.value == 1.0
+    assert progress_text.value == "Ingestion complete"
