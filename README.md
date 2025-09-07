@@ -11,7 +11,7 @@ A hybrid retrieval-augmented generation platform combining dense vector search a
 - **Hybrid Search**: Dense vector retrieval (all-MiniLM-L6-v2) + lexical BM25 with Reciprocal Rank Fusion [[EVID: src/retrieval/hybrid.py:1-47 | HybridRetriever orchestrates both methods]]
 - **Advanced Ranking**: RRF fusion with k=60 default and optional BGE-Reranker-v2-m3 cross-encoder [[EVID: src/ranking/rrf_fusion.py:8-9 | DEFAULT_RRF_K = 60]]
 - **Quality Evaluation**: Ragas faithfulness assessment with automatic scoring [[EVID: src/evaluation/ragas_integration.py:33-65 | RagasEvaluator with faithfulness metric]]
-- **Multipage Interface**: Gradio 5 application with Chat, Ingest, Evaluate, and Settings pages [[EVID: app.py:8-12 | FastAPI with Gradio mounting]]
+- **Multipage Interface**: Gradio 5 application with Chat, Ingest, Evaluate, and Settings pages; the Chat page uses a messages-based `gr.ChatInterface` (`type="messages"`) for structured conversation state [[EVID: app.py:8-12 | FastAPI with Gradio mounting]]
 - **Document Processing**: Multi-format ingestion (PDF, DOCX, TXT, MD, HTML) with intelligent chunking [[EVID: src/services/document_service.py:22-75 | DocumentService with format support]]
 - **Transparency**: Retrieval audit trails with component scores and source attribution [[EVID: src/ranking/rrf_fusion.py:56-61 | metadata with fusion_method and component_scores]]
 - **Performance Policy Management**: Enforces latency targets and can auto-tune retrieval parameters [[EVID: src/config/default_settings.yaml:14-20 | performance_policy defaults]]
@@ -175,12 +175,18 @@ Response 200
 
 GET /api/v1/recommendations
 Response 200
+```
+
+```python
+from datetime import datetime, UTC
+
 {
   "items": [
-    {"timestamp": "2025-01-27T12:00:00Z", "recommendation": "Expand top-K"}
+    {"timestamp": datetime.now(UTC).isoformat(), "recommendation": "Expand top-K"}
   ]
 }
 ```
+All timestamps are generated using `datetime.now(datetime.UTC)` to ensure timezone awareness.
 
 ### API Usage
 

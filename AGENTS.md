@@ -66,6 +66,10 @@ CPU remains the default execution target, though optional OpenVINO/XPU accelerat
 - Use `UPPER_CASE` for constants (e.g., `DEFAULT_RRF_K`, `EMBEDDING_DIMENSION`)
 - Prefix private methods with underscore (e.g., `_compute_rrf_scores`)
 
+**Datetime & Chat Interface Conventions:**
+- All timestamps MUST be timezone-aware using `datetime.now(datetime.UTC)`; naive timestamps are prohibited.
+- Gradio chat components MUST use `ChatInterface` with `type="messages"` to maintain structured conversation history.
+
 **RRF Implementation Standards:**
 - RRF formula MUST use: `score(d) = Σᵢ 1/(k + rankᵢ(d))` with k=60 default
 - All RRF functions MUST accept configurable `k` parameter per query
