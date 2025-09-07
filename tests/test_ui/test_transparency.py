@@ -1,6 +1,8 @@
 import gradio as gr
 from gradio.events import EventData
+from unittest.mock import patch
 
+from src.ranking import rrf_fusion as rrf_module
 from src.ui.components.transparency import (
     CitationBadge,
     DetailsDrawer,
@@ -22,17 +24,26 @@ def test_details_drawer_toggle():
 
 
 def test_transparency_panel_update_renders_metadata():
-    with gr.Blocks():
-        panel = TransparencyPanel().render()
-        panel.bind()
     meta = {
         "citations": [{"label": "Doc1", "source": "dense"}],
         "component_scores": {
             "Doc1": {"dense": {"rank": 1, "score": 0.42, "snippet": "s"}}
         },
         "latency": 12.3,
+        "memory": 45.6,
     }
-    updates = panel.update(meta)
+    with patch.object(
+        rrf_module, "RRFFusion", return_value=([], meta), create=True
+    ) as mock_rrf:
+        _, returned_meta = mock_rrf()
+
+    with gr.Blocks():
+        panel = TransparencyPanel().render()
+        panel.bind()
+    updates = panel.update(returned_meta)
+
     assert 'title="Dense rank 1, score 0.42"' in updates[0]["value"]
     assert updates[2]["value"][0]["rank"] == 1
     assert updates[2]["value"][0]["score"] == 0.42
+    assert "12.30 ms" in updates[1]["value"]
+    assert "45.60 MB" in updates[1]["value"]
