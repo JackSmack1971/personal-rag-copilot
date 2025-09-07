@@ -10,6 +10,7 @@ import pandas as pd
 import plotly.express as px
 
 from src.evaluation.ragas_integration import EvaluationResult, RagasEvaluator
+from src.config.runtime_config import config_manager
 from .navbar import render_navbar
 
 EVALUATOR = RagasEvaluator()
@@ -24,6 +25,9 @@ def _history_to_df(history: List[EvaluationResult]) -> pd.DataFrame:
                 "query",
                 "score",
                 "rationale",
+                "faithfulness",
+                "relevancy",
+                "precision",
             ]
         )
     return pd.DataFrame([h.__dict__ for h in history])
@@ -56,7 +60,16 @@ def _load_dashboard(
     avg_score = df["score"].mean()
     summary = f"**Evaluations:** {len(df)}  |  **Avg Score:** {avg_score:.2f}"
     fig = px.line(df, x="timestamp", y="score", title="Faithfulness Over Time")
-    alerts_df = df[df["score"] < 0.7][["timestamp", "query", "score"]]
+
+    thresholds = config_manager.get(
+        "evaluation_thresholds",
+        {"faithfulness": 0.7, "relevancy": 0.7, "precision": 0.7},
+    )
+    alerts_df = df[
+        (df["faithfulness"] < thresholds.get("faithfulness", 0.7))
+        | (df["relevancy"] < thresholds.get("relevancy", 0.7))
+        | (df["precision"] < thresholds.get("precision", 0.7))
+    ][["timestamp", "query", "faithfulness", "relevancy", "precision"]]
     if alerts_df.empty:
         alerts = "No alerts"
     else:

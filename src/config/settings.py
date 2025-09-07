@@ -20,6 +20,7 @@ DEFAULT_CONFIG_PATH = (
 # Supported options for enumerated configuration fields
 DEVICE_OPTIONS = {"auto", "cpu", "gpu_openvino", "gpu_xpu"}
 PRECISION_OPTIONS = {"fp32", "fp16", "int8"}
+EVAL_METRICS = {"faithfulness", "relevancy", "precision"}
 
 
 def validate_options(
@@ -52,6 +53,33 @@ def validate_options(
     return errors
 
 
+def validate_thresholds(
+    settings: Dict[str, Any], *, require_fields: bool = False
+) -> Dict[str, str]:
+    """Validate evaluation threshold fields in ``settings``."""
+    errors: Dict[str, str] = {}
+    thresholds = settings.get("evaluation_thresholds")
+    if thresholds is None:
+        if require_fields:
+            errors["evaluation_thresholds"] = "missing"
+        return errors
+    if not isinstance(thresholds, dict):
+        errors["evaluation_thresholds"] = "not_mapping"
+        return errors
+    for metric in EVAL_METRICS:
+        value = thresholds.get(metric)
+        if value is None:
+            if require_fields:
+                errors[f"evaluation_thresholds.{metric}"] = "missing"
+            continue
+        if not isinstance(value, (int, float)):
+            errors[f"evaluation_thresholds.{metric}"] = "not_numeric"
+            continue
+        if not 0 <= float(value) <= 1:
+            errors[f"evaluation_thresholds.{metric}"] = "out_of_bounds:0-1"
+    return errors
+
+
 def load_settings(path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """Load YAML configuration from ``path``.
 
@@ -75,7 +103,9 @@ def load_settings(path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
 def load_default_settings() -> Dict[str, Any]:
     """Load repository default configuration."""
     settings, _ = load_settings(str(DEFAULT_CONFIG_PATH))
-    errors = validate_options(settings, require_fields=True)
+    errors = {}
+    errors.update(validate_options(settings, require_fields=True))
+    errors.update(validate_thresholds(settings, require_fields=True))
     if errors:
         raise ValueError(f"invalid default configuration: {errors}")
     return settings
