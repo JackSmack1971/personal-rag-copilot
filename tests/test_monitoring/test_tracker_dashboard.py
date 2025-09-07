@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import time
 import tracemalloc
@@ -7,7 +9,9 @@ import pytest
 from src.monitoring.performance import MetricsDashboard, PerformanceTracker
 
 
-def test_performance_tracker_with_dashboard(monkeypatch, caplog):
+def test_performance_tracker_with_dashboard(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
     dashboard = MetricsDashboard()
     caplog.set_level(logging.WARNING, logger="src.monitoring.performance")
     times = [0, 0.2]

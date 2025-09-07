@@ -1,4 +1,7 @@
 from __future__ import annotations
+
+import pytest
+
 from src.config.runtime_config import ConfigManager
 
 
@@ -54,7 +57,9 @@ def test_hot_reload_and_rollback() -> None:
     assert events[-1] == 2000
 
 
-def test_env_overrides_and_device_detection(monkeypatch) -> None:
+def test_env_overrides_and_device_detection(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     called: dict[str, str] = {}
 
     def fake_detect(pref: str) -> str:

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import time
 import tracemalloc
@@ -11,7 +13,9 @@ from src.monitoring.performance import (
 )
 
 
-def test_performance_tracker_alert(monkeypatch, caplog):
+def test_performance_tracker_alert(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
     caplog.set_level(logging.WARNING, logger="src.monitoring.performance")
     times = [0, 2.0]
     monkeypatch.setattr(time, "perf_counter", lambda: times.pop(0))
@@ -32,7 +36,7 @@ def test_performance_tracker_alert(monkeypatch, caplog):
     assert "performance" in caplog.text
 
 
-def test_model_cache_cleanup():
+def test_model_cache_cleanup() -> None:
     cache = ModelCache(max_items=1)
     cache.get("a", lambda: object())
     assert cache.keys() == ["a"]
@@ -41,8 +45,8 @@ def test_model_cache_cleanup():
 
 
 def _run_latency(
-    monkeypatch,
-    dashboard,
+    monkeypatch: pytest.MonkeyPatch,
+    dashboard: MetricsDashboard,
     latency_ms: float,
     mode: str = "dense",
 ) -> None:
@@ -52,7 +56,7 @@ def _run_latency(
         pass
 
 
-def test_p95_latency_calculation(monkeypatch):
+def test_p95_latency_calculation(monkeypatch: pytest.MonkeyPatch) -> None:
     dashboard = MetricsDashboard(window_size=5)
     monkeypatch.setattr(tracemalloc, "start", lambda: None)
     monkeypatch.setattr(tracemalloc, "stop", lambda: None)
@@ -62,7 +66,9 @@ def test_p95_latency_calculation(monkeypatch):
     assert dashboard.p95_latency("dense") == pytest.approx(480.0)
 
 
-def test_p95_latency_warning(monkeypatch, caplog):
+def test_p95_latency_warning(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
     dashboard = MetricsDashboard(window_size=5)
     monkeypatch.setattr(tracemalloc, "start", lambda: None)
     monkeypatch.setattr(tracemalloc, "stop", lambda: None)
