@@ -1,7 +1,7 @@
 # Test Warnings Report
 
-- Generated: 2025-09-07T17:04:22Z
-- Pytest exit status: 2
+- Generated: 2025-09-07T17:10:05Z
+- Pytest exit status: 0
 - Total warnings: 1
 
 ## Warning 1
