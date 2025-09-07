@@ -110,6 +110,22 @@ def validate_performance_policy(
     return errors
 
 
+def validate_pinecone_indexes(
+    settings: Dict[str, Any], *, require_fields: bool = False
+) -> Dict[str, str]:
+    """Validate presence of Pinecone index settings."""
+    errors: Dict[str, str] = {}
+    for key in ["pinecone_dense_index", "pinecone_sparse_index"]:
+        value = settings.get(key)
+        if value is None or value == "":
+            if require_fields:
+                errors[key] = "missing"
+            continue
+        if not isinstance(value, str):
+            errors[key] = "not_string"
+    return errors
+
+
 def load_settings(path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """Load YAML configuration from ``path``.
 
@@ -137,6 +153,7 @@ def load_default_settings() -> Dict[str, Any]:
     errors.update(validate_options(settings, require_fields=True))
     errors.update(validate_thresholds(settings, require_fields=True))
     errors.update(validate_performance_policy(settings, require_fields=True))
+    errors.update(validate_pinecone_indexes(settings, require_fields=True))
     if errors:
         raise ValueError(f"invalid default configuration: {errors}")
     return settings

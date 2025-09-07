@@ -11,6 +11,7 @@ from .settings import (
     validate_options,
     validate_thresholds,
     validate_performance_policy,
+    validate_pinecone_indexes,
 )
 
 _logger = logging.getLogger(__name__)
@@ -51,6 +52,7 @@ def validate_settings(settings: Dict[str, Any]) -> Tuple[bool, Dict[str, str]]:
     errors.update(validate_options(settings))
     errors.update(validate_thresholds(settings))
     errors.update(validate_performance_policy(settings))
+    errors.update(validate_pinecone_indexes(settings, require_fields=True))
     return not errors, errors
 
 
