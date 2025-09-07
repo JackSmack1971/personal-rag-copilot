@@ -1,23 +1,11 @@
 {
-  "typeCheckingMode": "strict",
-  "pythonVersion": "3.12",
-  "include": [
-    "src",
-    "app.py",
-    "tests"
-  ],
-  "exclude": [
-    ".venv",
-    ".git",
-    "node_modules",
-    "**/__pycache__"
-  ],
-  "executionEnvironments": [
-    {
-      "root": ".",
-      "extraPaths": [
-        "./src"
-      ]
-    }
-  ]
+  "typeCheckingMode": "standard",
+  "strict": ["src/**", "app.py"],
+  "include": ["src", "app.py", "tests"],
+  "exclude": ["**/.venv", "**/__pycache__", "**/node_modules", "**/.git"],
+  "stubPath": "typings",
+  "venvPath": "/workspace/personal-rag-copilot",
+  "venv": ".venv",
+  "reportMissingTypeStubs": "warning",
+  "reportWildcardImportFromLibrary": "warning"
 }
