@@ -9,10 +9,18 @@ def test_evaluate_records_history(tmp_path):
     evaluator = RagasEvaluator(history_path=file_path)
 
     with patch("src.evaluation.ragas_integration.evaluate") as mock_eval:
-        mock_eval.return_value = {"faithfulness": [0.9]}
+        mock_eval.return_value = {
+            "faithfulness": [0.9],
+            "answer_relevancy": [0.8],
+            "context_precision": [0.7],
+        }
         result = evaluator.evaluate("q", "a", ["c"])
 
-    assert 0 <= result.score <= 1
+    assert result.faithfulness == 0.9
+    assert result.relevancy == 0.8
+    assert result.precision == 0.7
     line = file_path.read_text().strip().splitlines()[0]
     data = json.loads(line)
-    assert data["score"] == 0.9
+    assert data["faithfulness"] == 0.9
+    assert data["relevancy"] == 0.8
+    assert data["precision"] == 0.7

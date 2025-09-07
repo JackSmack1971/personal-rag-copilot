@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any, List, Optional
 
 from ragas import evaluate
-from ragas.metrics import faithfulness
+from ragas.metrics import answer_relevancy, context_precision, faithfulness
 
 
 @dataclass
@@ -22,10 +22,13 @@ class EvaluationResult:
     contexts: List[str]
     score: float
     rationale: str
+    faithfulness: float = 0.0
+    relevancy: float = 0.0
+    precision: float = 0.0
 
 
 class RagasEvaluator:
-    """Compute faithfulness scores using Ragas."""
+    """Compute evaluation metrics using Ragas."""
 
     def __init__(
         self, history_path: Path | str = "evaluation_history.jsonl"
@@ -34,7 +37,7 @@ class RagasEvaluator:
         self.history: List[EvaluationResult] = []
 
     def evaluate(self, query: str, answer: str, contexts: List[str]) -> EvaluationResult:
-        """Evaluate an answer's faithfulness against contexts."""
+        """Evaluate an answer against contexts using multiple metrics."""
         data = {
             "question": [query],
             "answer": [answer],
@@ -42,11 +45,17 @@ class RagasEvaluator:
         }
         rationale: str
         try:
-            result: Any = evaluate(data, metrics=[faithfulness])
-            score = float(result["faithfulness"][0])
-            rationale = "Computed using Ragas faithfulness metric."
+            result: Any = evaluate(
+                data,
+                metrics=[faithfulness, answer_relevancy, context_precision],
+            )
+            faith = float(result["faithfulness"][0])
+            relev = float(result["answer_relevancy"][0])
+            prec = float(result["context_precision"][0])
+            score = faith
+            rationale = "Computed using Ragas metrics: faithfulness, answer relevancy, context precision."
         except Exception as exc:  # pragma: no cover - safety net
-            score = 0.0
+            faith = relev = prec = score = 0.0
             rationale = f"Evaluation failed: {exc}"
         record = EvaluationResult(
             timestamp=datetime.utcnow().isoformat(),
@@ -55,11 +64,14 @@ class RagasEvaluator:
             contexts=contexts,
             score=score,
             rationale=rationale,
+            faithfulness=faith,
+            relevancy=relev,
+            precision=prec,
         )
         self.history.append(record)
         self.history_path.parent.mkdir(parents=True, exist_ok=True)
         with self.history_path.open("a", encoding="utf-8") as file:
-            file.write(json.dumps(record.__dict__) + "\n")
+            file.write(json.dumps(asdict(record)) + "\n")
         return record
 
     def load_history(
