@@ -5,12 +5,50 @@ from __future__ import annotations
 from typing import Any, Dict, Tuple
 
 import gradio as gr
+import pandas as pd
 
 from src.config.settings import load_settings, save_settings
 from src.config.validate import validate_settings
 from src.config.runtime_config import config_manager
+from src.ui.chat import QUERY_SERVICE
 
 from .navbar import render_navbar
+
+
+def update_field(
+    field: str, value: Any, settings: Dict[str, Any]
+) -> Tuple[Dict[str, Any], str]:
+    """Update a top-level configuration field."""
+    new_settings = {**settings, field: value}
+    valid, errors = validate_settings(new_settings)
+    if valid:
+        config_manager.set_runtime_overrides({field: value})
+        return config_manager.as_dict(), ""
+    return settings, errors.get(field, "")
+
+
+def update_policy_field(
+    field: str, value: Any, settings: Dict[str, Any]
+) -> Tuple[Dict[str, Any], str]:
+    """Update a performance policy field."""
+    policy = {**settings.get("performance_policy", {})}
+    policy[field] = value
+    new_settings = {**settings, "performance_policy": policy}
+    valid, errors = validate_settings(new_settings)
+    if valid:
+        config_manager.set_runtime_overrides({"performance_policy": policy})
+        return config_manager.as_dict(), ""
+    return settings, errors.get(f"performance_policy.{field}", "")
+
+
+def get_latency_trend(mode: str) -> pd.DataFrame:
+    """Return latency trend data for the given mode."""
+    latencies = list(QUERY_SERVICE.dashboard._latencies.get(mode, []))
+    if not latencies:
+        return pd.DataFrame({"step": [], "latency": []})
+    return pd.DataFrame(
+        {"step": list(range(1, len(latencies) + 1)), "latency": latencies}
+    )
 
 
 def settings_page() -> gr.Blocks:
@@ -21,16 +59,6 @@ def settings_page() -> gr.Blocks:
         render_navbar()
         gr.Markdown("# Settings")
         settings_state = gr.State(defaults)
-
-        def update_field(
-            field: str, value: float, settings: Dict[str, Any]
-        ) -> Tuple[Dict[str, Any], str]:
-            new_settings = {**settings, field: value}
-            valid, errors = validate_settings(new_settings)
-            if valid:
-                config_manager.set_runtime_overrides(new_settings)
-                return config_manager.as_dict(), ""
-            return settings, errors.get(field, "")
 
         def import_settings(file, settings: Dict[str, Any]):
             if file is None:
@@ -94,7 +122,100 @@ def settings_page() -> gr.Blocks:
                 gr.Markdown("Model settings coming soon.")
 
             with gr.Tab("Performance"):
-                gr.Markdown("Performance settings coming soon.")
+                policy = defaults.get("performance_policy", {})
+                metrics_json = gr.JSON(
+                    value=QUERY_SERVICE.dashboard.p95_metrics(),
+                    label="p95 Metrics",
+                    elem_id="p95-metrics",
+                )
+                policy_json = gr.JSON(
+                    value=policy,
+                    label="Active Policy",
+                    elem_id="policy-values",
+                )
+                mode_selector = gr.Dropdown(
+                    label="Mode",
+                    choices=list(QUERY_SERVICE.dashboard._latencies.keys()) or ["hybrid"],
+                    value=(list(QUERY_SERVICE.dashboard._latencies.keys()) or ["hybrid"])[
+                        0
+                    ],
+                )
+                trend_plot = gr.LinePlot(
+                    value=get_latency_trend(mode_selector.value),
+                    x="step",
+                    y="latency",
+                    label="Latency Trend",
+                    elem_id="latency-trend",
+                )
+                refresh_btn = gr.Button("Refresh Metrics")
+                target_p95 = gr.Slider(
+                    0,
+                    5000,
+                    value=policy.get("target_p95_ms", 2000),
+                    label="Target p95 (ms)",
+                )
+                max_top_k = gr.Slider(
+                    1,
+                    100,
+                    value=policy.get("max_top_k", 50),
+                    label="Max Top K",
+                )
+                rerank_disable = gr.Slider(
+                    0,
+                    5000,
+                    value=policy.get("rerank_disable_threshold", 1500),
+                    label="Rerank Disable Threshold",
+                )
+                auto_tune = gr.Checkbox(
+                    value=policy.get("auto_tune_enabled", False),
+                    label="Auto Tune Enabled",
+                )
+                enable_rerank = gr.Checkbox(
+                    value=defaults.get("enable_rerank", False),
+                    label="Enable Reranker",
+                )
+                policy_error = gr.Markdown()
+                rerank_error = gr.Markdown()
+
+                target_p95.change(
+                    lambda v, s: update_policy_field("target_p95_ms", v, s),
+                    inputs=[target_p95, settings_state],
+                    outputs=[settings_state, policy_error],
+                )
+                max_top_k.change(
+                    lambda v, s: update_policy_field("max_top_k", v, s),
+                    inputs=[max_top_k, settings_state],
+                    outputs=[settings_state, policy_error],
+                )
+                rerank_disable.change(
+                    lambda v, s: update_policy_field("rerank_disable_threshold", v, s),
+                    inputs=[rerank_disable, settings_state],
+                    outputs=[settings_state, policy_error],
+                )
+                auto_tune.change(
+                    lambda v, s: update_policy_field("auto_tune_enabled", v, s),
+                    inputs=[auto_tune, settings_state],
+                    outputs=[settings_state, policy_error],
+                )
+                enable_rerank.change(
+                    lambda v, s: update_field("enable_rerank", v, s),
+                    inputs=[enable_rerank, settings_state],
+                    outputs=[settings_state, rerank_error],
+                )
+                mode_selector.change(
+                    get_latency_trend,
+                    inputs=mode_selector,
+                    outputs=trend_plot,
+                )
+                refresh_btn.click(
+                    lambda m: (
+                        QUERY_SERVICE.dashboard.p95_metrics(),
+                        config_manager.get("performance_policy", {}),
+                        get_latency_trend(m),
+                    ),
+                    inputs=mode_selector,
+                    outputs=[metrics_json, policy_json, trend_plot],
+                )
 
             with gr.Tab("Advanced"):
                 status = gr.Markdown()
