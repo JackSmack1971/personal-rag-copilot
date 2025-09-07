@@ -26,6 +26,11 @@ def test_recommend_cross_metric():
     assert "Enable reranking" in recs
 
 
+def test_recommend_low_faithfulness():
+    recs = generate_recommendations({"faithfulness": 0.6, "precision": 0.6})
+    assert "Adjust weights" in recs
+
+
 def test_logger_records():
     logger = RecommendationLogger()
     before = {"relevancy": 0.5}
@@ -37,6 +42,16 @@ def test_logger_records():
     assert record.recommendation == "Expand top-K"
     assert record.before == before
     assert record.after == after
+
+
+def test_logger_records_faithfulness_improvement():
+    logger = RecommendationLogger()
+    before = {"faithfulness": 0.6, "precision": 0.6}
+    after = {"faithfulness": 0.8, "precision": 0.6}
+    logger.log("Adjust weights", before, after)
+    record = logger.get_records()[0]
+    assert record.recommendation == "Adjust weights"
+    assert record.after["faithfulness"] > record.before["faithfulness"]
 
 
 def test_load_dashboard_recommendations(monkeypatch):
