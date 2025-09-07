@@ -166,7 +166,7 @@ dmypy.json
 .pytype/
 
 # Pyright type checker
-typings/
+# typings/ contains third-party type stubs and should be committed
 .pyright/
 
 # Cython debug symbols
