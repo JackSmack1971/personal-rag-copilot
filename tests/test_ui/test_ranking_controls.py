@@ -1,8 +1,11 @@
+from __future__ import annotations
+
+import pytest
 import gradio as gr
 from src.ui.components.ranking_controls import RankingControls
 
 
-def test_ranking_controls_update_state():
+def test_ranking_controls_update_state() -> None:
     with gr.Blocks():
         controls = RankingControls().render()
         controls.bind()
@@ -13,7 +16,7 @@ def test_ranking_controls_update_state():
     assert state["enable_rerank"] is True
 
 
-def test_ranking_controls_validation_clamps_values():
+def test_ranking_controls_validation_clamps_values() -> None:
     with gr.Blocks():
         controls = RankingControls().render()
     state = controls.update_state(0, -1.0, 3.0, False)
@@ -23,7 +26,7 @@ def test_ranking_controls_validation_clamps_values():
     assert state["enable_rerank"] is False
 
 
-def test_ranking_controls_initial_state_defaults():
+def test_ranking_controls_initial_state_defaults() -> None:
     rc = RankingControls()
     assert rc.state.value["rrf_k"] == 60
     assert rc.state.value["enable_rerank"] is False

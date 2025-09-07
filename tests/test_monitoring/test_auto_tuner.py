@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pytest
 from src.config.runtime_config import ConfigManager
 from src.monitoring.auto_tuner import AutoTuner
 from src.monitoring.performance import MetricsDashboard

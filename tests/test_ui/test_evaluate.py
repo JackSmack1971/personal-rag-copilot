@@ -1,7 +1,9 @@
 """Tests for the evaluation dashboard UI."""
 
-import datetime
+from __future__ import annotations
 
+import pytest
+import datetime
 import gradio as gr
 
 from src.evaluation.ragas_integration import EvaluationResult
@@ -9,7 +11,7 @@ from src.ui.evaluate import EVALUATOR, _load_dashboard, evaluate_page
 from src.config.runtime_config import config_manager
 
 
-def test_evaluate_page_has_components():
+def test_evaluate_page_has_components() -> None:
     page = evaluate_page()
     blocks = list(page.blocks.values())
     assert any(isinstance(b, gr.Plot) for b in blocks)
@@ -25,7 +27,7 @@ def test_evaluate_page_has_components():
     )
 
 
-def test_load_dashboard_filters_and_exports(monkeypatch):
+def test_load_dashboard_filters_and_exports(monkeypatch: pytest.MonkeyPatch) -> None:
     now = datetime.datetime.now(datetime.UTC)
     records = [
         EvaluationResult(
@@ -83,7 +85,7 @@ def test_load_dashboard_filters_and_exports(monkeypatch):
     assert "Expand top-K" in recs
 
 
-def test_alerts_use_thresholds(monkeypatch):
+def test_alerts_use_thresholds(monkeypatch: pytest.MonkeyPatch) -> None:
     now = datetime.datetime.now(datetime.UTC)
     records = [
         EvaluationResult(

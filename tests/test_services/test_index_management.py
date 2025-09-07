@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 import json
 import datetime
 from typing import Any, Dict
@@ -43,7 +46,7 @@ def build_manager():
     return IndexManagement(DummyDense(), DummyLexical())
 
 
-def test_update_and_delete_record_audit():
+def test_update_and_delete_record_audit() -> None:
     mgr = build_manager()
     mgr.update_document("1", "doc", {})
     mgr.delete_document("1")
@@ -57,7 +60,7 @@ def test_update_and_delete_record_audit():
     assert timestamps == sorted(timestamps)
 
 
-def test_bulk_operations_and_error():
+def test_bulk_operations_and_error() -> None:
     mgr = build_manager()
     ops = [
         {"action": "update", "doc_id": "1", "content": "a"},
@@ -68,14 +71,14 @@ def test_bulk_operations_and_error():
     assert result["results"][-1]["result"]["status"] == "error"
 
 
-def test_index_health_check_reports_status():
+def test_index_health_check_reports_status() -> None:
     mgr = build_manager()
     health = mgr.index_health_check()
     assert health["dense"]["valid"]
     assert health["lexical"]["ready"]
 
 
-def test_log_retrieval_records_and_exports(tmp_path):
+def test_log_retrieval_records_and_exports(tmp_path) -> None:
     mgr = build_manager()
     meta = {
         "retrieval_mode": "hybrid",

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 import json
 import datetime
 from unittest.mock import patch
@@ -5,7 +8,7 @@ from unittest.mock import patch
 from src.evaluation.ragas_integration import RagasEvaluator
 
 
-def test_evaluate_records_history(tmp_path):
+def test_evaluate_records_history(tmp_path) -> None:
     file_path = tmp_path / "history.jsonl"
     evaluator = RagasEvaluator(history_path=file_path)
 

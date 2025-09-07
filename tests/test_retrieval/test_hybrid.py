@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 from src.retrieval.hybrid import HybridRetriever
 
 
@@ -11,7 +14,7 @@ class StubLexical:
         return [("b", 1.0), ("c", 0.5)], {"retrieved": 2}
 
 
-def test_hybrid_rrf_merges_and_tags_sources():
+def test_hybrid_rrf_merges_and_tags_sources() -> None:
     hybrid = HybridRetriever(StubDense(), StubLexical())
     results, meta = hybrid.query("test")
     assert results[0]["id"] == "b"
@@ -21,7 +24,7 @@ def test_hybrid_rrf_merges_and_tags_sources():
     assert "component_scores" in meta
 
 
-def test_mode_selection_dense_and_lexical():
+def test_mode_selection_dense_and_lexical() -> None:
     hybrid = HybridRetriever(StubDense(), StubLexical())
     dense_only, _ = hybrid.query("test", mode="dense")
     assert all(r["source"] == "dense" for r in dense_only)
@@ -37,14 +40,14 @@ def _build_hybrid_with_lexical_corpus():
     return HybridRetriever(StubDense(), lex)
 
 
-def test_common_language_query_keeps_default_weights():
+def test_common_language_query_keeps_default_weights() -> None:
     hybrid = _build_hybrid_with_lexical_corpus()
     _, meta = hybrid.query("alpha beta")
     assert meta["rrf_weights"]["dense"] == 1.0
     assert meta["rrf_weights"]["lexical"] == 1.0
 
 
-def test_rare_token_query_shifts_toward_lexical():
+def test_rare_token_query_shifts_toward_lexical() -> None:
     hybrid = _build_hybrid_with_lexical_corpus()
     _, meta = hybrid.query("AB-123 malfunction")
     assert meta["rrf_weights"]["lexical"] > meta["rrf_weights"]["dense"]

@@ -1,10 +1,13 @@
+from __future__ import annotations
+
+import pytest
 from pathlib import Path
 
 from src.integrations import huggingface_models
 from src.integrations.huggingface_models import HuggingFaceModelManager
 
 
-def test_download_success_tracks_revision(tmp_path, monkeypatch):
+def test_download_success_tracks_revision(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     def fake_download(
         repo_id: str,
         revision: str,
@@ -24,7 +27,7 @@ def test_download_success_tracks_revision(tmp_path, monkeypatch):
     assert version_file.read_text() == "123"
 
 
-def test_download_failure_uses_cached_revision(tmp_path, monkeypatch):
+def test_download_failure_uses_cached_revision(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     cached_dir = tmp_path / "test__model"
     cached_dir.mkdir()
     (cached_dir / "revision.txt").write_text("456")
@@ -48,7 +51,7 @@ def test_download_failure_uses_cached_revision(tmp_path, monkeypatch):
     assert Path(path).exists()
 
 
-def test_download_failure_uses_fallback_revision(tmp_path, monkeypatch):
+def test_download_failure_uses_fallback_revision(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     def fake_download(
         repo_id: str,
         revision: str,

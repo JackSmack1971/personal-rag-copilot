@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 import types
 from typing import Any, Dict, List
 
@@ -33,7 +36,7 @@ class FakeIndex:
         return {"matches": []}
 
 
-def test_create_index_retries(monkeypatch):
+def test_create_index_retries(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: Dict[str, int] = {"create": 0, "init": 0}
 
     def fake_init(api_key=None, environment=None):
@@ -65,7 +68,7 @@ def test_create_index_retries(monkeypatch):
     assert calls["init"] == 1
 
 
-def test_delete_index_retries(monkeypatch):
+def test_delete_index_retries(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: Dict[str, int] = {"delete": 0}
 
     def fake_delete_index(name):
@@ -88,7 +91,7 @@ def test_delete_index_retries(monkeypatch):
     assert calls["delete"] == 2
 
 
-def test_upsert_batches_and_retries(monkeypatch):
+def test_upsert_batches_and_retries(monkeypatch: pytest.MonkeyPatch) -> None:
     index = FakeIndex(fail_upsert_times=1)
 
     fake_pinecone = types.SimpleNamespace(
@@ -120,7 +123,7 @@ def test_upsert_batches_and_retries(monkeypatch):
     assert sleep_calls == [1.0, 0.5, 0.5]
 
 
-def test_query_retries(monkeypatch):
+def test_query_retries(monkeypatch: pytest.MonkeyPatch) -> None:
     index = FakeIndex(fail_query_times=1)
 
     fake_pinecone = types.SimpleNamespace(

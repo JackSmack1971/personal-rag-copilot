@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import time
 
 import pytest
@@ -8,7 +10,7 @@ def _build_docs(ids):
     return [{"id": i, "text": f"text {i}"} for i in ids]
 
 
-def test_reranker_orders_by_score(monkeypatch):
+def test_reranker_orders_by_score(monkeypatch: pytest.MonkeyPatch) -> None:
     reranker = CrossEncoderReranker(load_model=False)
 
     def fake_scores(query, texts):
@@ -21,7 +23,7 @@ def test_reranker_orders_by_score(monkeypatch):
     assert meta["reranked"]
 
 
-def test_reranker_timeout_fallback(monkeypatch):
+def test_reranker_timeout_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
     reranker = CrossEncoderReranker(load_model=False)
 
     def slow_scores(query, texts):
@@ -42,7 +44,7 @@ def test_reranker_timeout_fallback(monkeypatch):
 
 
 @pytest.mark.skip(reason="benchmark fixture not available")
-def test_reranker_benchmark(benchmark):
+def test_reranker_benchmark(benchmark) -> None:
     reranker = CrossEncoderReranker(load_model=False)
 
     def zero_scores(q, texts):
@@ -57,11 +59,11 @@ def test_reranker_benchmark(benchmark):
     benchmark(run)
 
 
-def test_reranker_falls_back_to_cpu_when_xpu_missing():
+def test_reranker_falls_back_to_cpu_when_xpu_missing() -> None:
     reranker = CrossEncoderReranker(load_model=False, device="gpu_xpu")
     assert reranker.device == "cpu"
 
 
-def test_reranker_falls_back_to_cpu_when_openvino_missing():
+def test_reranker_falls_back_to_cpu_when_openvino_missing() -> None:
     reranker = CrossEncoderReranker(load_model=False, device="gpu_openvino")
     assert reranker.device == "cpu"

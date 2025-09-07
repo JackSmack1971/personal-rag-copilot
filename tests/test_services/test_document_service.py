@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import importlib.util
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -45,7 +47,7 @@ def create_docx(path: Path) -> None:
     doc.save(path)
 
 
-def test_parse_various_formats(tmp_path, mocks):
+def test_parse_various_formats(tmp_path, mocks) -> None:
     dense, lexical = mocks
     service = DocumentService(dense, lexical)
 
@@ -73,7 +75,7 @@ def test_parse_various_formats(tmp_path, mocks):
         assert "Hello DOCX" in service.parse_document(str(docx_file))
 
 
-def test_chunk_and_ingest(tmp_path, mocks):
+def test_chunk_and_ingest(tmp_path, mocks) -> None:
     dense, lexical = mocks
     service = DocumentService(dense, lexical, chunk_size=3, overlap=1)
     file = tmp_path / "text.txt"
@@ -88,7 +90,7 @@ def test_chunk_and_ingest(tmp_path, mocks):
     assert result["chunk_count"] == 2
 
 
-def test_ingest_progress_callback(tmp_path, mocks):
+def test_ingest_progress_callback(tmp_path, mocks) -> None:
     dense, lexical = mocks
     service = DocumentService(dense, lexical, chunk_size=3, overlap=1)
     file = tmp_path / "text.txt"
@@ -104,7 +106,7 @@ def test_ingest_progress_callback(tmp_path, mocks):
     assert any("Indexing lexical" in s for s in steps)
 
 
-def test_update_delete_and_audit(mocks):
+def test_update_delete_and_audit(mocks) -> None:
     dense, lexical = mocks
     service = DocumentService(dense, lexical)
 
@@ -120,7 +122,7 @@ def test_update_delete_and_audit(mocks):
     assert [entry["action"] for entry in audit] == ["update", "delete"]
 
 
-def test_bulk_operations_audit(mocks):
+def test_bulk_operations_audit(mocks) -> None:
     dense, lexical = mocks
     service = DocumentService(dense, lexical)
 

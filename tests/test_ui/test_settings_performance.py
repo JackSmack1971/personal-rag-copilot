@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 import gradio as gr
 from gradio.components import JSON
 
@@ -10,7 +13,7 @@ from src.ui.chat import QUERY_SERVICE
 from src.config.runtime_config import config_manager
 
 
-def test_performance_tab_displays_metrics():
+def test_performance_tab_displays_metrics() -> None:
     dashboard = QUERY_SERVICE.dashboard
     dashboard.record_latency("hybrid", 100)
     dashboard.record_latency("hybrid", 200)
@@ -20,7 +23,7 @@ def test_performance_tab_displays_metrics():
     assert "hybrid" in metrics
 
 
-def test_manual_overrides_update_config_manager():
+def test_manual_overrides_update_config_manager() -> None:
     original = config_manager.as_dict()
     settings = original
     settings, _ = update_policy_field("target_p95_ms", 2500, settings)
