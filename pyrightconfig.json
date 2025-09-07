@@ -1,0 +1,8 @@
+{
+  "typeCheckingMode": "strict",
+  "pythonVersion": "3.12",
+  "venvPath": ".",
+  "venv": ".venv",
+  "include": ["src", "app.py", "tests"],
+  "exclude": [".venv", ".git", "node_modules", "**/__pycache__"]
+}
