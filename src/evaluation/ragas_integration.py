@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import datetime
 import json
 from dataclasses import dataclass, asdict
-from datetime import datetime
 from pathlib import Path
 from typing import Any, List, Optional
 
@@ -36,7 +36,12 @@ class RagasEvaluator:
         self.history_path = Path(history_path)
         self.history: List[EvaluationResult] = []
 
-    def evaluate(self, query: str, answer: str, contexts: List[str]) -> EvaluationResult:
+    def evaluate(
+        self,
+        query: str,
+        answer: str,
+        contexts: List[str],
+    ) -> EvaluationResult:
         """Evaluate an answer against contexts using multiple metrics."""
         data = {
             "question": [query],
@@ -53,12 +58,17 @@ class RagasEvaluator:
             relev = float(result["answer_relevancy"][0])
             prec = float(result["context_precision"][0])
             score = faith
-            rationale = "Computed using Ragas metrics: faithfulness, answer relevancy, context precision."
+            rationale = (
+                "Computed using Ragas metrics: "
+                "faithfulness, answer relevancy, context precision."
+            )
         except Exception as exc:  # pragma: no cover - safety net
             faith = relev = prec = score = 0.0
             rationale = f"Evaluation failed: {exc}"
         record = EvaluationResult(
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=datetime.datetime.now(datetime.UTC)
+            .isoformat()
+            .replace("+00:00", "Z"),
             query=query,
             answer=answer,
             contexts=contexts,
@@ -76,8 +86,8 @@ class RagasEvaluator:
 
     def load_history(
         self,
-        start: Optional[datetime] = None,
-        end: Optional[datetime] = None,
+        start: Optional[datetime.datetime] = None,
+        end: Optional[datetime.datetime] = None,
     ) -> List[EvaluationResult]:
         """Load evaluation history filtered by optional time range."""
         if not self.history_path.exists():
@@ -87,7 +97,9 @@ class RagasEvaluator:
             for line in file:
                 data = json.loads(line)
                 record = EvaluationResult(**data)
-                ts = datetime.fromisoformat(record.timestamp)
+                ts = datetime.datetime.fromisoformat(
+                    record.timestamp.replace("Z", "+00:00")
+                )
                 if start and ts < start:
                     continue
                 if end and ts > end:

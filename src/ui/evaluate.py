@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import List, Tuple, Dict, Any
+import datetime
+from typing import Any, Dict, List, Tuple
 
 import gradio as gr
 import pandas as pd
@@ -67,8 +67,14 @@ def _load_dashboard(
     Dict[str, Any],
 ]:
     """Prepare dashboard data for the given time range."""
-    start_dt = datetime.fromisoformat(start) if start else None
-    end_dt = datetime.fromisoformat(end) if end else None
+    start_dt = (
+        datetime.datetime.fromisoformat(start).replace(tzinfo=datetime.UTC)
+        if start
+        else None
+    )
+    end_dt = (
+        datetime.datetime.fromisoformat(end).replace(tzinfo=datetime.UTC) if end else None
+    )
     history = EVALUATOR.load_history(start_dt, end_dt)
     df = _history_to_df(history)
     if df.empty:
@@ -127,7 +133,9 @@ def _load_dashboard(
         }
     )
     recommendations = (
-        "\n".join(f"- {rec}" for rec in rec_list) if rec_list else "No recommendations"
+        "\n".join(f"- {rec}" for rec in rec_list)
+        if rec_list
+        else "No recommendations"  # noqa: E501
     )
     csv_bytes = df.to_csv(index=False).encode("utf-8")
     json_bytes = df.to_json(orient="records").encode("utf-8")

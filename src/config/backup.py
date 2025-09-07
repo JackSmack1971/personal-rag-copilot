@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import shutil
-from datetime import datetime
+import datetime
 from pathlib import Path
 from typing import Tuple
 
@@ -13,7 +13,7 @@ def backup_config(path: str, backup_dir: str) -> Tuple[Path, dict]:
     source = Path(path)
     dest_dir = Path(backup_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.datetime.now(datetime.UTC).strftime("%Y%m%d%H%M%S")
     backup_path = dest_dir / f"{source.stem}_{timestamp}{source.suffix}"
     shutil.copy2(source, backup_path)
     return backup_path, {"source": str(source)}

@@ -1,6 +1,6 @@
+import datetime
 import json
 import logging
-from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -27,7 +27,9 @@ class IndexManagement:
         entry = {
             "action": "update",
             "doc_id": doc_id,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.datetime.now(datetime.UTC)
+            .isoformat()
+            .replace("+00:00", "Z"),
         }
         self._audit_log.append(entry)
         return {"dense": dense_result, "lexical": lexical_result}
@@ -39,7 +41,9 @@ class IndexManagement:
         entry = {
             "action": "delete",
             "doc_id": doc_id,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.datetime.now(datetime.UTC)
+            .isoformat()
+            .replace("+00:00", "Z"),
         }
         self._audit_log.append(entry)
         return {"dense": dense_result, "lexical": lexical_result}
@@ -57,7 +61,9 @@ class IndexManagement:
             "rrf_weights": meta.get("rrf_weights"),
             "component_scores": meta.get("component_scores"),
             "reranked": meta.get("reranked", False),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.datetime.now(datetime.UTC)
+            .isoformat()
+            .replace("+00:00", "Z"),
         }
         self._audit_log.append(entry)
         return entry

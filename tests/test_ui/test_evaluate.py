@@ -1,6 +1,6 @@
 """Tests for the evaluation dashboard UI."""
 
-from datetime import datetime, timedelta
+import datetime
 
 import gradio as gr
 
@@ -16,18 +16,22 @@ def test_evaluate_page_has_components():
     assert any(isinstance(b, gr.DataFrame) for b in blocks)
     assert any(isinstance(b, gr.DownloadButton) for b in blocks)
     assert any(
-        isinstance(b, gr.Markdown) and b.label == "Metric Correlations" for b in blocks
+        isinstance(b, gr.Markdown) and b.label == "Metric Correlations"
+        for b in blocks  # noqa: E501
     )
     assert any(
-        isinstance(b, gr.Markdown) and b.label == "Recommendations" for b in blocks
+        isinstance(b, gr.Markdown) and b.label == "Recommendations"
+        for b in blocks  # noqa: E501
     )
 
 
 def test_load_dashboard_filters_and_exports(monkeypatch):
-    now = datetime.utcnow()
+    now = datetime.datetime.now(datetime.UTC)
     records = [
         EvaluationResult(
-            timestamp=(now - timedelta(days=1)).isoformat(),
+            timestamp=(now - datetime.timedelta(days=1))
+            .isoformat()
+            .replace("+00:00", "Z"),
             query="q1",
             answer="a1",
             contexts=[],
@@ -38,7 +42,7 @@ def test_load_dashboard_filters_and_exports(monkeypatch):
             precision=0.9,
         ),
         EvaluationResult(
-            timestamp=now.isoformat(),
+            timestamp=now.isoformat().replace("+00:00", "Z"),
             query="q2",
             answer="a2",
             contexts=[],
@@ -58,10 +62,17 @@ def test_load_dashboard_filters_and_exports(monkeypatch):
         return records
 
     monkeypatch.setattr(EVALUATOR, "load_history", fake_load)
-    summary, fig, df, corr, alerts, recs, csv_update, json_update = _load_dashboard(
-        "2020-01-01", None
-    )
-    assert isinstance(captured["start"], datetime)
+    (
+        summary,
+        fig,
+        df,
+        corr,
+        alerts,
+        recs,
+        csv_update,
+        json_update,
+    ) = _load_dashboard("2020-01-01", None)
+    assert isinstance(captured["start"], datetime.datetime)
     assert "Evaluations" in summary
     assert len(df) == 2
     assert len(fig.data) == 3
@@ -73,10 +84,10 @@ def test_load_dashboard_filters_and_exports(monkeypatch):
 
 
 def test_alerts_use_thresholds(monkeypatch):
-    now = datetime.utcnow()
+    now = datetime.datetime.now(datetime.UTC)
     records = [
         EvaluationResult(
-            timestamp=now.isoformat(),
+            timestamp=now.isoformat().replace("+00:00", "Z"),
             query="q1",
             answer="a1",
             contexts=[],
@@ -87,7 +98,7 @@ def test_alerts_use_thresholds(monkeypatch):
             precision=0.9,
         ),
         EvaluationResult(
-            timestamp=now.isoformat(),
+            timestamp=now.isoformat().replace("+00:00", "Z"),
             query="q2",
             answer="a2",
             contexts=[],
@@ -114,6 +125,12 @@ def test_alerts_use_thresholds(monkeypatch):
     _, _, _, _, alerts, _, _, _ = _load_dashboard(None, None)
     assert "q1" in alerts and "q2" in alerts
 
-    thresholds.update({"faithfulness": 0.5, "relevancy": 0.5, "precision": 0.5})
+    thresholds.update(
+        {
+            "faithfulness": 0.5,
+            "relevancy": 0.5,
+            "precision": 0.5,
+        }
+    )
     _, _, _, _, alerts, _, _, _ = _load_dashboard(None, None)
     assert alerts == "No alerts"

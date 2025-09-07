@@ -1,18 +1,17 @@
-"""
-Pytest configuration to capture all warnings and always write a Markdown report.
+"""Pytest configuration to capture warnings and write a Markdown report.
 
 - Collects every warning via `pytest_warning_recorded`.
-- ALWAYS writes `<repo_root>/warnings_report.md` at session end (even if zero warnings),
-  which is helpful for CI artifact collection.
+- ALWAYS writes `<repo_root>/warnings_report.md` at session end
+  (even if zero warnings), which is helpful for CI artifact collection.
 
 Reference: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 """
 
 from __future__ import annotations
 
+import datetime
 import os
-from datetime import datetime
-import pytest
+import pytest  # noqa: F401
 
 # In-memory store of all warnings seen during the run
 _ALL_WARNINGS: list[dict[str, object]] = []
@@ -45,13 +44,21 @@ def pytest_sessionfinish(session, exitstatus):
     Always write a Markdown report to `<repo_root>/warnings_report.md`,
     even if there were no warnings (empty report for CI).
     """
-    report_path = os.path.join(str(session.config.rootdir), "warnings_report.md")
+    report_path = os.path.join(
+        str(session.config.rootdir),
+        "warnings_report.md",
+    )
 
     # Header + metadata
     lines: list[str] = []
     lines.append("# Test Warnings Report")
     lines.append("")
-    lines.append(f"- Generated: {datetime.utcnow().isoformat(timespec='seconds')}Z")
+    generated = (
+        datetime.datetime.now(datetime.UTC)
+        .isoformat(timespec="seconds")
+        .replace("+00:00", "Z")
+    )
+    lines.append(f"- Generated: {generated}")
     lines.append(f"- Pytest exit status: {exitstatus}")
     lines.append(f"- Total warnings: {len(_ALL_WARNINGS)}")
     lines.append("")
