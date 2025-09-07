@@ -53,7 +53,10 @@ class PineconeClient:
                 return func(*args, **kwargs)
             except Exception as exc:  # pragma: no cover
                 if attempt == MAX_RETRIES - 1:
-                    self._logger.error("Operation failed after %s attempts", MAX_RETRIES)
+                    self._logger.error(
+                        "Operation failed after %s attempts",
+                        MAX_RETRIES,
+                    )
                     raise
                 self._logger.warning(
                     "Operation failed (%s/%s): %s",
@@ -155,6 +158,22 @@ class PineconeClient:
         return self._with_retries(
             index.query,
             vector=embedding,
+            top_k=top_k,
+            include_metadata=True,
+        )
+
+    def query_sparse(
+        self,
+        index_name: str,
+        sparse_vector: Dict[str, List[float]],
+        top_k: int = 5,
+    ) -> Any:
+        """Query a sparse Pinecone index using token frequencies."""
+
+        index = self.get_index(index_name)
+        return self._with_retries(
+            index.query,
+            sparse_vector=sparse_vector,
             top_k=top_k,
             include_metadata=True,
         )
