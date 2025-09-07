@@ -19,19 +19,38 @@ EVALUATOR = RagasEvaluator()
 
 def _history_to_df(history: List[EvaluationResult]) -> pd.DataFrame:
     """Convert history records to a DataFrame."""
+    columns = [
+        "timestamp",
+        "query",
+        "rationale",
+        "faithfulness",
+        "relevancy",
+        "precision",
+    ]
     if not history:
-        return pd.DataFrame(
-            columns=[
-                "timestamp",
-                "query",
-                "score",
-                "rationale",
-                "faithfulness",
-                "relevancy",
-                "precision",
-            ]
+        return pd.DataFrame(columns=columns + ["score"])
+    records = []
+    for h in history:
+        record = {
+            "timestamp": h.timestamp,
+            "query": h.query,
+            "rationale": getattr(h, "rationale", ""),
+            "faithfulness": getattr(h, "faithfulness", None),
+            "relevancy": getattr(h, "relevancy", None),
+            "precision": getattr(h, "precision", None),
+        }
+        metrics = [
+            record.get("faithfulness"),
+            record.get("relevancy"),
+            record.get("precision"),
+        ]
+        record["score"] = (
+            sum(m for m in metrics if m is not None) / len(metrics)
+            if any(m is not None for m in metrics)
+            else None
         )
-    return pd.DataFrame([h.__dict__ for h in history])
+        records.append(record)
+    return pd.DataFrame(records, columns=columns + ["score"])
 
 
 def _load_dashboard(
@@ -41,6 +60,7 @@ def _load_dashboard(
     str,
     Any,
     pd.DataFrame,
+    str,
     str,
     str,
     Dict[str, Any],
@@ -54,14 +74,34 @@ def _load_dashboard(
     if df.empty:
         fig = px.line(title="No data")
         summary = "No evaluations available"
+        correlations = "No data"
         alerts = "No alerts"
         empty = gr.update(visible=False)
-        return summary, fig, df, alerts, "No recommendations", empty, empty
+        return (
+            summary,
+            fig,
+            df,
+            correlations,
+            alerts,
+            "No recommendations",
+            empty,
+            empty,
+        )
 
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     avg_score = df["score"].mean()
     summary = f"**Evaluations:** {len(df)}  |  **Avg Score:** {avg_score:.2f}"
-    fig = px.line(df, x="timestamp", y="score", title="Faithfulness Over Time")
+    fig = px.line(
+        df,
+        x="timestamp",
+        y=["faithfulness", "relevancy", "precision"],
+        title="Evaluation Metrics Over Time",
+    )
+    correlations = (
+        df[["faithfulness", "relevancy", "precision"]]
+        .corr()
+        .to_string(float_format="{:.2f}".format)
+    )
 
     thresholds = config_manager.get(
         "evaluation_thresholds",
@@ -87,9 +127,7 @@ def _load_dashboard(
         }
     )
     recommendations = (
-        "\n".join(f"- {rec}" for rec in rec_list)
-        if rec_list
-        else "No recommendations"
+        "\n".join(f"- {rec}" for rec in rec_list) if rec_list else "No recommendations"
     )
     csv_bytes = df.to_csv(index=False).encode("utf-8")
     json_bytes = df.to_json(orient="records").encode("utf-8")
@@ -98,7 +136,17 @@ def _load_dashboard(
     return (
         summary,
         fig,
-        df[["timestamp", "query", "score", "rationale"]],
+        df[
+            [
+                "timestamp",
+                "query",
+                "faithfulness",
+                "relevancy",
+                "precision",
+                "rationale",
+            ]
+        ],
+        correlations,
         alerts,
         recommendations,
         csv_update,
@@ -125,6 +173,7 @@ def evaluate_page() -> gr.Blocks:
         summary = gr.Markdown()
         chart = gr.Plot()
         analysis = gr.DataFrame(label="Query Analysis")
+        correlations_box = gr.Markdown(label="Metric Correlations")
         alerts_box = gr.Markdown(label="Quality Alerts")
         recommendations_box = gr.Markdown(label="Recommendations")
         with gr.Row():
@@ -138,6 +187,7 @@ def evaluate_page() -> gr.Blocks:
                 summary,
                 chart,
                 analysis,
+                correlations_box,
                 alerts_box,
                 recommendations_box,
                 export_csv,
