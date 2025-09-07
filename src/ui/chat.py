@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+import datetime
 from html import escape
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Tuple
@@ -43,7 +43,9 @@ def _sanitize(text: str) -> str:
 def _append_history(user_message: str, bot_message: str) -> None:
     """Persist a chat exchange to disk."""
     record = {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.datetime.now(datetime.UTC)
+        .isoformat()
+        .replace("+00:00", "Z"),
         "user": user_message,
         "bot": bot_message,
     }
