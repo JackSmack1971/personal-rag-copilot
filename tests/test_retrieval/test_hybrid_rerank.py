@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 from src.retrieval.hybrid import HybridRetriever
 
 
@@ -21,7 +24,7 @@ class StubReranker:
         return docs[:top_k], {"reranked": True, "latency_ms": 1}
 
 
-def test_hybrid_rerank_integration():
+def test_hybrid_rerank_integration() -> None:
     hybrid = HybridRetriever(
         StubDense(),
         StubLexical(),

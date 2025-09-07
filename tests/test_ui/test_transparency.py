@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 import gradio as gr
 from gradio.events import EventData
 from unittest.mock import patch
@@ -10,20 +13,20 @@ from src.ui.components.transparency import (
 )
 
 
-def test_citation_badge_click_returns_label():
+def test_citation_badge_click_returns_label() -> None:
     badge = CitationBadge("Doc1")
     evt = EventData(_data={}, target="Doc1")
     assert badge.on_click(evt) == "Doc1"
 
 
-def test_details_drawer_toggle():
+def test_details_drawer_toggle() -> None:
     drawer = DetailsDrawer()
     evt = EventData(_data={}, target=None)
     assert drawer.toggle(evt) is True
     assert drawer.toggle(evt) is False
 
 
-def test_transparency_panel_update_renders_metadata():
+def test_transparency_panel_update_renders_metadata() -> None:
     meta = {
         "citations": [{"label": "Doc1", "source": "dense"}],
         "component_scores": {

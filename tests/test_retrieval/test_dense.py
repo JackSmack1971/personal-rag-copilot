@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -19,7 +22,7 @@ class MockPineconeClient:
 
 
 @patch("src.retrieval.dense.SentenceTransformer")
-def test_embed_query_returns_dimension(mock_model):
+def test_embed_query_returns_dimension(mock_model) -> None:
     mock_instance = MagicMock()
     dim_attr = mock_instance.get_sentence_embedding_dimension
     dim_attr.return_value = EMBEDDING_DIMENSION
@@ -34,7 +37,7 @@ def test_embed_query_returns_dimension(mock_model):
 
 
 @patch("src.retrieval.dense.SentenceTransformer")
-def test_index_corpus_upserts_vectors(mock_model):
+def test_index_corpus_upserts_vectors(mock_model) -> None:
     mock_instance = MagicMock()
     dim_attr = mock_instance.get_sentence_embedding_dimension
     dim_attr.return_value = EMBEDDING_DIMENSION
@@ -56,7 +59,7 @@ def test_index_corpus_upserts_vectors(mock_model):
 
 
 @patch("src.retrieval.dense.SentenceTransformer")
-def test_xpu_device_uses_xpu_backend(mock_model):
+def test_xpu_device_uses_xpu_backend(mock_model) -> None:
     mock_instance = MagicMock()
     mock_instance.get_sentence_embedding_dimension.return_value = EMBEDDING_DIMENSION
     mock_model.return_value = mock_instance
@@ -67,7 +70,7 @@ def test_xpu_device_uses_xpu_backend(mock_model):
     mock_model.assert_called_with("all-MiniLM-L6-v2", device="xpu")
 
 
-def test_openvino_device_uses_compile(monkeypatch):
+def test_openvino_device_uses_compile(monkeypatch: pytest.MonkeyPatch) -> None:
     core_instance = MagicMock()
     core_instance.compile_model.return_value = MagicMock()
     core_cls = MagicMock(return_value=core_instance)

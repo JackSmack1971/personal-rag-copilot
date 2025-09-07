@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 from src.evaluation.recommendations import (
     RecommendationLogger,
     generate_recommendations,
@@ -6,32 +9,32 @@ from src.ui.evaluate import _load_dashboard, EVALUATOR
 from src.evaluation.ragas_integration import EvaluationResult
 
 
-def test_recommend_low_relevancy():
+def test_recommend_low_relevancy() -> None:
     recs = generate_recommendations({"relevancy": 0.5, "precision": 0.9})
     assert "Expand top-K" in recs
     assert "Enable reranking" not in recs
     assert "Adjust weights" not in recs
 
 
-def test_recommend_low_precision():
+def test_recommend_low_precision() -> None:
     recs = generate_recommendations({"relevancy": 0.9, "precision": 0.6})
     assert "Enable reranking" in recs
     assert "Expand top-K" not in recs
 
 
-def test_recommend_cross_metric():
+def test_recommend_cross_metric() -> None:
     recs = generate_recommendations({"relevancy": 0.6, "precision": 0.6})
     assert "Adjust weights" in recs
     assert "Expand top-K" in recs
     assert "Enable reranking" in recs
 
 
-def test_recommend_low_faithfulness():
+def test_recommend_low_faithfulness() -> None:
     recs = generate_recommendations({"faithfulness": 0.6, "precision": 0.6})
     assert "Adjust weights" in recs
 
 
-def test_logger_records():
+def test_logger_records() -> None:
     logger = RecommendationLogger()
     before = {"relevancy": 0.5}
     after = {"relevancy": 0.8}
@@ -44,7 +47,7 @@ def test_logger_records():
     assert record.after == after
 
 
-def test_logger_records_faithfulness_improvement():
+def test_logger_records_faithfulness_improvement() -> None:
     logger = RecommendationLogger()
     before = {"faithfulness": 0.6, "precision": 0.6}
     after = {"faithfulness": 0.8, "precision": 0.6}
@@ -54,7 +57,7 @@ def test_logger_records_faithfulness_improvement():
     assert record.after["faithfulness"] > record.before["faithfulness"]
 
 
-def test_load_dashboard_recommendations(monkeypatch):
+def test_load_dashboard_recommendations(monkeypatch: pytest.MonkeyPatch) -> None:
     sample_history = [
         EvaluationResult(
             timestamp="2024-01-01T00:00:00",

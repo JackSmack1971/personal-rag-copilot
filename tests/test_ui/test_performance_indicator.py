@@ -1,9 +1,12 @@
+from __future__ import annotations
+
+import pytest
 import gradio as gr
 
 from src.ui.components.transparency import PerformanceIndicator
 
 
-def test_performance_indicator_updates_latency():
+def test_performance_indicator_updates_latency() -> None:
     with gr.Blocks():
         perf = PerformanceIndicator()
         md = perf.render()

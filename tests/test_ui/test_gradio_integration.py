@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 from src.ui.chat import chat_page
@@ -9,7 +11,7 @@ except Exception:  # pragma: no cover
 
 
 @pytest.mark.skipif(TestClient is None, reason="no TestClient")
-def test_chat_page_interaction():
+def test_chat_page_interaction() -> None:
     client = TestClient(chat_page())
     result = client.chat("hello")
     assert "You said" in result[0]

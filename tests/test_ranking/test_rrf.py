@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 import math
 
 from src.ranking.rrf_fusion import DEFAULT_RRF_K, rrf_fusion

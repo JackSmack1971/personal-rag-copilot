@@ -1,5 +1,8 @@
 """Tests for ingest page UI."""
 
+from __future__ import annotations
+
+import pytest
 import gradio as gr
 
 from src.ui import ingest as ingest_module
@@ -10,7 +13,7 @@ class DummyFile:
         self.name = name
 
 
-def test_ingest_page_has_components():
+def test_ingest_page_has_components() -> None:
     page = ingest_module.ingest_page()
     blocks = list(page.blocks.values())
     assert any(isinstance(b, gr.File) for b in blocks)
@@ -23,7 +26,7 @@ def test_ingest_page_has_components():
     assert {"Process All", "Update", "Delete", "Health Check"} <= button_labels
 
 
-def test_callbacks_invoked(monkeypatch, tmp_path):
+def test_callbacks_invoked(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     calls: dict[str, object] = {}
 
     class DummyIndex:
@@ -96,7 +99,7 @@ def test_callbacks_invoked(monkeypatch, tmp_path):
     assert "update" in calls and "delete" in calls
 
 
-def test_failed_ingest_shows_error(monkeypatch, tmp_path):
+def test_failed_ingest_shows_error(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     class FailingService:
         def parse_document(self, _path):
             raise ValueError("bad file")
@@ -115,7 +118,7 @@ def test_failed_ingest_shows_error(monkeypatch, tmp_path):
     assert alert["visible"] is True
 
 
-def test_progress_callback_updates_components(tmp_path):
+def test_progress_callback_updates_components(tmp_path) -> None:
     from unittest.mock import MagicMock
 
     dense = MagicMock()

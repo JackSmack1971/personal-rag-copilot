@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import pytest
 import json
 
 import gradio as gr
@@ -11,11 +14,11 @@ from src.ui.chat import (
 )
 
 
-def test_sanitize_html():
+def test_sanitize_html() -> None:
     assert _sanitize(" <b>hi</b> ") == "&lt;b&gt;hi&lt;/b&gt;"
 
 
-def test_append_history_writes(tmp_path):
+def test_append_history_writes(tmp_path) -> None:
     file_path = tmp_path / "history.jsonl"
     original = HISTORY_PATH
     try:
@@ -37,7 +40,7 @@ def test_append_history_writes(tmp_path):
         chat.HISTORY_PATH = original
 
 
-def test_generate_response_streams(tmp_path):
+def test_generate_response_streams(tmp_path) -> None:
     file_path = tmp_path / "history.jsonl"
     from src.ui import chat
 
@@ -82,6 +85,6 @@ def test_generate_response_streams(tmp_path):
     chat.EVALUATOR.evaluate = original_evaluate
 
 
-def test_chat_page_has_chat_interface():
+def test_chat_page_has_chat_interface() -> None:
     page = chat_page()
     assert any(isinstance(b, gr.Chatbot) for b in page.blocks.values())
