@@ -44,7 +44,7 @@ CPU remains the default execution target, though optional OpenVINO/XPU accelerat
 - To run tests with coverage: `python -m pytest tests/ --cov=src --cov-report=html`
 - To format code: `black src/ tests/ app.py`
 - To run linting: `flake8 src/ tests/ app.py`
-- To run type checking: `mypy src/ app.py`
+- To run type checking: `pyright`
 - To validate configuration: `python -m src.config.validate`
 
 **Testing Specific Components:**
