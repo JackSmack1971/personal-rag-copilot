@@ -10,6 +10,7 @@ import pandas as pd
 import plotly.express as px
 
 from src.evaluation.ragas_integration import EvaluationResult, RagasEvaluator
+from src.evaluation.recommendations import generate_recommendations
 from src.config.runtime_config import config_manager
 from .navbar import render_navbar
 
@@ -41,6 +42,7 @@ def _load_dashboard(
     Any,
     pd.DataFrame,
     str,
+    str,
     Dict[str, Any],
     Dict[str, Any],
 ]:
@@ -54,7 +56,7 @@ def _load_dashboard(
         summary = "No evaluations available"
         alerts = "No alerts"
         empty = gr.update(visible=False)
-        return summary, fig, df, alerts, empty, empty
+        return summary, fig, df, alerts, "No recommendations", empty, empty
 
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     avg_score = df["score"].mean()
@@ -74,6 +76,21 @@ def _load_dashboard(
         alerts = "No alerts"
     else:
         alerts = alerts_df.to_string(index=False)
+    avg_relevancy = df["relevancy"].mean()
+    avg_precision = df["precision"].mean()
+    avg_faithfulness = df["faithfulness"].mean()
+    rec_list = generate_recommendations(
+        {
+            "faithfulness": avg_faithfulness,
+            "relevancy": avg_relevancy,
+            "precision": avg_precision,
+        }
+    )
+    recommendations = (
+        "\n".join(f"- {rec}" for rec in rec_list)
+        if rec_list
+        else "No recommendations"
+    )
     csv_bytes = df.to_csv(index=False).encode("utf-8")
     json_bytes = df.to_json(orient="records").encode("utf-8")
     csv_update = gr.update(value=csv_bytes, visible=True)
@@ -83,6 +100,7 @@ def _load_dashboard(
         fig,
         df[["timestamp", "query", "score", "rationale"]],
         alerts,
+        recommendations,
         csv_update,
         json_update,
     )
@@ -108,6 +126,7 @@ def evaluate_page() -> gr.Blocks:
         chart = gr.Plot()
         analysis = gr.DataFrame(label="Query Analysis")
         alerts_box = gr.Markdown(label="Quality Alerts")
+        recommendations_box = gr.Markdown(label="Recommendations")
         with gr.Row():
             export_csv = gr.DownloadButton("Export CSV", visible=False)
             export_json = gr.DownloadButton("Export JSON", visible=False)
@@ -120,6 +139,7 @@ def evaluate_page() -> gr.Blocks:
                 chart,
                 analysis,
                 alerts_box,
+                recommendations_box,
                 export_csv,
                 export_json,
             ],
