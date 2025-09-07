@@ -233,7 +233,7 @@ python -m pytest tests/ --cov=src --cov-report=html
 # Code formatting and linting
 black src/ tests/ app.py
 flake8 src/ tests/ app.py
-mypy src/ app.py
+pyright
 ```
 
 ### Testing
