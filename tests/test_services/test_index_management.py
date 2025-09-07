@@ -1,4 +1,5 @@
 import json
+import datetime
 from typing import Any, Dict
 
 from src.services.index_management import IndexManagement
@@ -48,6 +49,12 @@ def test_update_and_delete_record_audit():
     mgr.delete_document("1")
     log = mgr.audit_operations()
     assert [e["action"] for e in log] == ["update", "delete"]
+    timestamps = [
+        datetime.datetime.fromisoformat(e["timestamp"].replace("Z", "+00:00"))
+        for e in log
+    ]
+    assert all(ts.tzinfo is datetime.UTC for ts in timestamps)
+    assert timestamps == sorted(timestamps)
 
 
 def test_bulk_operations_and_error():
@@ -85,6 +92,8 @@ def test_log_retrieval_records_and_exports(tmp_path):
     assert entry["rrf_weights"] == meta["rrf_weights"]
     assert entry["component_scores"] == meta["component_scores"]
     assert entry["reranked"] is True
+    ts = datetime.datetime.fromisoformat(entry["timestamp"].replace("Z", "+00:00"))
+    assert ts.tzinfo is datetime.UTC
 
     export_path = tmp_path / "audit.json"
     exported = mgr.audit_operations(export_path)
