@@ -109,6 +109,17 @@ class ConfigManager:
         precision = os.getenv("PRECISION")
         if precision is not None:
             overrides["precision"] = precision.lower()
+        thresholds: Dict[str, Any] = {}
+        for metric in ["faithfulness", "relevancy", "precision"]:
+            env_key = f"EVAL_{metric.upper()}"
+            value = os.getenv(env_key)
+            if value is not None:
+                try:
+                    thresholds[metric] = float(value)
+                except ValueError:
+                    continue
+        if thresholds:
+            overrides["evaluation_thresholds"] = thresholds
         return overrides
 
     def as_dict(self) -> Dict[str, Any]:

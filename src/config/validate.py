@@ -6,7 +6,7 @@ import argparse
 import logging
 from typing import Any, Dict, Tuple
 
-from .settings import load_settings, validate_options
+from .settings import load_settings, validate_options, validate_thresholds
 
 _logger = logging.getLogger(__name__)
 
@@ -31,6 +31,7 @@ def validate_settings(settings: Dict[str, Any]) -> Tuple[bool, Dict[str, str]]:
         if not low <= value <= high:
             errors[key] = f"out_of_bounds:{low}-{high}"
     errors.update(validate_options(settings))
+    errors.update(validate_thresholds(settings))
     return not errors, errors
 
 
