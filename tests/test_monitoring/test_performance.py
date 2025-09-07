@@ -40,7 +40,12 @@ def test_model_cache_cleanup():
     assert cache.keys() == ["b"]
 
 
-def _run_latency(monkeypatch, dashboard, latency_ms: float, mode: str = "dense") -> None:
+def _run_latency(
+    monkeypatch,
+    dashboard,
+    latency_ms: float,
+    mode: str = "dense",
+) -> None:
     times = [0, latency_ms / 1000]
     monkeypatch.setattr(time, "perf_counter", lambda: times.pop(0))
     with PerformanceTracker(dashboard=dashboard, retrieval_mode=mode):

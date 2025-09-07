@@ -11,6 +11,18 @@ from .settings import load_default_settings
 from .validate import validate_settings
 
 
+def _deep_merge(
+    base: Dict[str, Any],
+    updates: Dict[str, Any],
+) -> Dict[str, Any]:
+    for key, value in updates.items():
+        if isinstance(value, dict) and isinstance(base.get(key), dict):
+            base[key] = _deep_merge(base.get(key, {}), value)
+        else:
+            base[key] = value
+    return base
+
+
 class OverrideChain:
     """Maintain ordered configuration layers with precedence."""
 
@@ -26,7 +38,8 @@ class OverrideChain:
     def resolve(self) -> Dict[str, Any]:
         result: Dict[str, Any] = {}
         for name in ["defaults", "environment", "cli", "runtime"]:
-            result.update(self._layers.get(name, {}))
+            layer = deepcopy(self._layers.get(name, {}))
+            result = _deep_merge(result, layer)
         return result
 
 
@@ -85,7 +98,12 @@ class ConfigManager:
         self.chain.set_layer("defaults", base)
         self.chain.set_layer("environment", self._load_env())
         self.chain.set_layer("cli", {})
-        device = detect_device(self.chain.resolve().get("device_preference", "auto"))
+        device = detect_device(
+            self.chain.resolve().get(
+                "device_preference",
+                "auto",
+            )
+        )
         self.chain.set_layer("runtime", {"device": device})
 
         self.validator = ValidationEngine()
@@ -120,6 +138,24 @@ class ConfigManager:
                     continue
         if thresholds:
             overrides["evaluation_thresholds"] = thresholds
+        policy: Dict[str, Any] = {}
+        num_fields = {
+            "target_p95_ms": "PERF_TARGET_P95_MS",
+            "max_top_k": "PERF_MAX_TOP_K",
+            "rerank_disable_threshold": "PERF_RERANK_DISABLE_THRESHOLD",
+        }
+        for field, env_name in num_fields.items():
+            value = os.getenv(env_name)
+            if value is not None:
+                try:
+                    policy[field] = int(value)
+                except ValueError:
+                    continue
+        auto = os.getenv("PERF_AUTO_TUNE_ENABLED")
+        if auto is not None:
+            policy["auto_tune_enabled"] = auto.lower() in {"1", "true", "yes"}
+        if policy:
+            overrides["performance_policy"] = policy
         return overrides
 
     def as_dict(self) -> Dict[str, Any]:
@@ -129,11 +165,19 @@ class ConfigManager:
         return self.as_dict().get(key, default)
 
     def set_cli_overrides(self, overrides: Dict[str, Any]) -> None:
-        self.chain.set_layer("cli", overrides)
+        if not overrides:
+            self.chain.set_layer("cli", {})
+        else:
+            current = self.chain.get_layer("cli")
+            self.chain.set_layer("cli", _deep_merge(current, overrides))
         self._commit()
 
     def set_runtime_overrides(self, overrides: Dict[str, Any]) -> None:
-        self.chain.set_layer("runtime", overrides)
+        if not overrides:
+            self.chain.set_layer("runtime", {})
+        else:
+            current = self.chain.get_layer("runtime")
+            self.chain.set_layer("runtime", _deep_merge(current, overrides))
         self._commit()
 
     def _commit(self) -> None:

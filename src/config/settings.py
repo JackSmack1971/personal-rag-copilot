@@ -80,6 +80,36 @@ def validate_thresholds(
     return errors
 
 
+def validate_performance_policy(
+    settings: Dict[str, Any], *, require_fields: bool = False
+) -> Dict[str, str]:
+    """Validate performance policy fields in ``settings``."""
+    errors: Dict[str, str] = {}
+    policy = settings.get("performance_policy")
+    if policy is None:
+        if require_fields:
+            errors["performance_policy"] = "missing"
+        return errors
+    if not isinstance(policy, dict):
+        errors["performance_policy"] = "not_mapping"
+        return errors
+    for field in ["target_p95_ms", "max_top_k", "rerank_disable_threshold"]:
+        value = policy.get(field)
+        if value is None:
+            if require_fields:
+                errors[f"performance_policy.{field}"] = "missing"
+            continue
+        if not isinstance(value, (int, float)):
+            errors[f"performance_policy.{field}"] = "not_numeric"
+    auto = policy.get("auto_tune_enabled")
+    if auto is None:
+        if require_fields:
+            errors["performance_policy.auto_tune_enabled"] = "missing"
+    elif not isinstance(auto, bool):
+        errors["performance_policy.auto_tune_enabled"] = "not_bool"
+    return errors
+
+
 def load_settings(path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """Load YAML configuration from ``path``.
 
@@ -106,12 +136,16 @@ def load_default_settings() -> Dict[str, Any]:
     errors = {}
     errors.update(validate_options(settings, require_fields=True))
     errors.update(validate_thresholds(settings, require_fields=True))
+    errors.update(validate_performance_policy(settings, require_fields=True))
     if errors:
         raise ValueError(f"invalid default configuration: {errors}")
     return settings
 
 
-def save_settings(settings: Dict[str, Any], path: Optional[str] = None) -> Dict[str, str]:
+def save_settings(
+    settings: Dict[str, Any],
+    path: Optional[str] = None,
+) -> Dict[str, str]:
     """Persist ``settings`` to ``path``.
 
     If ``path`` is ``None`` a temporary file is created and its path returned

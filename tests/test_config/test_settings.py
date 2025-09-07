@@ -37,3 +37,6 @@ def test_load_default_settings() -> None:
     defaults = load_default_settings()
     assert defaults["top_k"] == 5
     assert defaults["rrf_k"] == 60
+    policy = defaults["performance_policy"]
+    assert policy["target_p95_ms"] == 2000
+    assert policy["auto_tune_enabled"] is False

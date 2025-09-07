@@ -17,7 +17,18 @@ def test_auto_tuner_reduces_top_k() -> None:
 def test_auto_tuner_respects_locks() -> None:
     dashboard = MetricsDashboard()
     dashboard.record_latency("hybrid", 2500)
-    cm = ConfigManager(base_config={"top_k": 5, "rrf_k": 60})
+    cm = ConfigManager(
+        base_config={
+            "top_k": 5,
+            "rrf_k": 60,
+            "performance_policy": {
+                "target_p95_ms": 2000,
+                "auto_tune_enabled": False,
+                "max_top_k": 50,
+                "rerank_disable_threshold": 1500,
+            },
+        }
+    )
     cm.set_runtime_overrides({"tuner_locks": ["top_k"], "top_k": 7})
     tuner = AutoTuner(dashboard, config=cm)
     params = {"top_k": 7, "k": 60, "enable_rerank": False}
