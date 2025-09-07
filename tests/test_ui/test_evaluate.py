@@ -15,6 +15,12 @@ def test_evaluate_page_has_components():
     assert any(isinstance(b, gr.Plot) for b in blocks)
     assert any(isinstance(b, gr.DataFrame) for b in blocks)
     assert any(isinstance(b, gr.DownloadButton) for b in blocks)
+    assert any(
+        isinstance(b, gr.Markdown) and b.label == "Metric Correlations" for b in blocks
+    )
+    assert any(
+        isinstance(b, gr.Markdown) and b.label == "Recommendations" for b in blocks
+    )
 
 
 def test_load_dashboard_filters_and_exports(monkeypatch):
@@ -28,7 +34,7 @@ def test_load_dashboard_filters_and_exports(monkeypatch):
             score=0.6,
             rationale="r1",
             faithfulness=0.6,
-            relevancy=0.9,
+            relevancy=0.5,
             precision=0.9,
         ),
         EvaluationResult(
@@ -39,7 +45,7 @@ def test_load_dashboard_filters_and_exports(monkeypatch):
             score=0.9,
             rationale="r2",
             faithfulness=0.9,
-            relevancy=0.9,
+            relevancy=0.5,
             precision=0.9,
         ),
     ]
@@ -52,16 +58,18 @@ def test_load_dashboard_filters_and_exports(monkeypatch):
         return records
 
     monkeypatch.setattr(EVALUATOR, "load_history", fake_load)
-    summary, fig, df, alerts, recs, csv_update, json_update = _load_dashboard(
+    summary, fig, df, corr, alerts, recs, csv_update, json_update = _load_dashboard(
         "2020-01-01", None
     )
     assert isinstance(captured["start"], datetime)
     assert "Evaluations" in summary
     assert len(df) == 2
+    assert len(fig.data) == 3
+    assert "faithfulness" in corr
     assert csv_update["value"].startswith(b"timestamp")
     assert json_update["value"].startswith(b"[")
     assert "q1" in alerts
-    assert recs == "No recommendations"
+    assert "Expand top-K" in recs
 
 
 def test_alerts_use_thresholds(monkeypatch):
@@ -103,9 +111,9 @@ def test_alerts_use_thresholds(monkeypatch):
 
     monkeypatch.setattr(config_manager, "get", fake_get)
 
-    _, _, _, alerts, _, _, _ = _load_dashboard(None, None)
+    _, _, _, _, alerts, _, _, _ = _load_dashboard(None, None)
     assert "q1" in alerts and "q2" in alerts
 
     thresholds.update({"faithfulness": 0.5, "relevancy": 0.5, "precision": 0.5})
-    _, _, _, alerts, _, _, _ = _load_dashboard(None, None)
+    _, _, _, _, alerts, _, _, _ = _load_dashboard(None, None)
     assert alerts == "No alerts"

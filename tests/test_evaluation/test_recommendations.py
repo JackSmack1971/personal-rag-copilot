@@ -58,5 +58,5 @@ def test_load_dashboard_recommendations(monkeypatch):
         return sample_history
 
     monkeypatch.setattr(EVALUATOR, "load_history", fake_load_history)
-    summary, fig, df, alerts, recs, *_ = _load_dashboard(None, None)
+    summary, fig, df, corr, alerts, recs, *_ = _load_dashboard(None, None)
     assert "Expand top-K" in recs
