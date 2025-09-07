@@ -1,0 +1,933 @@
+/workspace/personal-rag-copilot/app.py
+  /workspace/personal-rag-copilot/app.py:4:27 - error: Type of "mount_gradio_app" is partially unknown
+    Type of "mount_gradio_app" is "(app: FastAPI, blocks: Blocks, path: str, server_name: str = "0.0.0.0", server_port: int = 7860, show_api: bool | None = None, app_kwargs: dict[str, Any] | None = None, *, auth: ((...) -> Unknown) | tuple[str, str] | list[tuple[str, str]] | None = None, auth_message: str | None = None, auth_dependency: ((Request) -> (str | None)) | None = None, root_path: str | None = None, allowed_paths: list[str] | None = None, blocked_paths: list[str] | None = None, favicon_path: str | None = None, show_error: bool = True, max_file_size: str | int | None = None, ssr_mode: bool | None = None, node_server_name: str | None = None, node_port: int | None = None, enable_monitoring: bool | None = None, pwa: bool | None = None, i18n: I18n | None = None, mcp_server: bool | None = None) -> FastAPI" (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/config/__init__.py
+  /workspace/personal-rag-copilot/src/config/__init__.py:5:21 - error: Type of "backup_config" is partially unknown
+    Type of "backup_config" is "(path: str, backup_dir: str) -> Tuple[Path, dict[Unknown, Unknown]]" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/config/__init__.py:5:36 - error: Type of "restore_config" is partially unknown
+    Type of "restore_config" is "(backup_path: str, target_path: str) -> Tuple[Path, dict[Unknown, Unknown]]" (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/config/backup.py
+  /workspace/personal-rag-copilot/src/config/backup.py:11:5 - error: Return type, "Tuple[Path, dict[Unknown, Unknown]]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/config/backup.py:11:62 - error: Expected type arguments for generic class "dict" (reportMissingTypeArgument)
+  /workspace/personal-rag-copilot/src/config/backup.py:19:12 - error: Return type, "tuple[Path, dict[Unknown, Unknown]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/config/backup.py:22:5 - error: Return type, "Tuple[Path, dict[Unknown, Unknown]]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/config/backup.py:22:71 - error: Expected type arguments for generic class "dict" (reportMissingTypeArgument)
+  /workspace/personal-rag-copilot/src/config/backup.py:28:12 - error: Return type, "tuple[Path, dict[Unknown, Unknown]]", is partially unknown (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/config/runtime_config.py
+  /workspace/personal-rag-copilot/src/config/runtime_config.py:20:56 - error: Argument type is partially unknown
+    Argument corresponds to parameter "updates" in function "_deep_merge"
+    Argument type is "dict[Unknown, Unknown]" (reportUnknownArgumentType)
+/workspace/personal-rag-copilot/src/config/settings.py
+  /workspace/personal-rag-copilot/src/config/settings.py:70:9 - error: Type of "value" is partially unknown
+    Type of "value" is "Unknown | None" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/config/settings.py:70:17 - error: Type of "get" is partially unknown
+    Type of "get" is "Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/config/settings.py:97:9 - error: Type of "value" is partially unknown
+    Type of "value" is "Unknown | None" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/config/settings.py:97:17 - error: Type of "get" is partially unknown
+    Type of "get" is "Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/config/settings.py:104:5 - error: Type of "auto" is partially unknown
+    Type of "auto" is "Unknown | None" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/config/settings.py:104:12 - error: Type of "get" is partially unknown
+    Type of "get" is "Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/config/settings.py:123:13 - error: Type of "data" is partially unknown
+    Type of "data" is "Any | dict[Unknown, Unknown]" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/config/settings.py:124:16 - error: Return type, "tuple[Any | dict[Unknown, Unknown], dict[str, Any]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/config/settings.py:137:5 - error: Type of "update" is partially unknown
+    Type of "update" is "Overload[(m: SupportsKeysAndGetItem[Unknown, Unknown], /) -> None, (m: SupportsKeysAndGetItem[str, Unknown], /, **kwargs: Unknown) -> None, (m: Iterable[tuple[Unknown, Unknown]], /) -> None, (m: Iterable[tuple[str, Unknown]], /, **kwargs: Unknown) -> None, (**kwargs: Unknown) -> None]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/config/settings.py:138:5 - error: Type of "update" is partially unknown
+    Type of "update" is "Overload[(m: SupportsKeysAndGetItem[Unknown, Unknown], /) -> None, (m: SupportsKeysAndGetItem[str, Unknown], /, **kwargs: Unknown) -> None, (m: Iterable[tuple[Unknown, Unknown]], /) -> None, (m: Iterable[tuple[str, Unknown]], /, **kwargs: Unknown) -> None, (**kwargs: Unknown) -> None]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/config/settings.py:139:5 - error: Type of "update" is partially unknown
+    Type of "update" is "Overload[(m: SupportsKeysAndGetItem[Unknown, Unknown], /) -> None, (m: SupportsKeysAndGetItem[str, Unknown], /, **kwargs: Unknown) -> None, (m: Iterable[tuple[Unknown, Unknown]], /) -> None, (m: Iterable[tuple[str, Unknown]], /, **kwargs: Unknown) -> None, (**kwargs: Unknown) -> None]" (reportUnknownMemberType)
+/workspace/personal-rag-copilot/src/config/validate.py
+  /workspace/personal-rag-copilot/src/config/validate.py:34:9 - error: Type of "current" is partially unknown
+    Type of "current" is "Unknown | None" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/config/validate.py:34:19 - error: Type of "get" is partially unknown
+    Type of "get" is "Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/config/validate.py:35:12 - error: Return type, "Any | Unknown", is partially unknown (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/integrations/huggingface_models.py
+  /workspace/personal-rag-copilot/src/integrations/huggingface_models.py:55:20 - error: Object of type "None" cannot be called (reportOptionalCall)
+  /workspace/personal-rag-copilot/src/integrations/huggingface_models.py:72:28 - error: Object of type "None" cannot be called (reportOptionalCall)
+  /workspace/personal-rag-copilot/src/integrations/huggingface_models.py:93:28 - error: Object of type "None" cannot be called (reportOptionalCall)
+/workspace/personal-rag-copilot/src/integrations/pinecone_client.py
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:47:9 - error: Return type, "Unknown | None", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:47:29 - error: Type of parameter "func" is partially unknown
+    Parameter type is "(...) -> Unknown" (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:47:35 - error: Expected type arguments for generic class "Callable" (reportMissingTypeArgument)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:47:46 - error: Type of parameter "args" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:47:46 - error: Type annotation is missing for parameter "args" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:47:54 - error: Type of parameter "kwargs" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:47:54 - error: Type annotation is missing for parameter "kwargs" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:53:24 - error: Return type is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:53:30 - error: Argument type is unknown
+    Argument corresponds to parameter "args" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:53:38 - error: Argument type is unknown
+    Argument corresponds to parameter "kwargs" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:72:9 - error: Type of "init" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:72:18 - error: "init" is not a known attribute of module "pinecone" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:72:18 - error: "init" is not a known attribute of "None" (reportOptionalMemberAccess)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:83:26 - error: Type of "list_indexes" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:83:35 - error: "list_indexes" is not a known attribute of module "pinecone" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:83:35 - error: "list_indexes" is not a known attribute of "None" (reportOptionalMemberAccess)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:85:9 - error: Type of "_with_retries" is partially unknown
+    Type of "_with_retries" is "(func: (...) -> Unknown, ...) -> (Unknown | None)" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:86:13 - error: Type of "create_index" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:86:13 - error: Argument type is unknown
+    Argument corresponds to parameter "func" in function "_with_retries" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:86:22 - error: "create_index" is not a known attribute of module "pinecone" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:86:22 - error: "create_index" is not a known attribute of "None" (reportOptionalMemberAccess)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:96:30 - error: Type of "list_indexes" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:96:39 - error: "list_indexes" is not a known attribute of module "pinecone" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:96:39 - error: "list_indexes" is not a known attribute of "None" (reportOptionalMemberAccess)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:98:9 - error: Type of "_with_retries" is partially unknown
+    Type of "_with_retries" is "(func: (...) -> Unknown, ...) -> (Unknown | None)" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:98:28 - error: Type of "delete_index" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:98:28 - error: Argument type is unknown
+    Argument corresponds to parameter "func" in function "_with_retries" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:98:37 - error: "delete_index" is not a known attribute of module "pinecone" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:98:37 - error: "delete_index" is not a known attribute of "None" (reportOptionalMemberAccess)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:100:9 - error: Return type is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:101:16 - error: Type of "Index" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:101:16 - error: Return type is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:101:25 - error: "Index" is not a known attribute of module "pinecone" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:101:25 - error: "Index" is not a known attribute of "None" (reportOptionalMemberAccess)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:105:13 - error: Type of "description" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:105:27 - error: Type of "describe_index" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:105:36 - error: "describe_index" is not a known attribute of module "pinecone" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:105:36 - error: "describe_index" is not a known attribute of "None" (reportOptionalMemberAccess)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:106:13 - error: Type of "actual_dim" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:106:26 - error: Type of "dimension" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:111:21 - error: Argument type is unknown
+    Argument corresponds to parameter "args" in function "error" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:131:9 - error: Type of "index" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:138:13 - error: Type of "_with_retries" is partially unknown
+    Type of "_with_retries" is "(func: (...) -> Unknown, ...) -> (Unknown | None)" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:139:17 - error: Type of "upsert" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:139:17 - error: Argument type is unknown
+    Argument corresponds to parameter "func" in function "_with_retries" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:154:9 - error: Type of "index" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:155:16 - error: Type of "_with_retries" is partially unknown
+    Type of "_with_retries" is "(func: (...) -> Unknown, ...) -> (Unknown | None)" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:155:16 - error: Return type, "Unknown | None", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:156:13 - error: Type of "query" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/integrations/pinecone_client.py:156:13 - error: Argument type is unknown
+    Argument corresponds to parameter "func" in function "_with_retries" (reportUnknownArgumentType)
+/workspace/personal-rag-copilot/src/monitoring/auto_tuner.py
+  /workspace/personal-rag-copilot/src/monitoring/auto_tuner.py:37:9 - error: Type of "locks" is partially unknown
+    Type of "locks" is "set[Unknown]" (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/monitoring/performance.py
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:31:24 - error: Type of parameter "exc_type" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:31:24 - error: Type annotation is missing for parameter "exc_type" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:31:34 - error: Type of parameter "exc" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:31:34 - error: Type annotation is missing for parameter "exc" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:31:39 - error: Type of parameter "tb" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:31:39 - error: Type annotation is missing for parameter "tb" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:75:24 - error: Type of parameter "exc_type" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:75:24 - error: Type annotation is missing for parameter "exc_type" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:75:34 - error: Type of parameter "exc" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:75:34 - error: Type annotation is missing for parameter "exc" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:75:39 - error: Type of parameter "tb" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:75:39 - error: Type annotation is missing for parameter "tb" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:79:13 - error: Type of "__exit__" is partially unknown
+    Type of "__exit__" is "(exc_type: Unknown, exc: Unknown, tb: Unknown) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:79:32 - error: Argument type is unknown
+    Argument corresponds to parameter "exc_type" in function "__exit__" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:79:42 - error: Argument type is unknown
+    Argument corresponds to parameter "exc" in function "__exit__" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/monitoring/performance.py:79:47 - error: Argument type is unknown
+    Argument corresponds to parameter "tb" in function "__exit__" (reportUnknownArgumentType)
+/workspace/personal-rag-copilot/src/query_service.py
+  /workspace/personal-rag-copilot/src/query_service.py:47:31 - error: Argument of type "Any | int" cannot be assigned to parameter "enable_rerank" of type "bool" in function "query"
+    Type "Any | int" is not assignable to type "bool"
+      "int" is not assignable to "bool" (reportArgumentType)
+/workspace/personal-rag-copilot/src/ranking/reranker.py
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:36:22 - error: Import "openvino.runtime" could not be resolved (reportMissingImports)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:36:46 - error: Type of "Core" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:38:17 - error: Type of "core" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:49:17 - error: Type of "model" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:49:30 - error: Type of "core" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:49:30 - error: Type of "compile_model" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:78:22 - error: Object of type "None" cannot be called (reportOptionalCall)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:85:13 - error: Type of "result" is partially unknown
+    Type of "result" is "Any | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:85:22 - error: Type of "model" is partially unknown
+    Type of "model" is "Unknown | Any | None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:85:22 - error: Object of type "None" cannot be called (reportOptionalCall)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:86:13 - error: Type of "logits" is partially unknown
+    Type of "logits" is "Any | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:86:22 - error: Type of "squeeze" is partially unknown
+    Type of "squeeze" is "Any | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:86:27 - error: Argument type is partially unknown
+    Argument corresponds to parameter "i" in function "next"
+    Argument type is "SupportsNext[Any | Unknown]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:86:32 - error: Type of "values" is partially unknown
+    Type of "values" is "Any | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:86:32 - error: Argument type is partially unknown
+    Argument corresponds to parameter "object" in function "iter"
+    Argument type is "Any | Unknown" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:87:20 - error: Type of "tolist" is partially unknown
+    Type of "tolist" is "Any | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:87:20 - error: Return type, "Any | Unknown", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:88:18 - error: Object of type "None" cannot be called (reportOptionalCall)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:98:13 - error: Type of "logits" is partially unknown
+    Type of "logits" is "Any | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:98:22 - error: Type of "model" is partially unknown
+    Type of "model" is "Unknown | Any | None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:98:22 - error: Object of type "None" cannot be called (reportOptionalCall)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:98:22 - error: Type of "logits" is partially unknown
+    Type of "logits" is "Any | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:98:22 - error: Type of "squeeze" is partially unknown
+    Type of "squeeze" is "Any | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:99:16 - error: Type of "cpu" is partially unknown
+    Type of "cpu" is "Any | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:99:16 - error: Type of "tolist" is partially unknown
+    Type of "tolist" is "Any | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ranking/reranker.py:99:16 - error: Return type, "Any | Unknown", is partially unknown (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/retrieval/dense.py
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:58:29 - error: Type of "core" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:59:46 - error: Type of "compile_model" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:78:21 - error: Type of "encode" is partially unknown
+    Type of "encode" is "Overload[(sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[False] = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[True] = ..., convert_to_tensor: Literal[False] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> ndarray[tuple[Any, ...], dtype[Any]], (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: Literal[True] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[Tensor], (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[dict[str, Tensor]], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> dict[str, Tensor], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:78:21 - error: Argument type is partially unknown
+    Argument corresponds to parameter "func" in function "to_thread"
+    Argument type is "Overload[(sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[False] = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[True] = ..., convert_to_tensor: Literal[False] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> ndarray[tuple[Any, ...], dtype[Any]], (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: Literal[True] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[Tensor], (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[dict[str, Tensor]], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> dict[str, Tensor], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:85:17 - error: Type of "encode" is partially unknown
+    Type of "encode" is "Overload[(sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[False] = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[True] = ..., convert_to_tensor: Literal[False] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> ndarray[tuple[Any, ...], dtype[Any]], (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: Literal[True] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[Tensor], (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[dict[str, Tensor]], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> dict[str, Tensor], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:85:17 - error: Argument type is partially unknown
+    Argument corresponds to parameter "func" in function "to_thread"
+    Argument type is "Overload[(sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[False] = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[True] = ..., convert_to_tensor: Literal[False] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> ndarray[tuple[Any, ...], dtype[Any]], (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: Literal[True] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[Tensor], (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[dict[str, Tensor]], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> dict[str, Tensor], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:90:16 - error: Type of "tolist" is partially unknown
+    Type of "tolist" is "Unknown | Overload[() -> Any, () -> Any, () -> list[Any], () -> list[list[Any]], () -> list[list[list[Any]]], () -> Any]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:90:16 - error: Return type, "Any | Unknown", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:90:27 - error: Cannot access attribute "tolist" for class "object"
+    Attribute "tolist" is unknown (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:133:57 - error: Type of "encode" is partially unknown
+    Type of "encode" is "Overload[(sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[False] = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[True] = ..., convert_to_tensor: Literal[False] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> ndarray[tuple[Any, ...], dtype[Any]], (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: Literal[True] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[Tensor], (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[dict[str, Tensor]], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> dict[str, Tensor], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:133:57 - error: Argument type is partially unknown
+    Argument corresponds to parameter "func" in function "to_thread"
+    Argument type is "Overload[(sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[False] = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[True] = ..., convert_to_tensor: Literal[False] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> ndarray[tuple[Any, ...], dtype[Any]], (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: Literal[True] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[Tensor], (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[dict[str, Tensor]], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> dict[str, Tensor], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:135:53 - error: Type of "encode" is partially unknown
+    Type of "encode" is "Overload[(sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[False] = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[True] = ..., convert_to_tensor: Literal[False] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> ndarray[tuple[Any, ...], dtype[Any]], (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: Literal[True] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[Tensor], (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[dict[str, Tensor]], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> dict[str, Tensor], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:135:53 - error: Argument type is partially unknown
+    Argument corresponds to parameter "func" in function "to_thread"
+    Argument type is "Overload[(sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[False] = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: Literal[True] = ..., convert_to_tensor: Literal[False] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> ndarray[tuple[Any, ...], dtype[Any]], (sentences: str | list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: Literal[True] = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor, (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['sentence_embedding', 'token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[Tensor], (sentences: list[str] | ndarray[tuple[Any, ...], dtype[Any]], prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> list[dict[str, Tensor]], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: None = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> dict[str, Tensor], (sentences: str, prompt_name: str | None = ..., prompt: str | None = ..., batch_size: int = ..., show_progress_bar: bool | None = ..., output_value: Literal['token_embeddings'] = ..., precision: Literal['float32', 'int8', 'uint8', 'binary', 'ubinary'] = ..., convert_to_numpy: bool = ..., convert_to_tensor: bool = ..., device: str | list[str | device] | None = ..., normalize_embeddings: bool = ..., truncate_dim: int | None = ..., pool: dict[Literal['input', 'output', 'processes'], Any] | None = ..., chunk_size: int | None = ..., **kwargs: Unknown) -> Tensor]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:136:20 - error: Type of "tolist" is partially unknown
+    Type of "tolist" is "Unknown | (() -> list[Unknown])" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:136:20 - error: Return type, "tuple[list[Unknown] | Unknown, dict[str, Any]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/dense.py:136:30 - error: Cannot access attribute "tolist" for class "object"
+    Attribute "tolist" is unknown (reportAttributeAccessIssue)
+/workspace/personal-rag-copilot/src/retrieval/hybrid.py
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:44:13 - error: Type of "results" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:44:22 - error: Type of "meta" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:44:29 - error: "CoroutineType[Any, Any, Tuple[List[Tuple[str, float]], Dict[str, Any]]]" is not iterable
+    "__iter__" method not defined (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:45:13 - error: Type of "wrapped" is partially unknown
+    Type of "wrapped" is "list[dict[str, Unknown | str]]" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:47:21 - error: Type of "doc_id" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:47:29 - error: Type of "score" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:49:13 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:50:20 - error: Return type, "tuple[list[dict[str, Unknown | str]], Unknown]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:68:13 - error: Type of "dense_results" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:68:28 - error: Type of "_" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/hybrid.py:68:32 - error: "CoroutineType[Any, Any, Tuple[List[Tuple[str, float]], Dict[str, Any]]]" is not iterable
+    "__iter__" method not defined (reportGeneralTypeIssues)
+/workspace/personal-rag-copilot/src/retrieval/lexical.py
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:5:6 - error: Stub file not found for "rank_bm25" (reportMissingTypeStubs)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:8:10 - error: Stub file not found for "nltk.stem" (reportMissingTypeStubs)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:32:24 - error: Object of type "None" cannot be called (reportOptionalCall)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:46:13 - error: Type of "tokens" is partially unknown
+    Type of "tokens" is "list[Unknown | str]" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:46:23 - error: Type of "stem" is partially unknown
+    Type of "stem" is "(word: Unknown, to_lowercase: bool = True) -> Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:47:16 - error: Return type, "list[Unknown | str] | List[str]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:62:17 - error: Type of "append" is partially unknown
+    Type of "append" is "(object: Unknown, /) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:65:20 - error: Return type, "tuple[list[Unknown], dict[str, Any]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:65:60 - error: Argument type is partially unknown
+    Argument corresponds to parameter "obj" in function "len"
+    Argument type is "list[Unknown]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:78:13 - error: Type of "scores" is partially unknown
+    Type of "scores" is "ndarray[tuple[int], dtype[float64]] | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:78:22 - error: Type of "get_scores" is partially unknown
+    Type of "get_scores" is "(query: Unknown) -> (ndarray[tuple[int], dtype[float64]] | Unknown)" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:80:35 - error: Argument type is partially unknown
+    Argument corresponds to parameter "iter2" in function "__new__"
+    Argument type is "ndarray[tuple[int], dtype[float64]] | Unknown" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/retrieval/lexical.py:82:20 - error: Type "tuple[list[tuple[str, float64]], dict[str, Any]]" is not assignable to return type "Tuple[List[Tuple[str, float]], Dict[str, Any]]"
+    "list[tuple[str, float64]]" is not assignable to "List[Tuple[str, float]]"
+      Type parameter "_T@list" is invariant, but "tuple[str, float64]" is not the same as "Tuple[str, float]"
+      Consider switching from "list" to "Sequence" which is covariant (reportReturnType)
+/workspace/personal-rag-copilot/src/services/document_service.py
+  /workspace/personal-rag-copilot/src/services/document_service.py:52:32 - error: Argument of type "Path" cannot be assigned to parameter "docx" of type "str | IO[bytes] | None" in function "Document"
+    Type "Path" is not assignable to type "str | IO[bytes] | None"
+      "Path" is not assignable to "str"
+      "Path" is not assignable to "IO[bytes]"
+      "Path" is not assignable to "None" (reportArgumentType)
+  /workspace/personal-rag-copilot/src/services/document_service.py:133:13 - error: Type of "dense_ids" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/services/document_service.py:133:24 - error: Type of "dense_meta" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/services/document_service.py:133:37 - error: "CoroutineType[Any, Any, Tuple[List[str], Dict[str, Any]]]" is not iterable
+    "__iter__" method not defined (reportGeneralTypeIssues)
+/workspace/personal-rag-copilot/src/ui/chat.py
+  /workspace/personal-rag-copilot/src/ui/chat.py:24:9 - error: Return type, "tuple[list[Unknown], dict[str, str | dict[Unknown, Unknown]]]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/chat.py:25:16 - error: Return type, "tuple[list[Unknown], dict[str, str | dict[Unknown, Unknown]]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/chat.py:32:30 - error: Argument of type "_StubHybridRetriever" cannot be assigned to parameter "retriever" of type "HybridRetriever" in function "__init__"
+    "_StubHybridRetriever" is not assignable to "HybridRetriever" (reportArgumentType)
+  /workspace/personal-rag-copilot/src/ui/chat.py:74:9 - error: Type of "append" is partially unknown
+    Type of "append" is "(object: Unknown, /) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/chat.py:82:5 - error: Type of "metadata" is partially unknown
+    Type of "metadata" is "dict[str, Any | dict[str, Any | None] | list[Unknown]]" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/chat.py:102:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __enter__
+    Attribute "__enter__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/ui/chat.py:102:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __exit__
+    Attribute "__exit__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/ui/chat.py:102:20 - error: No parameter named "css" (reportCallIssue)
+  /workspace/personal-rag-copilot/src/ui/chat.py:102:50 - error: Type of "demo" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/chat.py:108:33 - error: Type of "state" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/chat.py:112:12 - error: Return type is unknown (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/ui/components/__init__.py
+  /workspace/personal-rag-copilot/src/ui/components/__init__.py:3:12 - error: "ranking_controls" is specified in __all__ but is not present in module (reportUnsupportedDunderAll)
+  /workspace/personal-rag-copilot/src/ui/components/__init__.py:3:32 - error: "transparency" is specified in __all__ but is not present in module (reportUnsupportedDunderAll)
+/workspace/personal-rag-copilot/src/ui/components/ranking_controls.py
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:21:9 - error: Type of "state" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:21:22 - error: Type of "State" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:21:25 - error: "State" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:31:14 - error: Type of "Accordion" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:31:17 - error: "Accordion" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:32:13 - error: Type of "rrf_k_slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:32:33 - error: Type of "Slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:32:36 - error: "Slider" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:39:13 - error: Type of "w_dense_slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:39:35 - error: Type of "Slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:39:38 - error: "Slider" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:46:13 - error: Type of "w_lexical_slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:46:37 - error: Type of "Slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:46:40 - error: "Slider" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:53:13 - error: Type of "rerank_toggle" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:53:34 - error: Type of "Checkbox" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:53:37 - error: "Checkbox" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:59:9 - error: Type of "components" is partially unknown
+    Type of "components" is "list[Unknown]" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:60:13 - error: Type of "rrf_k_slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:61:13 - error: Type of "w_dense_slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:62:13 - error: Type of "w_lexical_slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:63:13 - error: Type of "rerank_toggle" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:65:13 - error: Type of "comp" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:66:13 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/ranking_controls.py:69:25 - error: Type of "state" is unknown (reportUnknownMemberType)
+/workspace/personal-rag-copilot/src/ui/components/transparency.py
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:29:13 - error: Type of "append" is partially unknown
+    Type of "append" is "(object: Unknown, /) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:31:13 - error: Type of "append" is partially unknown
+    Type of "append" is "(object: Unknown, /) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:33:13 - error: Type of "append" is partially unknown
+    Type of "append" is "(object: Unknown, /) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:35:13 - error: Type of "append" is partially unknown
+    Type of "append" is "(object: Unknown, /) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:36:34 - error: Argument type is partially unknown
+    Argument corresponds to parameter "iterable" in function "join"
+    Argument type is "list[Unknown]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:58:5 - error: Type of "content" is partially unknown
+    Type of "content" is "dict[Unknown, Unknown]" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:61:9 - error: Return type is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:61:25 - error: Type of "Accordion" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:61:28 - error: "Accordion" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:62:14 - error: Type of "Accordion" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:62:17 - error: "Accordion" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:62:57 - error: Type of "acc" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:63:13 - error: Type of "json" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:63:25 - error: Type of "JSON" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:63:28 - error: "JSON" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:64:16 - error: Return type is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:72:16 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:72:16 - error: Return type is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:72:19 - error: "update" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:82:9 - error: Return type is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:82:25 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:82:28 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:83:9 - error: Type of "md" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:83:19 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:83:22 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:84:16 - error: Type of "md" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:84:16 - error: Return type is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:95:16 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:95:16 - error: Return type is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:95:19 - error: "update" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:109:9 - error: Type of "state" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:109:22 - error: Type of "State" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:109:25 - error: "State" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:114:14 - error: Type of "Row" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:114:17 - error: "Row" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:115:13 - error: Type of "badges_html" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:115:32 - error: Type of "HTML" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:115:35 - error: "HTML" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:116:13 - error: Type of "perf_md" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:116:28 - error: Type of "render" is partially unknown
+    Type of "render" is "() -> Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:117:9 - error: Type of "render" is partially unknown
+    Type of "render" is "() -> Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:121:9 - error: Type of "state" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:121:9 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:123:20 - error: Type of "state" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:124:22 - error: Type of "badges_html" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:124:40 - error: Type of "perf_md" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:124:54 - error: Type of "json" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:127:9 - error: Return type, "list[Unknown | Dict[str, str] | Dict[str, Any]]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:158:13 - error: Type of "append" is partially unknown
+    Type of "append" is "(object: Unknown, /) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:160:32 - error: Argument type is partially unknown
+    Argument corresponds to parameter "iterable" in function "join"
+    Argument type is "list[Unknown]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:163:16 - error: Return type, "list[Unknown | Dict[str, str] | Dict[str, Any]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:164:13 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/components/transparency.py:164:16 - error: "update" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+/workspace/personal-rag-copilot/src/ui/evaluate.py
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:9:8 - error: Stub file not found for "pandas" (reportMissingTypeStubs)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:10:8 - error: Stub file not found for "plotly.express" (reportMissingTypeStubs)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:31:37 - error: Argument of type "list[str]" cannot be assigned to parameter "columns" of type "Axes | None" in function "__init__"
+    Type "list[str]" is not assignable to type "Axes | None"
+      "list[str]" is not assignable to "ExtensionArray"
+      "list[str]" is not assignable to "ndarray[_AnyShape, dtype[Any]]"
+      "list[str]" is not assignable to "Index"
+      "list[str]" is not assignable to "Series"
+      "list[str]" is incompatible with protocol "SequenceNotStr[Unknown]"
+        "index" is an incompatible type
+          Type "(value: str, start: SupportsIndex = 0, stop: SupportsIndex = sys.maxsize, /) -> int" is not assignable to type "(value: Any, /, start: int = 0, stop: int = ...) -> int"
+    ... (reportArgumentType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:48:13 - error: No overloads for "sum" match the provided arguments (reportCallIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:48:17 - error: Argument of type "Generator[str | Any, None, None]" cannot be assigned to parameter "iterable" of type "Iterable[_SupportsSumNoDefaultT@sum]" in function "sum"
+    "Generator[str | Any, None, None]" is not assignable to "Iterable[_SupportsSumNoDefaultT@sum]"
+      Type parameter "_T_co@Iterable" is covariant, but "str | Any" is not a subtype of "_SupportsSumNoDefaultT@sum"
+        Type "str | Any" is not assignable to type "_SupportsSumWithNoDefaultGiven"
+          Type "str | Any" is not assignable to type "_SupportsSumWithNoDefaultGiven"
+            "str" is incompatible with protocol "_SupportsSumWithNoDefaultGiven" (reportArgumentType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:52:9 - error: Type of "append" is partially unknown
+    Type of "append" is "(object: Unknown, /) -> None" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:53:42 - error: Argument of type "list[str]" cannot be assigned to parameter "columns" of type "Axes | None" in function "__init__"
+    Type "list[str]" is not assignable to type "Axes | None"
+      "list[str]" is not assignable to "ExtensionArray"
+      "list[str]" is not assignable to "ndarray[_AnyShape, dtype[Any]]"
+      "list[str]" is not assignable to "Index"
+      "list[str]" is not assignable to "Series"
+      "list[str]" is incompatible with protocol "SequenceNotStr[Unknown]"
+        "index" is an incompatible type
+          Type "(value: str, start: SupportsIndex = 0, stop: SupportsIndex = sys.maxsize, /) -> int" is not assignable to type "(value: Any, /, start: int = 0, stop: int = ...) -> int"
+    ... (reportArgumentType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:81:15 - error: Type of "line" is partially unknown
+    Type of "line" is "(data_frame: Unknown | None = None, x: Unknown | None = None, y: Unknown | None = None, line_group: Unknown | None = None, color: Unknown | None = None, line_dash: Unknown | None = None, symbol: Unknown | None = None, hover_name: Unknown | None = None, hover_data: Unknown | None = None, custom_data: Unknown | None = None, text: Unknown | None = None, facet_row: Unknown | None = None, facet_col: Unknown | None = None, facet_col_wrap: int = 0, facet_row_spacing: Unknown | None = None, facet_col_spacing: Unknown | None = None, error_x: Unknown | None = None, error_x_minus: Unknown | None = None, error_y: Unknown | None = None, error_y_minus: Unknown | None = None, animation_frame: Unknown | None = None, animation_group: Unknown | None = None, category_orders: Unknown | None = None, labels: Unknown | None = None, orientation: Unknown | None = None, color_discrete_sequence: Unknown | None = None, color_discrete_map: Unknown | None = None, line_dash_sequence: Unknown | None = None, line_dash_map: Unknown | None = None, symbol_sequence: Unknown | None = None, symbol_map: Unknown | None = None, markers: bool = False, log_x: bool = False, log_y: bool = False, range_x: Unknown | None = None, range_y: Unknown | None = None, line_shape: Unknown | None = None, render_mode: str = "auto", title: Unknown | None = None, subtitle: Unknown | None = None, template: Unknown | None = None, width: Unknown | None = None, height: Unknown | None = None) -> Figure" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:85:9 - error: Type of "empty" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:85:17 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:85:20 - error: "update" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:86:16 - error: Return type, "tuple[Literal['No evaluations available'], Figure, DataFrame, Literal['No data'], Literal['No alerts'], Literal['No recommendations'], Unknown, Unknown]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:97:23 - error: Type of "to_datetime" is partially unknown
+    Type of "to_datetime" is "Overload[(arg: float | str | date | datetime64[date | int | None], errors: Literal['ignore', 'raise', 'coerce'] = ..., dayfirst: bool = ..., yearfirst: bool = ..., utc: bool = ..., format: str | None = ..., exact: bool = ..., unit: str | None = ..., infer_datetime_format: bool = ..., origin: ... = ..., cache: bool = ...) -> Timestamp, (arg: Series | FulldatetimeDict | DataFrame, errors: Literal['ignore', 'raise', 'coerce'] = ..., dayfirst: bool = ..., yearfirst: bool = ..., utc: bool = ..., format: str | None = ..., exact: bool = ..., unit: str | None = ..., infer_datetime_format: bool = ..., origin: ... = ..., cache: bool = ...) -> Series, (arg: list[Unknown] | tuple[Unknown, ...] | Index | ExtensionArray | ndarray[tuple[Any, ...], dtype[Any]], errors: Literal['ignore', 'raise', 'coerce'] = ..., dayfirst: bool = ..., yearfirst: bool = ..., utc: bool = ..., format: str | None = ..., exact: bool = ..., unit: str | None = ..., infer_datetime_format: bool = ..., origin: ... = ..., cache: bool = ...) -> DatetimeIndex]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:97:38 - error: Argument type is partially unknown
+    Argument corresponds to parameter "arg" in function "to_datetime"
+    Argument type is "Series | Unknown | DataFrame" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:98:5 - error: Type of "avg_score" is partially unknown
+    Type of "avg_score" is "Series | float | int | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:98:17 - error: Type of "mean" is partially unknown
+    Type of "mean" is "((axis: int | Literal['index', 'columns', 'rows'] | None = 0, skipna: bool = True, numeric_only: bool = False, **kwargs: Unknown) -> (Series | float)) | Unknown | ((axis: int | Literal['index', 'columns', 'rows'] | None = 0, skipna: bool = True, numeric_only: bool = False, **kwargs: Unknown) -> (Series | float | int))" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:100:11 - error: Type of "line" is partially unknown
+    Type of "line" is "(data_frame: Unknown | None = None, x: Unknown | None = None, y: Unknown | None = None, line_group: Unknown | None = None, color: Unknown | None = None, line_dash: Unknown | None = None, symbol: Unknown | None = None, hover_name: Unknown | None = None, hover_data: Unknown | None = None, custom_data: Unknown | None = None, text: Unknown | None = None, facet_row: Unknown | None = None, facet_col: Unknown | None = None, facet_col_wrap: int = 0, facet_row_spacing: Unknown | None = None, facet_col_spacing: Unknown | None = None, error_x: Unknown | None = None, error_x_minus: Unknown | None = None, error_y: Unknown | None = None, error_y_minus: Unknown | None = None, animation_frame: Unknown | None = None, animation_group: Unknown | None = None, category_orders: Unknown | None = None, labels: Unknown | None = None, orientation: Unknown | None = None, color_discrete_sequence: Unknown | None = None, color_discrete_map: Unknown | None = None, line_dash_sequence: Unknown | None = None, line_dash_map: Unknown | None = None, symbol_sequence: Unknown | None = None, symbol_map: Unknown | None = None, markers: bool = False, log_x: bool = False, log_y: bool = False, range_x: Unknown | None = None, range_y: Unknown | None = None, line_shape: Unknown | None = None, render_mode: str = "auto", title: Unknown | None = None, subtitle: Unknown | None = None, template: Unknown | None = None, width: Unknown | None = None, height: Unknown | None = None) -> Figure" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:106:5 - error: Type of "correlations" is partially unknown
+    Type of "correlations" is "str | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:107:9 - error: Type of "corr" is partially unknown
+    Type of "corr" is "((other: Series, method: ((ndarray[tuple[Any, ...], dtype[Any]], ndarray[tuple[Any, ...], dtype[Any]]) -> float) | Literal['pearson', 'kendall', 'spearman'] = "pearson", min_periods: int | None = None) -> float) | Unknown | ((method: ((ndarray[tuple[Any, ...], dtype[Any]], ndarray[tuple[Any, ...], dtype[Any]]) -> float) | Literal['pearson', 'kendall', 'spearman'] = "pearson", min_periods: int = 1, numeric_only: bool = False) -> DataFrame)" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:107:9 - error: Argument missing for parameter "other" (reportCallIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:107:9 - error: Type of "to_string" is partially unknown
+    Type of "to_string" is "Overload[(buf: None = ..., columns: ExtensionArray | ndarray[tuple[Any, ...], dtype[Any]] | Index | Series | SequenceNotStr[Unknown] | range | None = ..., col_space: int | list[int] | dict[Hashable, int] | None = ..., header: bool | SequenceNotStr[str] = ..., index: bool = ..., na_rep: str = ..., formatters: list[(...) -> Unknown] | tuple[(...) -> Unknown, ...] | Mapping[str | int, (...) -> Unknown] | None = ..., float_format: str | ((...) -> Unknown) | EngFormatter | None = ..., sparsify: bool | None = ..., index_names: bool = ..., justify: str | None = ..., max_rows: int | None = ..., max_cols: int | None = ..., show_dimensions: bool = ..., decimal: str = ..., line_width: int | None = ..., min_rows: int | None = ..., max_colwidth: int | None = ..., encoding: str | None = ...) -> str, (buf: str | PathLike[str] | WriteBuffer[str], columns: ExtensionArray | ndarray[tuple[Any, ...], dtype[Any]] | Index | Series | SequenceNotStr[Unknown] | range | None = ..., col_space: int | list[int] | dict[Hashable, int] | None = ..., header: bool | SequenceNotStr[str] = ..., index: bool = ..., na_rep: str = ..., formatters: list[(...) -> Unknown] | tuple[(...) -> Unknown, ...] | Mapping[str | int, (...) -> Unknown] | None = ..., float_format: str | ((...) -> Unknown) | EngFormatter | None = ..., sparsify: bool | None = ..., index_names: bool = ..., justify: str | None = ..., max_rows: int | None = ..., max_cols: int | None = ..., show_dimensions: bool = ..., decimal: str = ..., line_width: int | None = ..., min_rows: int | None = ..., max_colwidth: int | None = ..., encoding: str | None = ...) -> None] | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:116:5 - error: Type of "alerts_df" is partially unknown
+    Type of "alerts_df" is "Series | Any | ndarray[tuple[Any, ...], dtype[Any]] | Unknown | DataFrame" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:121:8 - error: Type of "empty" is partially unknown
+    Type of "empty" is "bool | Any | Unknown" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:121:18 - error: Cannot access attribute "empty" for class "ndarray[_AnyShape, dtype[Any]]"
+    Attribute "empty" is unknown (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:124:9 - error: Type of "alerts" is partially unknown
+    Type of "alerts" is "str | Any | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:124:18 - error: Type of "to_string" is partially unknown
+    Type of "to_string" is "Overload[(buf: None = ..., na_rep: str = ..., float_format: str | None = ..., header: bool = ..., index: bool = ..., length: bool = ..., dtype: ... = ..., name: ... = ..., max_rows: int | None = ..., min_rows: int | None = ...) -> str, (buf: str | PathLike[str] | WriteBuffer[str], na_rep: str = ..., float_format: str | None = ..., header: bool = ..., index: bool = ..., length: bool = ..., dtype: ... = ..., name: ... = ..., max_rows: int | None = ..., min_rows: int | None = ...) -> None] | Any | Unknown | Overload[(buf: None = ..., columns: ExtensionArray | ndarray[tuple[Any, ...], dtype[Any]] | Index | Series | SequenceNotStr[Unknown] | range | None = ..., col_space: int | list[int] | dict[Hashable, int] | None = ..., header: bool | SequenceNotStr[str] = ..., index: bool = ..., na_rep: str = ..., formatters: list[(...) -> Unknown] | tuple[(...) -> Unknown, ...] | Mapping[str | int, (...) -> Unknown] | None = ..., float_format: str | ((...) -> Unknown) | EngFormatter | None = ..., sparsify: bool | None = ..., index_names: bool = ..., justify: str | None = ..., max_rows: int | None = ..., max_cols: int | None = ..., show_dimensions: bool = ..., decimal: str = ..., line_width: int | None = ..., min_rows: int | None = ..., max_colwidth: int | None = ..., encoding: str | None = ...) -> str, (buf: str | PathLike[str] | WriteBuffer[str], columns: ExtensionArray | ndarray[tuple[Any, ...], dtype[Any]] | Index | Series | SequenceNotStr[Unknown] | range | None = ..., col_space: int | list[int] | dict[Hashable, int] | None = ..., header: bool | SequenceNotStr[str] = ..., index: bool = ..., na_rep: str = ..., formatters: list[(...) -> Unknown] | tuple[(...) -> Unknown, ...] | Mapping[str | int, (...) -> Unknown] | None = ..., float_format: str | ((...) -> Unknown) | EngFormatter | None = ..., sparsify: bool | None = ..., index_names: bool = ..., justify: str | None = ..., max_rows: int | None = ..., max_cols: int | None = ..., show_dimensions: bool = ..., decimal: str = ..., line_width: int | None = ..., min_rows: int | None = ..., max_colwidth: int | None = ..., encoding: str | None = ...) -> None]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:124:28 - error: Cannot access attribute "to_string" for class "ndarray[_AnyShape, dtype[Any]]"
+    Attribute "to_string" is unknown (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:125:5 - error: Type of "avg_relevancy" is partially unknown
+    Type of "avg_relevancy" is "Series | float | int | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:125:21 - error: Type of "mean" is partially unknown
+    Type of "mean" is "((axis: int | Literal['index', 'columns', 'rows'] | None = 0, skipna: bool = True, numeric_only: bool = False, **kwargs: Unknown) -> (Series | float)) | Unknown | ((axis: int | Literal['index', 'columns', 'rows'] | None = 0, skipna: bool = True, numeric_only: bool = False, **kwargs: Unknown) -> (Series | float | int))" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:126:5 - error: Type of "avg_precision" is partially unknown
+    Type of "avg_precision" is "Series | float | int | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:126:21 - error: Type of "mean" is partially unknown
+    Type of "mean" is "((axis: int | Literal['index', 'columns', 'rows'] | None = 0, skipna: bool = True, numeric_only: bool = False, **kwargs: Unknown) -> (Series | float)) | Unknown | ((axis: int | Literal['index', 'columns', 'rows'] | None = 0, skipna: bool = True, numeric_only: bool = False, **kwargs: Unknown) -> (Series | float | int))" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:127:5 - error: Type of "avg_faithfulness" is partially unknown
+    Type of "avg_faithfulness" is "Series | float | int | Unknown" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:127:24 - error: Type of "mean" is partially unknown
+    Type of "mean" is "((axis: int | Literal['index', 'columns', 'rows'] | None = 0, skipna: bool = True, numeric_only: bool = False, **kwargs: Unknown) -> (Series | float)) | Unknown | ((axis: int | Literal['index', 'columns', 'rows'] | None = 0, skipna: bool = True, numeric_only: bool = False, **kwargs: Unknown) -> (Series | float | int))" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:129:9 - error: Argument of type "dict[str, Series | float | int | Unknown]" cannot be assigned to parameter "metrics" of type "Dict[str, float]" in function "generate_recommendations"
+    Type "Series | float | int | Unknown" is not assignable to type "float"
+      "Series" is not assignable to "float"
+    Type "Series | float | int | Unknown" is not assignable to type "float"
+      "Series" is not assignable to "float"
+    Type "Series | float | int | Unknown" is not assignable to type "float"
+      "Series" is not assignable to "float" (reportArgumentType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:140:17 - error: Type of "to_csv" is partially unknown
+    Type of "to_csv" is "Overload[(path_or_buf: None = ..., sep: str = ..., na_rep: str = ..., float_format: str | ((...) -> Unknown) | None = ..., columns: Sequence[Hashable] | None = ..., header: bool | list[str] = ..., index: bool = ..., index_label: Hashable | Sequence[Hashable] | None = ..., mode: str = ..., encoding: str | None = ..., compression: dict[str, Any] | Literal['infer', 'gzip', 'bz2', 'zip', 'xz', 'zstd', 'tar'] | None = ..., quoting: int | None = ..., quotechar: str = ..., lineterminator: str | None = ..., chunksize: int | None = ..., date_format: str | None = ..., doublequote: bool = ..., escapechar: str | None = ..., decimal: str = ..., errors: Literal['strict', 'ignore', 'replace', 'surrogateescape', 'xmlcharrefreplace', 'backslashreplace', 'namereplace'] = ..., storage_options: dict[str, Any] | None = ...) -> str, (path_or_buf: str | PathLike[str] | WriteBuffer[bytes] | WriteBuffer[str], sep: str = ..., na_rep: str = ..., float_format: str | ((...) -> Unknown) | None = ..., columns: Sequence[Hashable] | None = ..., header: bool | list[str] = ..., index: bool = ..., index_label: Hashable | Sequence[Hashable] | None = ..., mode: str = ..., encoding: str | None = ..., compression: dict[str, Any] | Literal['infer', 'gzip', 'bz2', 'zip', 'xz', 'zstd', 'tar'] | None = ..., quoting: int | None = ..., quotechar: str = ..., lineterminator: str | None = ..., chunksize: int | None = ..., date_format: str | None = ..., doublequote: bool = ..., escapechar: str | None = ..., decimal: str = ..., errors: Literal['strict', 'ignore', 'replace', 'surrogateescape', 'xmlcharrefreplace', 'backslashreplace', 'namereplace'] = ..., storage_options: dict[str, Any] | None = ...) -> None]" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:141:18 - error: Type of "to_json" is partially unknown
+    Type of "to_json" is "(path_or_buf: str | PathLike[str] | WriteBuffer[bytes] | WriteBuffer[str] | None = None, orient: Literal['split', 'records', 'index', 'table', 'columns', 'values'] | None = None, date_format: str | None = None, double_precision: int = 10, force_ascii: bool = True, date_unit: Literal['s', 'ms', 'us', 'ns'] = "ms", default_handler: ((Any) -> (str | float | bool | list[Unknown] | dict[Unknown, Unknown] | None)) | None = None, lines: bool = False, compression: dict[str, Any] | Literal['infer', 'gzip', 'bz2', 'zip', 'xz', 'zstd', 'tar'] | None = "infer", index: bool | None = None, indent: int | None = None, storage_options: dict[str, Any] | None = None, mode: Literal['a', 'w'] = "w") -> (str | None)" (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:141:47 - error: "encode" is not a known attribute of "None" (reportOptionalMemberAccess)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:142:5 - error: Type of "csv_update" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:142:18 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:142:21 - error: "update" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:143:5 - error: Type of "json_update" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:143:19 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:143:22 - error: "update" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:144:12 - error: Return type, "tuple[str, Figure, Series | Unknown | DataFrame, str | Unknown, str | Any | Unknown, str, Unknown, Unknown]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:147:9 - error: Type "tuple[str, Figure, Series | Unknown | DataFrame, str | Unknown, str | Any | Unknown, str, Unknown, Unknown]" is not assignable to return type "Tuple[str, Any, DataFrame, str, str, str, Dict[str, Any], Dict[str, Any]]"
+    Type "Series | Unknown | DataFrame" is not assignable to type "DataFrame"
+      "Series" is not assignable to "DataFrame" (reportReturnType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:167:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __enter__
+    Attribute "__enter__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:167:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __exit__
+    Attribute "__exit__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:167:25 - error: Type of "demo" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:169:9 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:169:12 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:170:14 - error: Type of "Row" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:170:17 - error: "Row" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:171:13 - error: Type of "start_date" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:171:26 - error: Type of "Textbox" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:171:29 - error: "Textbox" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:175:13 - error: Type of "end_date" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:175:24 - error: Type of "Textbox" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:175:27 - error: "Textbox" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:179:13 - error: Type of "load_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:179:24 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:179:27 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:181:9 - error: Type of "summary" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:181:19 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:181:22 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:182:9 - error: Type of "chart" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:182:17 - error: Type of "Plot" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:182:20 - error: "Plot" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:183:9 - error: Type of "analysis" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:183:20 - error: Type of "DataFrame" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:183:23 - error: "DataFrame" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:184:9 - error: Type of "correlations_box" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:184:28 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:184:31 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:185:9 - error: Type of "alerts_box" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:185:22 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:185:25 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:186:9 - error: Type of "recommendations_box" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:186:31 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:186:34 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:187:14 - error: Type of "Row" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:187:17 - error: "Row" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:188:13 - error: Type of "export_csv" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:188:26 - error: Type of "DownloadButton" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:188:29 - error: "DownloadButton" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:189:13 - error: Type of "export_json" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:189:27 - error: Type of "DownloadButton" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:189:30 - error: "DownloadButton" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:191:9 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/evaluate.py:205:12 - error: Return type is unknown (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/ui/ingest.py
+  /workspace/personal-rag-copilot/src/ui/ingest.py:25:9 - error: Return type, "tuple[list[Unknown], dict[Unknown, Unknown]]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:25:29 - error: Type of parameter "args" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:25:29 - error: Type annotation is missing for parameter "args" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:25:37 - error: Type of parameter "kwargs" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:25:37 - error: Type annotation is missing for parameter "kwargs" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:26:16 - error: Return type, "tuple[list[Unknown], dict[Unknown, Unknown]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:28:9 - error: Return type, "dict[Unknown, Unknown]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:28:32 - error: Type of parameter "args" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:28:32 - error: Type annotation is missing for parameter "args" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:28:40 - error: Type of parameter "kwargs" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:28:40 - error: Type annotation is missing for parameter "kwargs" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:29:16 - error: Return type, "dict[Unknown, Unknown]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:31:9 - error: Return type, "dict[Unknown, Unknown]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:31:32 - error: Type of parameter "args" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:31:32 - error: Type annotation is missing for parameter "args" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:31:40 - error: Type of parameter "kwargs" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:31:40 - error: Type annotation is missing for parameter "kwargs" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:32:16 - error: Return type, "dict[Unknown, Unknown]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:34:9 - error: Return type, "tuple[Literal[True], dict[Unknown, Unknown]]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:34:31 - error: Type of parameter "args" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:34:31 - error: Type annotation is missing for parameter "args" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:34:39 - error: Type of parameter "kwargs" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:34:39 - error: Type annotation is missing for parameter "kwargs" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:35:16 - error: Return type, "tuple[Literal[True], dict[Unknown, Unknown]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:41:9 - error: Return type, "tuple[list[Unknown], dict[Unknown, Unknown]]", is partially unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:41:32 - error: Type of parameter "args" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:41:32 - error: Type annotation is missing for parameter "args" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:41:40 - error: Type of parameter "kwargs" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:41:40 - error: Type annotation is missing for parameter "kwargs" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:42:16 - error: Return type, "tuple[list[Unknown], dict[Unknown, Unknown]]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:46:5 - error: Argument of type "_DummyDenseRetriever" cannot be assigned to parameter "dense_retriever" of type "DenseRetriever" in function "__init__"
+    "_DummyDenseRetriever" is not assignable to "DenseRetriever" (reportArgumentType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:47:5 - error: Argument of type "_DummyLexicalRetriever" cannot be assigned to parameter "lexical_retriever" of type "LexicalBM25" in function "__init__"
+    "_DummyLexicalRetriever" is not assignable to "LexicalBM25" (reportArgumentType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:69:5 - error: Type of parameter "files" is partially unknown
+    Parameter type is "list[Unknown]" (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:69:17 - error: Type of "File" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:69:20 - error: "File" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:77:16 - error: Return type, "tuple[List[List[Any]], Dict[str, str], Unknown]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:77:33 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:77:36 - error: "update" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:78:9 - error: Type of "file" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:79:33 - error: Type of "name" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:79:33 - error: Argument type is unknown
+    Argument corresponds to parameter "name" in function "_sanitize_name" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:81:40 - error: Type of "name" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:81:40 - error: Argument type is unknown
+    Argument corresponds to parameter "path_str" in function "_sanitize_path" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:87:12 - error: Return type, "tuple[List[List[Any]], Dict[str, str], Unknown]", is partially unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:87:29 - error: Type of "update" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:87:32 - error: "update" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:140:9 - error: Type of "metadata" is partially unknown
+    Type of "metadata" is "Any | dict[Unknown, Unknown]" (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:143:63 - error: Argument type is partially unknown
+    Argument corresponds to parameter "metadata" in function "update_document"
+    Argument type is "Any | dict[Unknown, Unknown]" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:166:34 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:166:34 - error: Argument type is unknown
+    Argument corresponds to parameter "default" in function "getattr" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:166:37 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:167:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __enter__
+    Attribute "__enter__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:167:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __exit__
+    Attribute "__exit__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:167:25 - error: Type of "demo" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:169:9 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:169:12 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:171:9 - error: Type of "file_input" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:171:22 - error: Type of "File" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:171:25 - error: "File" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:176:9 - error: Type of "queue" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:176:17 - error: Type of "Dataframe" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:176:20 - error: "Dataframe" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:181:9 - error: Type of "contents_state" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:181:26 - error: Type of "State" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:181:29 - error: "State" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:182:9 - error: Type of "process_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:182:23 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:182:26 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:183:9 - error: Type of "report" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:183:18 - error: Type of "JSON" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:183:21 - error: "JSON" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:184:9 - error: Type of "upload" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:189:9 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:194:14 - error: Type of "Accordion" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:194:17 - error: "Accordion" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:195:13 - error: Type of "metadata_table" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:195:30 - error: Type of "Dataframe" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:195:33 - error: "Dataframe" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:199:13 - error: Type of "chunk_preview" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:199:29 - error: Type of "Textbox" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:199:32 - error: "Textbox" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:200:18 - error: Type of "Row" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:200:21 - error: "Row" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:201:17 - error: Type of "update_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:201:30 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:201:33 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:202:17 - error: Type of "delete_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:202:30 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:202:33 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:203:17 - error: Type of "health_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:203:30 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:203:33 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:204:13 - error: Type of "update_result" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:204:29 - error: Type of "JSON" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:204:32 - error: "JSON" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:205:13 - error: Type of "delete_result" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:205:29 - error: Type of "JSON" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:205:32 - error: "JSON" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:206:13 - error: Type of "health_result" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:206:29 - error: Type of "JSON" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:206:32 - error: "JSON" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:207:13 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:212:13 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:217:13 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/ingest.py:218:12 - error: Return type is unknown (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/ui/navbar.py
+  /workspace/personal-rag-copilot/src/ui/navbar.py:6:10 - error: Type of "Row" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/navbar.py:6:13 - error: "Row" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/navbar.py:7:9 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/navbar.py:7:12 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+/workspace/personal-rag-copilot/src/ui/settings.py
+  /workspace/personal-rag-copilot/src/ui/settings.py:8:8 - error: Stub file not found for "pandas" (reportMissingTypeStubs)
+  /workspace/personal-rag-copilot/src/ui/settings.py:46:46 - error: "_latencies" is protected and used outside of the class in which it is declared (reportPrivateUsage)
+  /workspace/personal-rag-copilot/src/ui/settings.py:58:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __enter__
+    Attribute "__enter__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/ui/settings.py:58:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __exit__
+    Attribute "__exit__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/src/ui/settings.py:58:25 - error: Type of "demo" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:60:9 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:60:12 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:61:9 - error: Type of "settings_state" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:61:26 - error: Type of "State" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:61:29 - error: "State" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:63:29 - error: Type of parameter "file" is unknown (reportUnknownParameterType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:63:29 - error: Type annotation is missing for parameter "file" (reportMissingParameterType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:71:45 - error: Type of "name" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:71:45 - error: Argument type is unknown
+    Argument corresponds to parameter "path" in function "load_settings" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:72:20 - error: Variable "errors" is not accessed (reportUnusedVariable)
+  /workspace/personal-rag-copilot/src/ui/settings.py:97:14 - error: Type of "Tabs" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:97:17 - error: "Tabs" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:98:18 - error: Type of "Tab" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:98:21 - error: "Tab" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:99:17 - error: Type of "top_k" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:99:25 - error: Type of "Number" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:99:28 - error: "Number" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:103:17 - error: Type of "top_k_error" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:103:31 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:103:34 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:104:17 - error: Type of "rrf_k" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:104:25 - error: Type of "Number" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:104:28 - error: "Number" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:108:17 - error: Type of "rrf_k_error" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:108:31 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:108:34 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:110:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:111:28 - error: Type of parameter "v" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:111:31 - error: Type of parameter "s" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:111:59 - error: Argument type is unknown
+    Argument corresponds to parameter "settings" in function "update_field" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:115:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:116:28 - error: Type of parameter "v" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:116:31 - error: Type of parameter "s" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:116:59 - error: Argument type is unknown
+    Argument corresponds to parameter "settings" in function "update_field" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:121:18 - error: Type of "Tab" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:121:21 - error: "Tab" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:122:17 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:122:20 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:124:18 - error: Type of "Tab" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:124:21 - error: "Tab" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:126:17 - error: Type of "metrics_json" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:126:32 - error: Type of "JSON" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:126:35 - error: "JSON" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:131:17 - error: Type of "policy_json" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:131:31 - error: Type of "JSON" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:131:34 - error: "JSON" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:136:17 - error: Type of "mode_selector" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:136:33 - error: Type of "Dropdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:136:36 - error: "Dropdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:138:58 - error: "_latencies" is protected and used outside of the class in which it is declared (reportPrivateUsage)
+  /workspace/personal-rag-copilot/src/ui/settings.py:139:57 - error: "_latencies" is protected and used outside of the class in which it is declared (reportPrivateUsage)
+  /workspace/personal-rag-copilot/src/ui/settings.py:143:17 - error: Type of "trend_plot" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:143:30 - error: Type of "LinePlot" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:143:33 - error: "LinePlot" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:144:45 - error: Type of "value" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:144:45 - error: Argument type is unknown
+    Argument corresponds to parameter "mode" in function "get_latency_trend" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:150:17 - error: Type of "refresh_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:150:31 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:150:34 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:151:17 - error: Type of "target_p95" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:151:30 - error: Type of "Slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:151:33 - error: "Slider" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:157:17 - error: Type of "max_top_k" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:157:29 - error: Type of "Slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:157:32 - error: "Slider" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:163:17 - error: Type of "rerank_disable" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:163:34 - error: Type of "Slider" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:163:37 - error: "Slider" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:169:17 - error: Type of "auto_tune" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:169:29 - error: Type of "Checkbox" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:169:32 - error: "Checkbox" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:173:17 - error: Type of "enable_rerank" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:173:33 - error: Type of "Checkbox" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:173:36 - error: "Checkbox" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:177:17 - error: Type of "policy_error" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:177:32 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:177:35 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:178:17 - error: Type of "rerank_error" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:178:32 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:178:35 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:180:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:181:28 - error: Type of parameter "v" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:181:31 - error: Type of parameter "s" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:181:74 - error: Argument type is unknown
+    Argument corresponds to parameter "settings" in function "update_policy_field" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:185:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:186:28 - error: Type of parameter "v" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:186:31 - error: Type of parameter "s" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:186:70 - error: Argument type is unknown
+    Argument corresponds to parameter "settings" in function "update_policy_field" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:190:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:191:28 - error: Type of parameter "v" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:191:31 - error: Type of parameter "s" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:191:85 - error: Argument type is unknown
+    Argument corresponds to parameter "settings" in function "update_policy_field" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:195:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:196:28 - error: Type of parameter "v" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:196:31 - error: Type of parameter "s" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:196:78 - error: Argument type is unknown
+    Argument corresponds to parameter "settings" in function "update_policy_field" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:200:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:201:28 - error: Type of parameter "v" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:201:31 - error: Type of parameter "s" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:201:67 - error: Argument type is unknown
+    Argument corresponds to parameter "settings" in function "update_field" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:205:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:210:17 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:211:28 - error: Type of parameter "m" is unknown (reportUnknownLambdaType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:214:43 - error: Argument type is unknown
+    Argument corresponds to parameter "mode" in function "get_latency_trend" (reportUnknownArgumentType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:220:18 - error: Type of "Tab" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:220:21 - error: "Tab" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:221:17 - error: Type of "status" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:221:26 - error: Type of "Markdown" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:221:29 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:222:17 - error: Type of "import_file" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:222:31 - error: Type of "File" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:222:34 - error: "File" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:226:17 - error: Type of "export_file" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:226:31 - error: Type of "File" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:226:34 - error: "File" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:227:17 - error: Type of "export_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:227:30 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:227:33 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:228:17 - error: Type of "reset_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:228:29 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:228:32 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:229:17 - error: Type of "rollback_btn" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:229:32 - error: Type of "Button" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:229:35 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/src/ui/settings.py:231:17 - error: Type of "change" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:236:17 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:241:17 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:246:17 - error: Type of "click" is unknown (reportUnknownMemberType)
+  /workspace/personal-rag-copilot/src/ui/settings.py:252:12 - error: Return type is unknown (reportUnknownVariableType)
+/workspace/personal-rag-copilot/src/utils/hardware.py
+  /workspace/personal-rag-copilot/src/utils/hardware.py:15:9 - error: Type of "core" is unknown (reportUnknownVariableType)
+  /workspace/personal-rag-copilot/src/utils/hardware.py:16:27 - error: Argument type is unknown
+    Argument corresponds to parameter "o" in function "getattr" (reportUnknownArgumentType)
+/workspace/personal-rag-copilot/tests/test_query_service.py
+  /workspace/personal-rag-copilot/tests/test_query_service.py:18:28 - error: Argument of type "StubHybrid" cannot be assigned to parameter "retriever" of type "HybridRetriever" in function "__init__"
+    "StubHybrid" is not assignable to "HybridRetriever" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_query_service.py:25:28 - error: Argument of type "StubHybrid" cannot be assigned to parameter "retriever" of type "HybridRetriever" in function "__init__"
+    "StubHybrid" is not assignable to "HybridRetriever" (reportArgumentType)
+/workspace/personal-rag-copilot/tests/test_retrieval/conftest.py
+  /workspace/personal-rag-copilot/tests/test_retrieval/conftest.py:16:21 - error: Cannot assign to attribute "encode" for class "type[SentenceTransformer]"
+    Attribute "encode" is unknown (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_retrieval/conftest.py:17:6 - error: Cannot assign to attribute "SentenceTransformer" for class "ModuleType"
+    Attribute "SentenceTransformer" is unknown (reportAttributeAccessIssue)
+/workspace/personal-rag-copilot/tests/test_retrieval/test_dense.py
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_dense.py:33:32 - error: Argument of type "MockPineconeClient" cannot be assigned to parameter "pinecone_client" of type "PineconeClient" in function "__init__"
+    "MockPineconeClient" is not assignable to "PineconeClient" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_dense.py:52:32 - error: Argument of type "MockPineconeClient" cannot be assigned to parameter "pinecone_client" of type "PineconeClient" in function "__init__"
+    "MockPineconeClient" is not assignable to "PineconeClient" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_dense.py:68:32 - error: Argument of type "MockPineconeClient" cannot be assigned to parameter "pinecone_client" of type "PineconeClient" in function "__init__"
+    "MockPineconeClient" is not assignable to "PineconeClient" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_dense.py:88:36 - error: Argument of type "MockPineconeClient" cannot be assigned to parameter "pinecone_client" of type "PineconeClient" in function "__init__"
+    "MockPineconeClient" is not assignable to "PineconeClient" (reportArgumentType)
+/workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid.py
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid.py:18:30 - error: Argument of type "StubDense" cannot be assigned to parameter "dense_retriever" of type "DenseRetriever" in function "__init__"
+    "StubDense" is not assignable to "DenseRetriever" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid.py:18:43 - error: Argument of type "StubLexical" cannot be assigned to parameter "lexical_retriever" of type "LexicalBM25" in function "__init__"
+    "StubLexical" is not assignable to "LexicalBM25" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid.py:28:30 - error: Argument of type "StubDense" cannot be assigned to parameter "dense_retriever" of type "DenseRetriever" in function "__init__"
+    "StubDense" is not assignable to "DenseRetriever" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid.py:28:43 - error: Argument of type "StubLexical" cannot be assigned to parameter "lexical_retriever" of type "LexicalBM25" in function "__init__"
+    "StubLexical" is not assignable to "LexicalBM25" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid.py:40:28 - error: Argument of type "StubDense" cannot be assigned to parameter "dense_retriever" of type "DenseRetriever" in function "__init__"
+    "StubDense" is not assignable to "DenseRetriever" (reportArgumentType)
+/workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid_rerank.py
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid_rerank.py:29:9 - error: Argument of type "StubDense" cannot be assigned to parameter "dense_retriever" of type "DenseRetriever" in function "__init__"
+    "StubDense" is not assignable to "DenseRetriever" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid_rerank.py:30:9 - error: Argument of type "StubLexical" cannot be assigned to parameter "lexical_retriever" of type "LexicalBM25" in function "__init__"
+    "StubLexical" is not assignable to "LexicalBM25" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_hybrid_rerank.py:31:18 - error: Argument of type "StubReranker" cannot be assigned to parameter "reranker" of type "CrossEncoderReranker | None" in function "__init__"
+    Type "StubReranker" is not assignable to type "CrossEncoderReranker | None"
+      "StubReranker" is not assignable to "CrossEncoderReranker"
+      "StubReranker" is not assignable to "None" (reportArgumentType)
+/workspace/personal-rag-copilot/tests/test_retrieval/test_query_analysis.py
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_query_analysis.py:16:50 - error: Argument of type "DummyLexical" cannot be assigned to parameter "lexical" of type "LexicalBM25" in function "analyze_query"
+    "DummyLexical" is not assignable to "LexicalBM25" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_retrieval/test_query_analysis.py:24:46 - error: Argument of type "DummyLexical" cannot be assigned to parameter "lexical" of type "LexicalBM25" in function "analyze_query"
+    "DummyLexical" is not assignable to "LexicalBM25" (reportArgumentType)
+/workspace/personal-rag-copilot/tests/test_services/test_document_service.py
+  /workspace/personal-rag-copilot/tests/test_services/test_document_service.py:33:10 - warning: Import "fpdf" could not be resolved from source (reportMissingModuleSource)
+  /workspace/personal-rag-copilot/tests/test_services/test_document_service.py:38:23 - error: No parameter named "txt" (reportCallIssue)
+  /workspace/personal-rag-copilot/tests/test_services/test_document_service.py:39:5 - error: No overloads for "output" match the provided arguments (reportCallIssue)
+  /workspace/personal-rag-copilot/tests/test_services/test_document_service.py:39:16 - error: Argument of type "Path" cannot be assigned to parameter "name" of type "str" in function "output"
+    "Path" is not assignable to "str" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_services/test_document_service.py:47:14 - error: Argument of type "Path" cannot be assigned to parameter "path_or_stream" of type "str | IO[bytes]" in function "save"
+    Type "Path" is not assignable to type "str | IO[bytes]"
+      "Path" is not assignable to "str"
+      "Path" is not assignable to "IO[bytes]" (reportArgumentType)
+/workspace/personal-rag-copilot/tests/test_services/test_index_management.py
+  /workspace/personal-rag-copilot/tests/test_services/test_index_management.py:47:28 - error: Argument of type "DummyDense" cannot be assigned to parameter "dense" of type "DenseRetriever" in function "__init__"
+    "DummyDense" is not assignable to "DenseRetriever" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_services/test_index_management.py:47:42 - error: Argument of type "DummyLexical" cannot be assigned to parameter "lexical" of type "LexicalBM25" in function "__init__"
+    "DummyLexical" is not assignable to "LexicalBM25" (reportArgumentType)
+/workspace/personal-rag-copilot/tests/test_ui/test_chat.py
+  /workspace/personal-rag-copilot/tests/test_ui/test_chat.py:41:9 - error: "chat" is possibly unbound (reportPossiblyUnboundVariable)
+  /workspace/personal-rag-copilot/tests/test_ui/test_chat.py:52:31 - error: Cannot assign to attribute "evaluate" for class "RagasEvaluator"
+    Type "(*_: Unknown, **__: Unknown) -> None" is not assignable to type "(query: str, answer: str, contexts: List[str]) -> EvaluationResult"
+      Function return type "None" is incompatible with type "EvaluationResult"
+        "None" is not assignable to "EvaluationResult" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_chat.py:91:33 - error: "Chatbot" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_chat.py:91:56 - error: Cannot access attribute "blocks" for class "Blocks"
+    Attribute "blocks" is unknown (reportAttributeAccessIssue)
+/workspace/personal-rag-copilot/tests/test_ui/test_evaluate.py
+  /workspace/personal-rag-copilot/tests/test_ui/test_evaluate.py:16:24 - error: Cannot access attribute "blocks" for class "Blocks"
+    Attribute "blocks" is unknown (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_evaluate.py:17:33 - error: "Plot" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_evaluate.py:18:33 - error: "DataFrame" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_evaluate.py:19:33 - error: "DownloadButton" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_evaluate.py:21:26 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_evaluate.py:25:26 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+/workspace/personal-rag-copilot/tests/test_ui/test_gradio_integration.py
+  /workspace/personal-rag-copilot/tests/test_ui/test_gradio_integration.py:8:10 - error: Import "gradio.testing" could not be resolved (reportMissingImports)
+  /workspace/personal-rag-copilot/tests/test_ui/test_gradio_integration.py:15:14 - error: Object of type "None" cannot be called (reportOptionalCall)
+/workspace/personal-rag-copilot/tests/test_ui/test_ingest.py
+  /workspace/personal-rag-copilot/tests/test_ui/test_ingest.py:19:24 - error: Cannot access attribute "blocks" for class "Blocks"
+    Attribute "blocks" is unknown (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ingest.py:20:33 - error: "File" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ingest.py:21:33 - error: "Dataframe" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ingest.py:22:33 - error: "JSON" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ingest.py:25:29 - error: "Button" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ingest.py:136:23 - error: "Slider" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ingest.py:137:24 - error: "Markdown" is not a known attribute of module "gradio" (reportAttributeAccessIssue)
+/workspace/personal-rag-copilot/tests/test_ui/test_performance_indicator.py
+  /workspace/personal-rag-copilot/tests/test_ui/test_performance_indicator.py:10:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __enter__
+    Attribute "__enter__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/tests/test_ui/test_performance_indicator.py:10:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __exit__
+    Attribute "__exit__" is unknown (reportGeneralTypeIssues)
+/workspace/personal-rag-copilot/tests/test_ui/test_ranking_controls.py
+  /workspace/personal-rag-copilot/tests/test_ui/test_ranking_controls.py:9:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __enter__
+    Attribute "__enter__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ranking_controls.py:9:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __exit__
+    Attribute "__exit__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ranking_controls.py:20:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __enter__
+    Attribute "__enter__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/tests/test_ui/test_ranking_controls.py:20:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __exit__
+    Attribute "__exit__" is unknown (reportGeneralTypeIssues)
+/workspace/personal-rag-copilot/tests/test_ui/test_settings_performance.py
+  /workspace/personal-rag-copilot/tests/test_ui/test_settings_performance.py:21:40 - error: Cannot access attribute "blocks" for class "Blocks"
+    Attribute "blocks" is unknown (reportAttributeAccessIssue)
+/workspace/personal-rag-copilot/tests/test_ui/test_transparency.py
+  /workspace/personal-rag-copilot/tests/test_ui/test_transparency.py:18:38 - error: Argument of type "Literal['Doc1']" cannot be assigned to parameter "target" of type "Block | None" in function "__init__"
+    Type "Literal['Doc1']" is not assignable to type "Block | None"
+      "Literal['Doc1']" is not assignable to "Block"
+      "Literal['Doc1']" is not assignable to "None" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_ui/test_transparency.py:43:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __enter__
+    Attribute "__enter__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/tests/test_ui/test_transparency.py:43:10 - error: Object of type "Blocks" cannot be used with "with" because it does not correctly implement __exit__
+    Attribute "__exit__" is unknown (reportGeneralTypeIssues)
+  /workspace/personal-rag-copilot/tests/test_ui/test_transparency.py:49:12 - error: Argument of type "Literal['rank']" cannot be assigned to parameter "key" of type "SupportsIndex | slice[Any, Any, Any]" in function "__getitem__"
+    Type "Literal['rank']" is not assignable to type "SupportsIndex | slice[Any, Any, Any]"
+      "Literal['rank']" is incompatible with protocol "SupportsIndex"
+        "__index__" is not present
+      "Literal['rank']" is not assignable to "slice[Any, Any, Any]" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_ui/test_transparency.py:50:12 - error: Argument of type "Literal['score']" cannot be assigned to parameter "key" of type "SupportsIndex | slice[Any, Any, Any]" in function "__getitem__"
+    Type "Literal['score']" is not assignable to type "SupportsIndex | slice[Any, Any, Any]"
+      "Literal['score']" is incompatible with protocol "SupportsIndex"
+        "__index__" is not present
+      "Literal['score']" is not assignable to "slice[Any, Any, Any]" (reportArgumentType)
+/workspace/personal-rag-copilot/tests/test_utils/test_timezone_handling.py
+  /workspace/personal-rag-copilot/tests/test_utils/test_timezone_handling.py:54:27 - error: Argument of type "DummyDense" cannot be assigned to parameter "dense" of type "DenseRetriever" in function "__init__"
+    "DummyDense" is not assignable to "DenseRetriever" (reportArgumentType)
+  /workspace/personal-rag-copilot/tests/test_utils/test_timezone_handling.py:54:41 - error: Argument of type "DummyLexical" cannot be assigned to parameter "lexical" of type "LexicalBM25" in function "__init__"
+    "DummyLexical" is not assignable to "LexicalBM25" (reportArgumentType)
+647 errors, 1 warning, 0 informations
