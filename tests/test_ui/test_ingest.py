@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from pathlib import Path
 import gradio as gr
 
 from src.ui import ingest as ingest_module
@@ -26,7 +27,9 @@ def test_ingest_page_has_components() -> None:
     assert {"Process All", "Update", "Delete", "Health Check"} <= button_labels
 
 
-def test_callbacks_invoked(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+def test_callbacks_invoked(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     calls: dict[str, object] = {}
 
     class DummyIndex:
@@ -99,7 +102,9 @@ def test_callbacks_invoked(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     assert "update" in calls and "delete" in calls
 
 
-def test_failed_ingest_shows_error(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+def test_failed_ingest_shows_error(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     class FailingService:
         def parse_document(self, _path):
             raise ValueError("bad file")
@@ -118,7 +123,7 @@ def test_failed_ingest_shows_error(monkeypatch: pytest.MonkeyPatch, tmp_path) ->
     assert alert["visible"] is True
 
 
-def test_progress_callback_updates_components(tmp_path) -> None:
+def test_progress_callback_updates_components(tmp_path: Path) -> None:
     from unittest.mock import MagicMock
 
     dense = MagicMock()

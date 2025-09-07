@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 import json
+from pathlib import Path
 
 import gradio as gr
 
@@ -18,7 +19,7 @@ def test_sanitize_html() -> None:
     assert _sanitize(" <b>hi</b> ") == "&lt;b&gt;hi&lt;/b&gt;"
 
 
-def test_append_history_writes(tmp_path) -> None:
+def test_append_history_writes(tmp_path: Path) -> None:
     file_path = tmp_path / "history.jsonl"
     original = HISTORY_PATH
     try:
@@ -40,7 +41,7 @@ def test_append_history_writes(tmp_path) -> None:
         chat.HISTORY_PATH = original
 
 
-def test_generate_response_streams(tmp_path) -> None:
+def test_generate_response_streams(tmp_path: Path) -> None:
     file_path = tmp_path / "history.jsonl"
     from src.ui import chat
 
