@@ -5,7 +5,7 @@ class StubHybrid:
     def __init__(self) -> None:
         self.last_mode = None
 
-    def query(self, query, mode=None, top_k=5):
+    def query(self, query, mode=None, top_k=5, **kwargs):
         self.last_mode = mode
         return [], {}
 
