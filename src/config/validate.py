@@ -6,7 +6,12 @@ import argparse
 import logging
 from typing import Any, Dict, Tuple
 
-from .settings import load_settings, validate_options, validate_thresholds
+from .settings import (
+    load_settings,
+    validate_options,
+    validate_thresholds,
+    validate_performance_policy,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -14,14 +19,27 @@ _logger = logging.getLogger(__name__)
 BOUNDS: Dict[str, Tuple[int, int]] = {
     "top_k": (1, 1000),
     "rrf_k": (1, 1000),
+    "performance_policy.target_p95_ms": (1, 10000),
+    "performance_policy.max_top_k": (1, 1000),
+    "performance_policy.rerank_disable_threshold": (0, 10000),
 }
+
+
+def _get_nested(settings: Dict[str, Any], path: str) -> Any:
+    parts = path.split(".")
+    current: Any = settings
+    for part in parts:
+        if not isinstance(current, dict):
+            return None
+        current = current.get(part)
+    return current
 
 
 def validate_settings(settings: Dict[str, Any]) -> Tuple[bool, Dict[str, str]]:
     """Validate configuration ``settings`` against predefined bounds."""
     errors: Dict[str, str] = {}
     for key, (low, high) in BOUNDS.items():
-        value = settings.get(key)
+        value = _get_nested(settings, key)
         if value is None:
             errors[key] = "missing"
             continue
@@ -32,6 +50,7 @@ def validate_settings(settings: Dict[str, Any]) -> Tuple[bool, Dict[str, str]]:
             errors[key] = f"out_of_bounds:{low}-{high}"
     errors.update(validate_options(settings))
     errors.update(validate_thresholds(settings))
+    errors.update(validate_performance_policy(settings))
     return not errors, errors
 
 

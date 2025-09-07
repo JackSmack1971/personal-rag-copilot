@@ -3,7 +3,18 @@ from src.config.runtime_config import ConfigManager
 
 
 def test_override_precedence() -> None:
-    cm = ConfigManager(base_config={"top_k": 1, "rrf_k": 10})
+    cm = ConfigManager(
+        base_config={
+            "top_k": 1,
+            "rrf_k": 10,
+            "performance_policy": {
+                "target_p95_ms": 2000,
+                "auto_tune_enabled": False,
+                "max_top_k": 50,
+                "rerank_disable_threshold": 1500,
+            },
+        }
+    )
     assert cm.get("top_k") == 1
     cm.set_cli_overrides({"top_k": 2})
     assert cm.get("top_k") == 2
@@ -16,19 +27,31 @@ def test_override_precedence() -> None:
 
 
 def test_hot_reload_and_rollback() -> None:
-    cm = ConfigManager(base_config={"top_k": 1, "rrf_k": 10})
+    cm = ConfigManager(
+        base_config={
+            "top_k": 1,
+            "rrf_k": 10,
+            "performance_policy": {
+                "target_p95_ms": 2000,
+                "auto_tune_enabled": False,
+                "max_top_k": 50,
+                "rerank_disable_threshold": 1500,
+            },
+        }
+    )
     events: list[int] = []
 
     def listener(cfg):
-        events.append(cfg["top_k"])
+        events.append(cfg["performance_policy"]["target_p95_ms"])
 
     cm.reloader.register(listener)
     cm.set_runtime_overrides({"top_k": 2})
-    cm.set_runtime_overrides({"top_k": 3})
-    assert events[-1] == 3
+    cm.set_runtime_overrides({"performance_policy": {"target_p95_ms": 2500}})
+    assert events[-1] == 2500
+    assert cm.get("performance_policy")["max_top_k"] == 50
     cm.rollback()
-    assert events[-1] == 2
-    assert cm.get("top_k") == 2
+    assert cm.get("performance_policy")["target_p95_ms"] == 2000
+    assert events[-1] == 2000
 
 
 def test_env_overrides_and_device_detection(monkeypatch) -> None:
@@ -47,6 +70,12 @@ def test_env_overrides_and_device_detection(monkeypatch) -> None:
             "rrf_k": 10,
             "device_preference": "auto",
             "precision": "fp32",
+            "performance_policy": {
+                "target_p95_ms": 2000,
+                "auto_tune_enabled": False,
+                "max_top_k": 50,
+                "rerank_disable_threshold": 1500,
+            },
         }
     )
     assert called["pref"] == "gpu_xpu"

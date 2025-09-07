@@ -10,3 +10,9 @@ evaluation_thresholds:
   faithfulness: 0.7
   relevancy: 0.7
   precision: 0.7
+
+performance_policy:
+  target_p95_ms: 2000
+  auto_tune_enabled: false
+  max_top_k: 50
+  rerank_disable_threshold: 1500
