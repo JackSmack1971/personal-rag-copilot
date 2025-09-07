@@ -1,15 +1,21 @@
-import time
+from __future__ import annotations
+
 import datetime
+import time
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 from src.config.backup import backup_config
-from src.services.index_management import IndexManagement
 from src.evaluation.ragas_integration import RagasEvaluator
+from src.services.index_management import IndexManagement
 
 
 class DummyDense:
-    def update_document(self, doc_id: str, content: str, metadata: dict | None = None):
+    def update_document(
+        self, doc_id: str, content: str, metadata: dict | None = None
+    ) -> dict:
         return {"status": "dense"}
 
     def delete_document(self, doc_id: str):
@@ -29,7 +35,10 @@ class DummyLexical:
     bm25 = object()
 
 
-def test_utc_now_across_modules(tmp_path: Path, monkeypatch):
+def test_utc_now_across_modules(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setenv("TZ", "US/Pacific")
     if hasattr(time, "tzset"):
         time.tzset()
@@ -57,5 +66,6 @@ def test_utc_now_across_modules(tmp_path: Path, monkeypatch):
             "context_precision": [0.0],
         }
         res = evaluator.evaluate("q", "a", ["c"])
-    ts_eval = datetime.datetime.fromisoformat(res.timestamp.replace("Z", "+00:00"))
+    timestamp_str = res.timestamp.replace("Z", "+00:00")
+    ts_eval = datetime.datetime.fromisoformat(timestamp_str)
     assert ts_eval.tzinfo is datetime.UTC
