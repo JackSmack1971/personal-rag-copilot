@@ -491,7 +491,7 @@ uvloop==0.21.0
     # via uvicorn
 watchfiles==1.1.0
     # via uvicorn
-websockets==15.0.1
+websockets==10.4
     # via
     #   gradio-client
     #   uvicorn
