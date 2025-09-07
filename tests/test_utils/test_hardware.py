@@ -1,13 +1,17 @@
+from __future__ import annotations
+
 import sys
 import types
+from typing import List, Optional
+
 import pytest
 
 from src.utils import hardware
 
 
-def mock_openvino(monkeypatch, devices):
+def mock_openvino(monkeypatch: pytest.MonkeyPatch, devices: List[str]) -> None:
     class DummyCore:
-        def __init__(self):
+        def __init__(self) -> None:
             self.available_devices = devices
 
     runtime = types.SimpleNamespace(Core=DummyCore)
@@ -16,10 +20,10 @@ def mock_openvino(monkeypatch, devices):
     monkeypatch.setitem(sys.modules, "openvino.runtime", runtime)
 
 
-def mock_torch_xpu(monkeypatch, available: bool):
+def mock_torch_xpu(monkeypatch: pytest.MonkeyPatch, available: bool) -> None:
     class DummyXPU:
         @staticmethod
-        def is_available():
+        def is_available() -> bool:
             return available
 
     torch_mod = types.SimpleNamespace(xpu=DummyXPU())
@@ -28,32 +32,34 @@ def mock_torch_xpu(monkeypatch, available: bool):
 
 # --- availability checks ---------------------------------------------------
 
-def test_has_openvino_gpu_true(monkeypatch):
+
+def test_has_openvino_gpu_true(monkeypatch: pytest.MonkeyPatch) -> None:
     mock_openvino(monkeypatch, ["GPU.0"])
     assert hardware.has_openvino_gpu() is True
 
 
-def test_has_openvino_gpu_false_no_gpu(monkeypatch):
+def test_has_openvino_gpu_false_no_gpu(monkeypatch: pytest.MonkeyPatch) -> None:
     mock_openvino(monkeypatch, ["CPU"])
     assert hardware.has_openvino_gpu() is False
 
 
-def test_has_openvino_gpu_false_missing(monkeypatch):
+def test_has_openvino_gpu_false_missing(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setitem(sys.modules, "openvino", None)
     assert hardware.has_openvino_gpu() is False
 
 
-def test_has_torch_xpu_true(monkeypatch):
+def test_has_torch_xpu_true(monkeypatch: pytest.MonkeyPatch) -> None:
     mock_torch_xpu(monkeypatch, True)
     assert hardware.has_torch_xpu() is True
 
 
-def test_has_torch_xpu_false_missing(monkeypatch):
+def test_has_torch_xpu_false_missing(monkeypatch: pytest.MonkeyPatch) -> None:
     mock_torch_xpu(monkeypatch, False)
     assert hardware.has_torch_xpu() is False
 
 
 # --- device detection ------------------------------------------------------
+
 
 @pytest.mark.parametrize(
     "xpu_available, ov_devices, preference, expected",
@@ -66,7 +72,13 @@ def test_has_torch_xpu_false_missing(monkeypatch):
         (False, [], "auto", "cpu"),
     ],
 )
-def test_detect_device(monkeypatch, xpu_available, ov_devices, preference, expected):
+def test_detect_device(
+    monkeypatch: pytest.MonkeyPatch,
+    xpu_available: bool,
+    ov_devices: Optional[List[str]],
+    preference: str,
+    expected: str,
+) -> None:
     mock_torch_xpu(monkeypatch, xpu_available)
     if ov_devices is not None:
         mock_openvino(monkeypatch, ov_devices)
