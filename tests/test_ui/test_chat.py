@@ -23,7 +23,12 @@ def test_append_history_writes(tmp_path):
         from src.ui import chat
 
         chat.HISTORY_PATH = file_path
-        _append_history("u", "b")
+        _append_history(
+            [
+                {"role": "user", "content": "u"},
+                {"role": "assistant", "content": "b"},
+            ]
+        )
         data = file_path.read_text().strip().splitlines()
         record = json.loads(data[0])
         assert record["user"] == "u"
@@ -59,12 +64,11 @@ def test_generate_response_streams(tmp_path):
     original_service = chat.QUERY_SERVICE
     chat.QUERY_SERVICE = DummyQueryService()
 
-    gen = _generate_response("hello world", [])
+    gen = _generate_response([{"role": "user", "content": "hello world"}])
     outputs = list(gen)
-    tokens = [t for t, _ in outputs]
-    assert len(tokens) > 1
-    assert "You said:" in "".join(tokens)
-    metadata = outputs[0][1]
+    assert len(outputs) > 1
+    final_messages, metadata = outputs[-1]
+    assert final_messages[-1]["content"].startswith("You said:")
     assert metadata["citations"][0]["source"] == "DENSE"
     assert metadata["citations"][1]["source"] == "FUSED"
     assert metadata["details"]["retrieval_mode"] == "hybrid"

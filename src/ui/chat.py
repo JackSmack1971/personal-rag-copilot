@@ -40,8 +40,10 @@ def _sanitize(text: str) -> str:
     return escape(text.strip())
 
 
-def _append_history(user_message: str, bot_message: str) -> None:
-    """Persist a chat exchange to disk."""
+def _append_history(messages: List[Dict[str, str]]) -> None:
+    """Persist the latest user and assistant messages to disk."""
+    user_message = messages[-2]["content"] if len(messages) >= 2 else ""
+    bot_message = messages[-1]["content"] if messages else ""
     record = {
         "timestamp": datetime.datetime.now(datetime.UTC)
         .isoformat()
@@ -55,11 +57,11 @@ def _append_history(user_message: str, bot_message: str) -> None:
 
 
 def _generate_response(
-    message: str, history: List[Tuple[str, str]]
-) -> Generator[Tuple[str, Dict[str, Any]], None, None]:
+    messages: List[Dict[str, str]], history: List[Dict[str, str]] | None = None
+) -> Generator[Tuple[List[Dict[str, str]], Dict[str, Any]], None, None]:
     """Stream an echo response with retrieval metadata."""
     with PerformanceTracker() as perf:
-        sanitized = _sanitize(message)
+        sanitized = _sanitize(messages[-1]["content"])
         results, retrieval_meta = QUERY_SERVICE.query(sanitized)
         reply = f"You said: {sanitized}"
 
@@ -84,11 +86,15 @@ def _generate_response(
         "details": details,
     }
 
+    assistant_message = {"role": "assistant", "content": ""}
+    conversation = messages + [assistant_message]
     for token in reply.split():
-        yield token + " ", metadata
+        assistant_message["content"] += token + " "
+        yield conversation, metadata
 
-    _append_history(sanitized, reply)
-    EVALUATOR.evaluate(sanitized, reply, [sanitized])
+    assistant_message["content"] = assistant_message["content"].strip()
+    _append_history(conversation)
+    EVALUATOR.evaluate(sanitized, assistant_message["content"], [sanitized])
 
 
 def chat_page() -> gr.Blocks:
@@ -101,5 +107,6 @@ def chat_page() -> gr.Blocks:
             fn=_generate_response,
             additional_outputs=[panel.state],
             title="Chat",
+            type="messages",
         )
     return demo
