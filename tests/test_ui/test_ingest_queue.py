@@ -1,7 +1,11 @@
+"""Tests for ingest queue processing."""
+
 from __future__ import annotations
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from src.ui.ingest import _queue_files, _process_all, _document_service
 
 
@@ -10,9 +14,7 @@ class DummyFile:
         self.name = name
 
 
-def test_queue_and_process(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_queue_and_process(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     file_path = tmp_path / "doc.txt"
     file_path.write_text("hello world")
 
