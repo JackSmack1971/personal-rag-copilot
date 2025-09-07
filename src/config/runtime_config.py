@@ -138,6 +138,12 @@ class ConfigManager:
                     continue
         if thresholds:
             overrides["evaluation_thresholds"] = thresholds
+        dense_index = os.getenv("PINECONE_DENSE_INDEX")
+        if dense_index:
+            overrides["pinecone_dense_index"] = dense_index
+        sparse_index = os.getenv("PINECONE_SPARSE_INDEX")
+        if sparse_index:
+            overrides["pinecone_sparse_index"] = sparse_index
         policy: Dict[str, Any] = {}
         num_fields = {
             "target_p95_ms": "PERF_TARGET_P95_MS",

@@ -6,6 +6,9 @@ device_preference: auto  # auto, cpu, gpu_openvino, gpu_xpu
 # Numerical precision for inference and retrieval operations
 precision: fp32          # fp32, fp16, int8
 
+pinecone_dense_index: dense-index
+pinecone_sparse_index: sparse-index
+
 evaluation_thresholds:
   faithfulness: 0.7
   relevancy: 0.7
