@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 from src.config.runtime_config import config_manager
+from src.config.models import EvaluationThresholdsModel
 
 
 def generate_recommendations(metrics: Dict[str, float]) -> List[str]:
@@ -19,15 +20,22 @@ def generate_recommendations(metrics: Dict[str, float]) -> List[str]:
     """
     thresholds = config_manager.get(
         "evaluation_thresholds",
-        {"faithfulness": 0.7, "relevancy": 0.7, "precision": 0.7},
+        EvaluationThresholdsModel(
+            faithfulness=0.7, relevancy=0.7, precision=0.7
+        ),
     )
+
+    def t(metric: str, default: float) -> float:
+        value = getattr(thresholds, metric, None)
+        return float(value) if value is not None else default
+
     recs: List[str] = []
-    if metrics.get("relevancy", 1.0) < thresholds.get("relevancy", 0.7):
+    if metrics.get("relevancy", 1.0) < t("relevancy", 0.7):
         recs.append("Expand top-K")
-    if metrics.get("precision", 1.0) < thresholds.get("precision", 0.7):
+    if metrics.get("precision", 1.0) < t("precision", 0.7):
         recs.append("Enable reranking")
     drop_count = sum(
-        metrics.get(name, 1.0) < thresholds.get(name, 0.7)
+        metrics.get(name, 1.0) < t(name, 0.7)
         for name in ("faithfulness", "relevancy", "precision")
     )
     if drop_count > 1:

@@ -60,9 +60,9 @@ def test_hot_reload_and_rollback() -> None:
     cm.set_runtime_overrides({"top_k": 2})
     cm.set_runtime_overrides({"performance_policy": {"target_p95_ms": 2500}})
     assert events[-1] == 2500
-    assert cm.get("performance_policy")["max_top_k"] == 50
+    assert cm.get("performance_policy").max_top_k == 50
     cm.rollback()
-    assert cm.get("performance_policy")["target_p95_ms"] == 2000
+    assert cm.get("performance_policy").target_p95_ms == 2000
     assert events[-1] == 2000
 
 

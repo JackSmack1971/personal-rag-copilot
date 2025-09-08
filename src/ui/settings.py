@@ -8,6 +8,7 @@ import gradio as gr
 import pandas as pd
 
 from src.config import SettingsModel
+from src.config.models import PerformancePolicyModel
 from src.config.settings import load_settings, save_settings
 from src.config.validate import validate_settings
 from src.config.runtime_config import config_manager
@@ -222,7 +223,9 @@ def settings_page() -> gr.Blocks:
                 refresh_btn.click(
                     lambda m: (
                         QUERY_SERVICE.dashboard.p95_metrics(),
-                        config_manager.get("performance_policy", {}),
+                        config_manager.get(
+                            "performance_policy", PerformancePolicyModel()
+                        ).model_dump(),
                         get_latency_trend(m),
                     ),
                     inputs=mode_selector,

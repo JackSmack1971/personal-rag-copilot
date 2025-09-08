@@ -11,6 +11,7 @@ import plotly.express as px
 
 from src.evaluation.ragas_integration import EvaluationResult, RagasEvaluator
 from src.evaluation.recommendations import generate_recommendations
+from src.config.models import EvaluationThresholdsModel
 from src.config.runtime_config import config_manager
 from .navbar import render_navbar
 
@@ -111,12 +112,19 @@ def _load_dashboard(
 
     thresholds = config_manager.get(
         "evaluation_thresholds",
-        {"faithfulness": 0.7, "relevancy": 0.7, "precision": 0.7},
+        EvaluationThresholdsModel(
+            faithfulness=0.7, relevancy=0.7, precision=0.7
+        ),
     )
+
+    def t(metric: str, default: float) -> float:
+        value = getattr(thresholds, metric, None)
+        return float(value) if value is not None else default
+
     alerts_df = df[
-        (df["faithfulness"] < thresholds.get("faithfulness", 0.7))
-        | (df["relevancy"] < thresholds.get("relevancy", 0.7))
-        | (df["precision"] < thresholds.get("precision", 0.7))
+        (df["faithfulness"] < t("faithfulness", 0.7))
+        | (df["relevancy"] < t("relevancy", 0.7))
+        | (df["precision"] < t("precision", 0.7))
     ][["timestamp", "query", "faithfulness", "relevancy", "precision"]]
     if alerts_df.empty:
         alerts = "No alerts"
