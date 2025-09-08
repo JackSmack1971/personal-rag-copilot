@@ -1,7 +1,9 @@
 # Pyright Summary
 
-- Total diagnostics: **734**
-- Severity counts: {'error': 733, 'warning': 1}
+| Run | Errors | Warnings | Total |
+| --- | --- | --- | --- |
+| Baseline | 733 | 1 | 734 |
+| After fixes | 639 | 1 | 640 |
 
 ## Top Rules
 |Rule|Count|
