@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 import gradio as gr
@@ -11,15 +10,22 @@ from html import escape
 from gradio.events import EventData
 
 
-@dataclass
 class CitationBadge:
     """Simple badge representing a citation source."""
 
-    label: str
-    link: Optional[str] = None
-    source: Optional[str] = None
-    rank: Optional[int] = None
-    score: Optional[float] = None
+    def __init__(
+        self,
+        label: str,
+        link: Optional[str] = None,
+        source: Optional[str] = None,
+        rank: Optional[int] = None,
+        score: Optional[float] = None,
+    ) -> None:
+        self.label = label
+        self.link = link
+        self.source = source
+        self.rank = rank
+        self.score = score
 
     def render(self) -> str:
         """Return HTML for the badge."""
@@ -51,12 +57,12 @@ class CitationBadge:
         return self.label
 
 
-@dataclass
 class DetailsDrawer:
     """Expandable drawer to show retrieval metadata."""
 
-    content: Any = field(default_factory=dict)
-    open: bool = False
+    def __init__(self, content: Any | None = None, open: bool = False) -> None:
+        self.content = content if content is not None else {}
+        self.open = open
 
     def render(self) -> gr.Accordion:
         with gr.Accordion("Details", open=self.open) as acc:
@@ -72,12 +78,12 @@ class DetailsDrawer:
         return gr.update(value=content)
 
 
-@dataclass
 class PerformanceIndicator:
     """Display simple performance metrics such as latency and memory."""
 
-    latency_ms: float = 0.0
-    memory_mb: float = 0.0
+    def __init__(self, latency_ms: float = 0.0, memory_mb: float = 0.0) -> None:
+        self.latency_ms = latency_ms
+        self.memory_mb = memory_mb
 
     def render(self) -> gr.Markdown:
         self.md = gr.Markdown(self.format_metrics())

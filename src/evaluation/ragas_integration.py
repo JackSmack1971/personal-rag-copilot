@@ -4,16 +4,16 @@ from __future__ import annotations
 
 import datetime
 import json
-from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Any, List, Optional
+
+from pydantic import BaseModel
 
 from ragas import evaluate
 from ragas.metrics import answer_relevancy, context_precision, faithfulness
 
 
-@dataclass
-class EvaluationResult:
+class EvaluationResult(BaseModel):
     """Container for a single evaluation.
 
     References: FR-RET-006, FR-EVAL-001
@@ -94,7 +94,7 @@ class RagasEvaluator:
         self.history.append(record)
         self.history_path.parent.mkdir(parents=True, exist_ok=True)
         with self.history_path.open("a", encoding="utf-8") as file:
-            file.write(json.dumps(asdict(record)) + "\n")
+            file.write(json.dumps(record.model_dump()) + "\n")
         return record
 
     def load_history(
