@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-import pytest
 import math
+import pytest
 
 from src.ranking.rrf_fusion import DEFAULT_RRF_K, rrf_fusion
+from src.retrieval.hybrid import HybridRetriever
 
 
 def test_rrf_scores_and_weights() -> None:
@@ -24,6 +25,38 @@ def test_rrf_scores_and_weights() -> None:
     assert fused[0]["id"] == "d2"
     assert math.isclose(fused[1]["score"], expected_d1)
     assert fused[1]["id"] == "d1"
+
+    assert meta["fusion_method"] == "rrf"
+    assert meta["rrf_weights"] == {"dense": 2.0, "lexical": 1.0}
+    assert meta["component_scores"]["d2"] == {"dense": 0.8, "lexical": 0.7}
+
+
+class _DummyDense:
+    def query(self, query: str, top_k: int):
+        return [("d1", 0.9), ("d2", 0.8)], {}
+
+
+class _DummyLexical:
+    doc_ids = ["d1", "d2", "d3"]
+    documents = ["t1", "t2", "t3"]
+
+    def query(self, query: str, top_k: int):
+        return [("d2", 0.7), ("d3", 0.6)], {}
+
+
+def test_rrf_pinecone_hybrid() -> None:
+    hybrid = HybridRetriever(_DummyDense(), _DummyLexical())  # type: ignore[arg-type]
+    results, meta = hybrid.query("q", top_k=2, k=10, w_dense=2.0, w_lexical=1.0)
+
+    dense_contrib = 2.0 * (1.0 / (10 + 2))
+    lexical_contrib = 1.0 * (1.0 / (10 + 1))
+    expected_d2 = dense_contrib + lexical_contrib
+    expected_d1 = 2.0 * (1.0 / (10 + 1))
+
+    assert math.isclose(results[0]["score"], expected_d2)
+    assert results[0]["id"] == "d2"
+    assert math.isclose(results[1]["score"], expected_d1)
+    assert results[1]["id"] == "d1"
 
     assert meta["fusion_method"] == "rrf"
     assert meta["rrf_weights"] == {"dense": 2.0, "lexical": 1.0}
