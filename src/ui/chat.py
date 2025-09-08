@@ -11,6 +11,7 @@ from ..monitoring.performance import PerformanceTracker
 from .navbar import render_navbar
 from ..evaluation.ragas_integration import RagasEvaluator
 from ..query_service import QueryService
+from ..config.runtime_config import config_manager
 
 
 class _StubHybridRetriever:
@@ -62,7 +63,8 @@ def _generate_response(
     """Stream an echo response with retrieval metadata."""
     with PerformanceTracker() as perf:
         sanitized = _sanitize(messages[-1]["content"])
-        results, retrieval_meta = QUERY_SERVICE.query(sanitized)
+        mode = config_manager.get("retrieval_mode", QUERY_SERVICE.default_mode)
+        results, retrieval_meta = QUERY_SERVICE.query(sanitized, mode=mode)
         reply = f"You said: {sanitized}"
 
     metrics = perf.metrics()
@@ -70,7 +72,12 @@ def _generate_response(
     citations = []
     for doc in results:
         raw_source = doc.get("source", "")
-        source = "FUSED" if "+" in raw_source else raw_source.upper()
+        if "+" in raw_source:
+            source = "FUSED"
+        elif raw_source == "lexical":
+            source = "SPARSE"
+        else:
+            source = raw_source.upper()
         citations.append({"label": doc.get("id", ""), "source": source})
 
     details = {

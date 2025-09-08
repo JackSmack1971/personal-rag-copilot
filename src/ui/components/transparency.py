@@ -144,14 +144,15 @@ class TransparencyPanel:
 
         citations = []
         for i, c in enumerate(meta.get("citations", [])):
-            label = c.get("label", str(i + 1))
+            doc_id = c.get("label", str(i + 1))
             link = c.get("link")
-            source = c.get("source")
-            entry = comp_scores.get(label, {}).get((source or "").lower(), {})
+            source = (c.get("source") or "").upper()
+            lookup = {"SPARSE": "lexical", "DENSE": "dense"}.get(source, source.lower())
+            entry = comp_scores.get(doc_id, {}).get(lookup, {})
             badge = CitationBadge(
-                label,
+                source or doc_id,
                 link,
-                source.title() if source else None,
+                source or None,
                 entry.get("rank"),
                 entry.get("score"),
             ).render()
