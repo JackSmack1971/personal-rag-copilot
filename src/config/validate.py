@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 import logging
-from typing import Any
+from collections.abc import Callable
 
 from .models import SettingsModel
 from .settings import (
@@ -18,31 +18,35 @@ from .settings import (
 _logger = logging.getLogger(__name__)
 
 # Supported numeric bounds for configuration parameters
-BOUNDS: dict[str, tuple[int, int]] = {
-    "top_k": (1, 1000),
-    "rrf_k": (1, 1000),
-    "performance_policy.target_p95_ms": (1, 10000),
-    "performance_policy.max_top_k": (1, 1000),
-    "performance_policy.rerank_disable_threshold": (0, 10000),
-}
-
-
-def _get_nested(settings: SettingsModel, path: str) -> Any:
-    """Retrieve value at ``path`` using attribute access."""
-
-    current: Any = settings
-    for part in path.split("."):
-        current = getattr(current, part, None)
-        if current is None:
-            break
-    return current
+BOUND_CHECKS: list[tuple[str, Callable[[SettingsModel], int | float | None], int, int]] = [
+    ("top_k", lambda s: s.top_k, 1, 1000),
+    ("rrf_k", lambda s: s.rrf_k, 1, 1000),
+    (
+        "performance_policy.target_p95_ms",
+        lambda s: s.performance_policy.target_p95_ms if s.performance_policy else None,
+        1,
+        10000,
+    ),
+    (
+        "performance_policy.max_top_k",
+        lambda s: s.performance_policy.max_top_k if s.performance_policy else None,
+        1,
+        1000,
+    ),
+    (
+        "performance_policy.rerank_disable_threshold",
+        lambda s: s.performance_policy.rerank_disable_threshold if s.performance_policy else None,
+        0,
+        10000,
+    ),
+]
 
 
 def validate_settings(settings: SettingsModel) -> tuple[bool, dict[str, str]]:
     """Validate configuration ``settings`` against predefined bounds."""
     errors: dict[str, str] = {}
-    for key, (low, high) in BOUNDS.items():
-        value = _get_nested(settings, key)
+    for key, getter, low, high in BOUND_CHECKS:
+        value = getter(settings)
         if value is None:
             errors[key] = "missing"
             continue
