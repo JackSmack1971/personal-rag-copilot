@@ -10,6 +10,8 @@ def test_override_precedence() -> None:
         base_config={
             "top_k": 1,
             "rrf_k": 10,
+            "pinecone_dense_index": "base-dense",
+            "pinecone_sparse_index": "base-sparse",
             "performance_policy": {
                 "target_p95_ms": 2000,
                 "auto_tune_enabled": False,
@@ -34,6 +36,8 @@ def test_hot_reload_and_rollback() -> None:
         base_config={
             "top_k": 1,
             "rrf_k": 10,
+            "pinecone_dense_index": "base-dense",
+            "pinecone_sparse_index": "base-sparse",
             "performance_policy": {
                 "target_p95_ms": 2000,
                 "auto_tune_enabled": False,
@@ -73,6 +77,8 @@ def test_env_overrides_and_device_detection(monkeypatch: pytest.MonkeyPatch) -> 
             "rrf_k": 10,
             "device_preference": "auto",
             "precision": "fp32",
+            "pinecone_dense_index": "base-dense",
+            "pinecone_sparse_index": "base-sparse",
             "performance_policy": {
                 "target_p95_ms": 2000,
                 "auto_tune_enabled": False,
