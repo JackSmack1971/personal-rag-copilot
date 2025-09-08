@@ -25,7 +25,7 @@ def test_manual_overrides_update_config_manager() -> None:
     original = config_manager.as_dict()
     settings = original
     settings, _ = update_policy_field("target_p95_ms", 2500, settings)
-    assert config_manager.get("performance_policy")["target_p95_ms"] == 2500
+    assert config_manager.get("performance_policy").target_p95_ms == 2500
     settings, _ = update_field("enable_rerank", True, settings)
     assert config_manager.get("enable_rerank") is True
     config_manager.set_runtime_overrides({})

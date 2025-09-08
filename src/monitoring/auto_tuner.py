@@ -7,6 +7,7 @@ from typing import Dict, Any
 
 from src.monitoring.performance import MetricsDashboard
 from src.config.runtime_config import ConfigManager, config_manager
+from src.config.models import PerformancePolicyModel
 
 
 @dataclass
@@ -20,9 +21,17 @@ class AutoTuner:
 
     def __post_init__(self) -> None:  # pragma: no cover - trivial cache
         if self.config:
-            policy = self.config.get("performance_policy", {})
-            self.threshold_ms = policy.get("target_p95_ms", self.threshold_ms)
-            self.auto_tune_enabled = policy.get("auto_tune_enabled", True)
+            policy = self.config.get(
+                "performance_policy", PerformancePolicyModel()
+            )
+            self.threshold_ms = (
+                policy.target_p95_ms or self.threshold_ms
+            )
+            self.auto_tune_enabled = (
+                policy.auto_tune_enabled
+                if policy.auto_tune_enabled is not None
+                else True
+            )
 
     def tune(self, mode: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Adjust parameters if recent latency p95 is above threshold."""
@@ -34,15 +43,16 @@ class AutoTuner:
         if p95 <= self.threshold_ms:
             return tuned
 
-        locks = set()
-        policy: Dict[str, Any] = {}
+        policy = PerformancePolicyModel()
+        locks: set[str] = set()
         if self.config:
             locks = set(self.config.get("tuner_locks", []))
-            policy = self.config.get("performance_policy", {})
+            policy = self.config.get(
+                "performance_policy", PerformancePolicyModel()
+            )
 
-        rerank_threshold = policy.get(
-            "rerank_disable_threshold",
-            self.threshold_ms,
+        rerank_threshold = (
+            policy.rerank_disable_threshold or self.threshold_ms
         )
 
         if (

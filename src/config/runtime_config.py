@@ -2,7 +2,6 @@ from __future__ import annotations
 
 """Runtime config with validation, history, and hot reload."""
 
-from copy import deepcopy
 import os
 from typing import Any, Callable
 
@@ -14,8 +13,9 @@ from .validate import validate_settings
 
 def _deep_merge(base: dict[str, Any], updates: dict[str, Any]) -> dict[str, Any]:
     for key, value in updates.items():
-        if isinstance(value, dict) and isinstance(base.get(key), dict):
-            base[key] = _deep_merge(base.get(key, {}), value)
+        existing = base[key] if key in base else None
+        if isinstance(value, dict) and isinstance(existing, dict):
+            base[key] = _deep_merge(existing, value)
         else:
             base[key] = value
     return base
@@ -25,19 +25,29 @@ class OverrideChain:
     """Maintain ordered configuration layers with precedence."""
 
     def __init__(self) -> None:
-        self._layers: dict[str, dict[str, Any]] = {}
+        self._layers: dict[str, SettingsModel] = {}
 
-    def set_layer(self, name: str, values: dict[str, Any]) -> None:
-        self._layers[name] = values
+    def set_layer(self, name: str, values: SettingsModel | dict[str, Any]) -> None:
+        if isinstance(values, SettingsModel):
+            self._layers[name] = values
+        else:
+            self._layers[name] = SettingsModel.model_validate(values)
 
-    def get_layer(self, name: str) -> dict[str, Any]:
-        return self._layers.get(name, {})
+    def get_layer(self, name: str) -> SettingsModel:
+        return self._layers[name] if name in self._layers else SettingsModel()
 
-    def resolve(self) -> dict[str, Any]:
-        result: dict[str, Any] = {}
+    def resolve(self) -> SettingsModel:
+        result = SettingsModel()
         for name in ["defaults", "environment", "cli", "runtime"]:
-            layer = deepcopy(self._layers.get(name, {}))
-            result = _deep_merge(result, layer)
+            layer = (
+                self._layers[name].model_copy(deep=True)
+                if name in self._layers
+                else SettingsModel()
+            )
+            base_dict: dict[str, Any] = result.model_dump(exclude_none=True)
+            layer_dict: dict[str, Any] = layer.model_dump(exclude_none=True)
+            merged = _deep_merge(base_dict, layer_dict)
+            result = SettingsModel.model_validate(merged)
         return result
 
 
@@ -89,18 +99,15 @@ class ConfigManager:
     """Central runtime configuration manager."""
 
     def __init__(self, base_config: SettingsModel | None = None) -> None:
-        base = base_config.model_dump() if base_config else {}
         self.chain = OverrideChain()
-        self.chain.set_layer("defaults", base)
+        self.chain.set_layer("defaults", base_config or SettingsModel())
         self.chain.set_layer("environment", self._load_env())
-        self.chain.set_layer("cli", {})
-        device = detect_device(
-            self.chain.resolve().get(
-                "device_preference",
-                "auto",
-            )
+        self.chain.set_layer("cli", SettingsModel())
+        device_pref = self.chain.resolve().device_preference or "auto"
+        device = detect_device(device_pref)
+        self.chain.set_layer(
+            "runtime", SettingsModel.model_validate({"device": device})
         )
-        self.chain.set_layer("runtime", {"device": device})
 
         self.validator = ValidationEngine()
         self.tracker = ChangeTracker()
@@ -111,7 +118,7 @@ class ConfigManager:
             raise ValueError("invalid configuration")
         self.tracker.record(config)
 
-    def _load_env(self) -> dict[str, Any]:
+    def _load_env(self) -> SettingsModel:
         overrides: dict[str, Any] = {}
         for key in ["top_k", "rrf_k"]:
             env_key = key.upper()
@@ -171,35 +178,51 @@ class ConfigManager:
             policy["auto_tune_enabled"] = auto.lower() in {"1", "true", "yes"}
         if policy:
             overrides["performance_policy"] = policy
-        return overrides
+        return SettingsModel.model_validate(overrides)
 
     def as_model(self) -> SettingsModel:
-        return SettingsModel.model_validate(self.chain.resolve())
+        return self.chain.resolve()
 
     def as_dict(self) -> dict[str, Any]:
         return self.as_model().model_dump()
 
     def get(self, key: str, default: Any | None = None) -> Any:
-        return self.as_dict().get(key, default)
+        return getattr(self.as_model(), key, default)
 
-    def set_cli_overrides(self, overrides: dict[str, Any]) -> None:
-        if not overrides:
-            self.chain.set_layer("cli", {})
+    def set_cli_overrides(self, overrides: SettingsModel | dict[str, Any]) -> None:
+        if isinstance(overrides, SettingsModel):
+            data = overrides.model_dump(exclude_none=True)
+        else:
+            data = dict(overrides)
+        if not data:
+            self.chain.set_layer("cli", SettingsModel())
         else:
             current = self.chain.get_layer("cli")
-            self.chain.set_layer("cli", _deep_merge(current, overrides))
+            new_layer = SettingsModel.model_validate(
+                _deep_merge(current.model_dump(exclude_none=True), data)
+            )
+            self.chain.set_layer("cli", new_layer)
         self._commit()
 
-    def set_runtime_overrides(self, overrides: dict[str, Any]) -> None:
-        if not overrides:
-            self.chain.set_layer("runtime", {})
+    def set_runtime_overrides(
+        self, overrides: SettingsModel | dict[str, Any]
+    ) -> None:
+        if isinstance(overrides, SettingsModel):
+            data = overrides.model_dump(exclude_none=True)
+        else:
+            data = dict(overrides)
+        if not data:
+            self.chain.set_layer("runtime", SettingsModel())
         else:
             current = self.chain.get_layer("runtime")
-            self.chain.set_layer("runtime", _deep_merge(current, overrides))
+            new_layer = SettingsModel.model_validate(
+                _deep_merge(current.model_dump(exclude_none=True), data)
+            )
+            self.chain.set_layer("runtime", new_layer)
         self._commit()
 
     def _commit(self) -> None:
-        config = SettingsModel.model_validate(self.chain.resolve())
+        config = self.chain.resolve()
         valid, _ = self.validator.validate(config)
         if not valid:
             raise ValueError("invalid configuration")
@@ -208,7 +231,7 @@ class ConfigManager:
 
     def rollback(self, steps: int = 1) -> dict[str, Any]:
         config = self.tracker.rollback(steps)
-        self.chain.set_layer("runtime", config.model_dump())
+        self.chain.set_layer("runtime", config)
         self.reloader.notify(config)
         return config.model_dump()
 

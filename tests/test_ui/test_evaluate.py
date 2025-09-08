@@ -9,6 +9,7 @@ import gradio as gr
 from src.evaluation.ragas_integration import EvaluationResult
 from src.ui.evaluate import EVALUATOR, _load_dashboard, evaluate_page
 from src.config.runtime_config import config_manager
+from src.config.models import EvaluationThresholdsModel
 
 
 def test_evaluate_page_has_components() -> None:
@@ -114,7 +115,9 @@ def test_alerts_use_thresholds(monkeypatch: pytest.MonkeyPatch) -> None:
 
     monkeypatch.setattr(EVALUATOR, "load_history", lambda s, e: records)
 
-    thresholds = {"faithfulness": 0.7, "relevancy": 0.7, "precision": 0.7}
+    thresholds = EvaluationThresholdsModel(
+        faithfulness=0.7, relevancy=0.7, precision=0.7
+    )
     orig_get = config_manager.get
 
     def fake_get(key, default=None):
@@ -127,12 +130,8 @@ def test_alerts_use_thresholds(monkeypatch: pytest.MonkeyPatch) -> None:
     _, _, _, _, alerts, _, _, _ = _load_dashboard(None, None)
     assert "q1" in alerts and "q2" in alerts
 
-    thresholds.update(
-        {
-            "faithfulness": 0.5,
-            "relevancy": 0.5,
-            "precision": 0.5,
-        }
-    )
+    thresholds.faithfulness = 0.5
+    thresholds.relevancy = 0.5
+    thresholds.precision = 0.5
     _, _, _, _, alerts, _, _, _ = _load_dashboard(None, None)
     assert alerts == "No alerts"
