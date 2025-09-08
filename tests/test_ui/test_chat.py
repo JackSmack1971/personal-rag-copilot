@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 import json
 from pathlib import Path
 
@@ -79,6 +78,37 @@ def test_generate_response_streams(tmp_path: Path) -> None:
     assert metadata["details"]["rrf_weights"]["dense"] == 1.0
     assert "b" in metadata["details"]["component_scores"]
     assert all(m == metadata for _, m in outputs)
+
+    chat.QUERY_SERVICE = original_service
+    chat.HISTORY_PATH = HISTORY_PATH
+    chat.EVALUATOR.history_path = original_eval_path
+    chat.EVALUATOR.evaluate = original_evaluate
+
+
+def test_sparse_badge_display(tmp_path: Path) -> None:
+    file_path = tmp_path / "history.jsonl"
+    from src.ui import chat
+
+    chat.HISTORY_PATH = file_path
+    original_eval_path = chat.EVALUATOR.history_path
+    chat.EVALUATOR.history_path = tmp_path / "eval.jsonl"
+    original_evaluate = chat.EVALUATOR.evaluate
+    chat.EVALUATOR.evaluate = lambda *_, **__: None
+
+    class DummyQueryService:
+        def query(self, query, mode=None, top_k=5):
+            return [{"id": "a", "score": 1.0, "source": "lexical"}], {
+                "rrf_weights": {"lexical": 1.0},
+                "component_scores": {"a": {"lexical": {"rank": 1, "score": 1.0}}},
+                "retrieval_mode": "lexical",
+            }
+
+    original_service = chat.QUERY_SERVICE
+    chat.QUERY_SERVICE = DummyQueryService()
+
+    gen = _generate_response([{"role": "user", "content": "hello"}])
+    final_meta = list(gen)[-1][1]
+    assert final_meta["citations"][0]["source"] == "SPARSE"
 
     chat.QUERY_SERVICE = original_service
     chat.HISTORY_PATH = HISTORY_PATH

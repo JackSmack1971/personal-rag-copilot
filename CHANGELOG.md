@@ -1,4 +1,4 @@
 # Changelog
 
 ## Unreleased
-- add precise typing for configuration utilities and settings UI
+- add retrieval mode toggle and SPARSE badge support

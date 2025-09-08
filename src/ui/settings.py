@@ -95,6 +95,12 @@ def settings_page() -> gr.Blocks:
 
         with gr.Tabs():
             with gr.Tab("Retrieval"):
+                retrieval_mode = gr.Dropdown(
+                    label="Retrieval Mode",
+                    choices=["hybrid", "dense", "lexical"],
+                    value=defaults.get("retrieval_mode", "hybrid"),
+                )
+                retrieval_mode_error = gr.Markdown()
                 top_k = gr.Number(
                     label="Top K",
                     value=defaults.get("top_k", 5),
@@ -106,6 +112,11 @@ def settings_page() -> gr.Blocks:
                 )
                 rrf_k_error = gr.Markdown()
 
+                retrieval_mode.change(
+                    lambda v, s: update_field("retrieval_mode", v, s),
+                    inputs=[retrieval_mode, settings_state],
+                    outputs=[settings_state, retrieval_mode_error],
+                )
                 top_k.change(
                     lambda v, s: update_field("top_k", v, s),
                     inputs=[top_k, settings_state],
