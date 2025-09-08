@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 
 import gradio as gr
+import pytest
 
 from src.evaluation.ragas_integration import (
     EVALUATION_HISTORY_PATH,
@@ -108,6 +110,52 @@ def test_sparse_badge_display(tmp_path: Path) -> None:
     chat.EVALUATOR.history_path = EVALUATION_HISTORY_PATH
     chat.EVALUATOR.evaluate = original_evaluate
 
+
+def test_generate_response_records_history(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """_generate_response should append query, answer, and contexts to history."""
+    history_path = tmp_path / "evaluations" / "history.jsonl"
+    monkeypatch.setattr(chat.EVALUATOR, "history_path", history_path)
+    monkeypatch.setattr(chat.EVALUATOR, "history", [])
+
+    def fake_eval(data, metrics):
+        return {
+            "faithfulness": [0.9],
+            "answer_relevancy": [0.8],
+            "context_precision": [0.7],
+        }
+
+    monkeypatch.setattr(
+        "src.evaluation.ragas_integration.evaluate", fake_eval
+    )
+
+    class DummyQueryService:
+        default_mode = "hybrid"
+
+        def query(self, query, mode=None, top_k=5, w_dense=1.0, w_lexical=1.0):
+            return [
+                {"id": "a", "score": 1.0, "source": "dense", "text": "ctx"}
+            ], {
+                "retrieval_mode": "dense",
+                "rrf_weights": {},
+                "component_scores": {},
+            }
+
+    monkeypatch.setattr(chat, "QUERY_SERVICE", DummyQueryService())
+
+    gen = _generate_response([{"role": "user", "content": "hello"}])
+    list(gen)
+
+    line = history_path.read_text().strip().splitlines()[0]
+    data = json.loads(line)
+    assert data["query"] == "hello"
+    assert data["answer"] == "You said: hello"
+    assert data["contexts"] == ["ctx"]
+
+    if history_path.exists():
+        history_path.unlink()
+        history_path.parent.rmdir()
 
 def test_chat_page_has_chat_interface() -> None:
     page = chat_page()
