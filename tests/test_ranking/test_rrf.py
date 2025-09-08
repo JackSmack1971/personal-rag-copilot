@@ -59,4 +59,7 @@ def test_rrf_pinecone_hybrid() -> None:
 
     assert meta["fusion_method"] == "rrf"
     assert meta["rrf_weights"] == {"dense": 2.0, "lexical": 1.0}
-    assert meta["component_scores"]["d2"] == {"dense": 0.8, "lexical": 0.7}
+    assert meta["component_scores"]["d2"] == {
+        "dense": {"rank": 2, "score": 0.8},
+        "lexical": {"rank": 1, "score": 0.7},
+    }

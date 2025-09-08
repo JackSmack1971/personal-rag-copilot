@@ -53,7 +53,7 @@ def test_generate_response_streams(tmp_path: Path) -> None:
     class DummyQueryService:
         default_mode = "hybrid"
 
-        def query(self, query, mode=None, top_k=5):
+        def query(self, query, mode=None, top_k=5, w_dense=1.0, w_lexical=1.0):
             return [
                 {"id": "a", "score": 1.0, "source": "dense"},
                 {"id": "b", "score": 0.5, "source": "dense+lexical"},
@@ -100,7 +100,7 @@ def test_sparse_badge_display(tmp_path: Path) -> None:
     class DummyQueryService:
         default_mode = "hybrid"
 
-        def query(self, query, mode=None, top_k=5):
+        def query(self, query, mode=None, top_k=5, w_dense=1.0, w_lexical=1.0):
             return [{"id": "a", "score": 1.0, "source": "lexical"}], {
                 "rrf_weights": {"lexical": 1.0},
                 "component_scores": {"a": {"lexical": {"rank": 1, "score": 1.0}}},

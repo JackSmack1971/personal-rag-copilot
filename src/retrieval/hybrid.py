@@ -75,6 +75,19 @@ class HybridRetriever:
             except Exception as exc:  # pragma: no cover - logged for observability
                 self._logger.error("Lexical retrieval failed: %s", exc)
                 lexical_results = []
+        dense_meta = {
+            doc_id: {"rank": rank, "score": score}
+            for rank, (doc_id, score) in enumerate(dense_results, start=1)
+        }
+        lexical_meta = {
+            doc_id: {"rank": rank, "score": score}
+            for rank, (doc_id, score) in enumerate(lexical_results, start=1)
+        }
+        component_scores: Dict[str, Dict[str, Dict[str, float | int]]] = {}
+        for doc_id, data in dense_meta.items():
+            component_scores.setdefault(doc_id, {})["dense"] = data
+        for doc_id, data in lexical_meta.items():
+            component_scores.setdefault(doc_id, {})["lexical"] = data
         weights, analysis_meta = analyze_query(
             query, self.lexical, w_dense=w_dense, w_lexical=w_lexical
         )
@@ -86,6 +99,7 @@ class HybridRetriever:
                 "lexical": weights["w_lexical"],
             },
         )
+        meta["component_scores"] = component_scores
         meta.update(analysis_meta)
         meta.update({"retrieval_mode": "hybrid"})
 

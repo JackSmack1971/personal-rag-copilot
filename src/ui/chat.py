@@ -1,36 +1,22 @@
+# pyright: reportUnknownMemberType=false, reportUnknownVariableType=false, reportAttributeAccessIssue=false, reportGeneralTypeIssues=false
+
 import json
 import datetime
 from html import escape
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Tuple
 
-import gradio as gr
+import gradio as gr  # type: ignore[import]
 
 from .components.transparency import TransparencyPanel
 from ..monitoring.performance import PerformanceTracker
 from .navbar import render_navbar
 from ..evaluation.ragas_integration import RagasEvaluator
-from ..query_service import QueryService
 from ..config.runtime_config import config_manager
+from src.services import get_query_service
 
 
-class _StubHybridRetriever:
-    """Fallback retriever returning no results.
-
-    The real application wires a proper ``HybridRetriever`` instance at
-    runtime.  Tests can monkeypatch ``QUERY_SERVICE`` with a mock service to
-    provide deterministic retrieval behaviour.
-    """
-
-    def query(self, query: str, mode: str = "hybrid", top_k: int = 5):
-        return [], {
-            "retrieval_mode": mode,
-            "rrf_weights": {},
-            "component_scores": {},
-        }
-
-
-QUERY_SERVICE = QueryService(_StubHybridRetriever())
+QUERY_SERVICE = get_query_service()
 
 HISTORY_PATH = Path("chat_history.jsonl")
 EVALUATOR = RagasEvaluator()
@@ -64,13 +50,20 @@ def _generate_response(
     with PerformanceTracker() as perf:
         sanitized = _sanitize(messages[-1]["content"])
         mode = config_manager.get("retrieval_mode", QUERY_SERVICE.default_mode)
-        results, retrieval_meta = QUERY_SERVICE.query(sanitized, mode=mode)
+        w_dense = config_manager.get("w_dense", 1.0)
+        w_lexical = config_manager.get("w_lexical", 1.0)
+        results, retrieval_meta = QUERY_SERVICE.query(
+            sanitized,
+            mode=mode,
+            w_dense=w_dense,
+            w_lexical=w_lexical,
+        )
         reply = f"You said: {sanitized}"
 
     metrics = perf.metrics()
 
     citations = []
-    for doc in results:
+    for rank, doc in enumerate(results, start=1):
         raw_source = doc.get("source", "")
         if "+" in raw_source:
             source = "FUSED"
@@ -78,7 +71,14 @@ def _generate_response(
             source = "SPARSE"
         else:
             source = raw_source.upper()
-        citations.append({"label": doc.get("id", ""), "source": source})
+        citations.append(
+            {
+                "label": doc.get("id", ""),
+                "source": source,
+                "score": doc.get("score"),
+                "rank": rank,
+            }
+        )
 
     details = {
         "retrieval_mode": retrieval_meta.get("retrieval_mode"),
@@ -106,7 +106,7 @@ def _generate_response(
 
 def chat_page() -> gr.Blocks:
     """Build the chat page."""
-    with gr.Blocks(css=TransparencyPanel.CSS) as demo:
+    with gr.Blocks(css=TransparencyPanel.CSS) as demo:  # type: ignore[call-arg]
         render_navbar()
         panel = TransparencyPanel().render()
         panel.bind()
