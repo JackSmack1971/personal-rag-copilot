@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Dict, List
+
+from pydantic import BaseModel
 
 from src.config.runtime_config import config_manager
 from src.config.models import EvaluationThresholdsModel
@@ -43,8 +44,7 @@ def generate_recommendations(metrics: Dict[str, float]) -> List[str]:
     return recs
 
 
-@dataclass
-class RecommendationRecord:
+class RecommendationRecord(BaseModel):
     """Record of a recommendation and resulting metrics."""
 
     recommendation: str
@@ -66,9 +66,9 @@ class RecommendationLogger:
     ) -> None:
         self.records.append(
             RecommendationRecord(
-                recommendation,
-                metrics_before,
-                metrics_after,
+                recommendation=recommendation,
+                before=metrics_before,
+                after=metrics_after,
             )
         )
 

@@ -2,22 +2,25 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any, Dict
 
 import gradio as gr
 
 
-@dataclass
 class RankingControls:
     """Grouped sliders and toggle for ranking parameters."""
 
-    rrf_k: int = 60
-    w_dense: float = 1.0
-    w_lexical: float = 1.0
-    enable_rerank: bool = False
-
-    def __post_init__(self) -> None:
+    def __init__(
+        self,
+        rrf_k: int = 60,
+        w_dense: float = 1.0,
+        w_lexical: float = 1.0,
+        enable_rerank: bool = False,
+    ) -> None:
+        self.rrf_k = rrf_k
+        self.w_dense = w_dense
+        self.w_lexical = w_lexical
+        self.enable_rerank = enable_rerank
         self.state = gr.State(
             {
                 "rrf_k": self.rrf_k,

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 """Automatic tuning of retrieval parameters based on latency."""
 
-from dataclasses import dataclass, field
 from typing import Dict, Any
 
 from src.monitoring.performance import MetricsDashboard
@@ -10,23 +9,26 @@ from src.config.runtime_config import ConfigManager, config_manager
 from src.config.models import PerformancePolicyModel
 
 
-@dataclass
 class AutoTuner:
     """Reduce retrieval costs when latency exceeds policy thresholds."""
 
-    dashboard: MetricsDashboard
-    threshold_ms: float = 2000
-    config: ConfigManager | None = config_manager
-    auto_tune_enabled: bool = field(default=True)
+    def __init__(
+        self,
+        dashboard: MetricsDashboard,
+        threshold_ms: float = 2000,
+        config: ConfigManager | None = config_manager,
+        auto_tune_enabled: bool = True,
+    ) -> None:
+        self.dashboard = dashboard
+        self.threshold_ms = threshold_ms
+        self.config = config
+        self.auto_tune_enabled = auto_tune_enabled
 
-    def __post_init__(self) -> None:  # pragma: no cover - trivial cache
         if self.config:
             policy = self.config.get(
                 "performance_policy", PerformancePolicyModel()
             )
-            self.threshold_ms = (
-                policy.target_p95_ms or self.threshold_ms
-            )
+            self.threshold_ms = policy.target_p95_ms or self.threshold_ms
             self.auto_tune_enabled = (
                 policy.auto_tune_enabled
                 if policy.auto_tune_enabled is not None
