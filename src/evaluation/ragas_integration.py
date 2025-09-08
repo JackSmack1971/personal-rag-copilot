@@ -13,6 +13,9 @@ from ragas import evaluate
 from ragas.metrics import answer_relevancy, context_precision, faithfulness
 
 
+EVALUATION_HISTORY_PATH = Path("evaluations/history.jsonl")
+
+
 class EvaluationResult(BaseModel):
     """Container for a single evaluation.
 
@@ -35,7 +38,7 @@ class RagasEvaluator:
     """Compute evaluation metrics using Ragas."""
 
     def __init__(
-        self, history_path: Path | str = "evaluation_history.jsonl"
+        self, history_path: Path | str = EVALUATION_HISTORY_PATH
     ) -> None:  # noqa: E501
         self.history_path = Path(history_path)
         self.history: List[EvaluationResult] = []

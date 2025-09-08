@@ -9,13 +9,17 @@ import gradio as gr
 import pandas as pd
 import plotly.express as px
 
-from src.evaluation.ragas_integration import EvaluationResult, RagasEvaluator
+from src.evaluation.ragas_integration import (
+    EVALUATION_HISTORY_PATH,
+    EvaluationResult,
+    RagasEvaluator,
+)
 from src.evaluation.recommendations import generate_recommendations
 from src.config.models import EvaluationThresholdsModel
 from src.config.runtime_config import config_manager
 from .navbar import render_navbar
 
-EVALUATOR = RagasEvaluator()
+EVALUATOR = RagasEvaluator(history_path=EVALUATION_HISTORY_PATH)
 
 
 def _history_to_df(history: List[EvaluationResult]) -> pd.DataFrame:
