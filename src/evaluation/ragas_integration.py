@@ -14,7 +14,10 @@ from ragas.metrics import answer_relevancy, context_precision, faithfulness
 
 @dataclass
 class EvaluationResult:
-    """Container for a single evaluation."""
+    """Container for a single evaluation.
+
+    References: FR-RET-006, FR-EVAL-001
+    """
 
     timestamp: str
     query: str
@@ -25,6 +28,7 @@ class EvaluationResult:
     faithfulness: float = 0.0
     relevancy: float = 0.0
     precision: float = 0.0
+    source: str = "hybrid"
 
 
 class RagasEvaluator:
@@ -41,8 +45,16 @@ class RagasEvaluator:
         query: str,
         answer: str,
         contexts: List[str],
+        *,
+        source: str = "hybrid",
     ) -> EvaluationResult:
-        """Evaluate an answer against contexts using multiple metrics."""
+        """Evaluate an answer against contexts using multiple metrics.
+
+        Parameters
+        ----------
+        source:
+            Retrieval source for audit trail (``dense`` or ``sparse``).
+        """
         data = {
             "question": [query],
             "answer": [answer],
@@ -77,6 +89,7 @@ class RagasEvaluator:
             faithfulness=faith,
             relevancy=relev,
             precision=prec,
+            source=source,
         )
         self.history.append(record)
         self.history_path.parent.mkdir(parents=True, exist_ok=True)
@@ -96,6 +109,8 @@ class RagasEvaluator:
         with self.history_path.open("r", encoding="utf-8") as file:
             for line in file:
                 data = json.loads(line)
+                if "source" not in data:
+                    data["source"] = "unknown"
                 record = EvaluationResult(**data)
                 ts = datetime.datetime.fromisoformat(
                     record.timestamp.replace("Z", "+00:00")

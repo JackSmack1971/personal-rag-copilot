@@ -2,3 +2,4 @@
 
 ## Unreleased
 - add retrieval mode toggle and SPARSE badge support
+- log evaluation source (dense/sparse) for audit compliance
