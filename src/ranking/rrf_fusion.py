@@ -18,7 +18,8 @@ def rrf_fusion(
             tuples ordered by rank (best first).
         k: RRF ``k`` constant. Defaults to ``DEFAULT_RRF_K``.
         weights: Optional mapping of retriever name to weight. Any retriever
-            not present defaults to weight ``1.0``.
+            not present defaults to weight ``1.0``. All weights must be
+            non-negative.
 
     Returns:
         A tuple containing the fused ranking and metadata. The ranking is a
@@ -27,6 +28,8 @@ def rrf_fusion(
         ``component_scores`` for audit trails.
     """
     weights = weights or {}
+    if any(w < 0 for w in weights.values()):
+        raise ValueError("RRF weights must be non-negative")
     fused_scores: Dict[str, float] = {}
     component_scores: Dict[str, Dict[str, float]] = {}
 
@@ -46,6 +49,7 @@ def rrf_fusion(
 
     metadata = {
         "fusion_method": "rrf",
+        "rrf_k": k,
         "rrf_weights": {name: weights.get(name, 1.0) for name in results},
         "component_scores": component_scores,
     }

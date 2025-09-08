@@ -2,7 +2,7 @@
 
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Dict, List, Tuple
+from typing import Any, Callable, Dict, List, Tuple, cast
 
 from ..ranking.reranker import CrossEncoderReranker
 from ..ranking.rrf_fusion import DEFAULT_RRF_K, rrf_fusion
@@ -40,8 +40,12 @@ class HybridRetriever:
         timeout: float = 1.0,
     ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
         selected_mode = mode or self.default_mode
+        dense_query_fn = cast(
+            Callable[..., Tuple[List[Tuple[str, float]], Dict[str, Any]]],
+            getattr(self.dense, "query_sync", self.dense.query),
+        )
         if selected_mode == "dense":
-            results, meta = self.dense.query(query, top_k=top_k)
+            results, meta = dense_query_fn(query, top_k=top_k)
             wrapped = [
                 {"id": doc_id, "score": score, "source": "dense"}
                 for doc_id, score in results
@@ -58,15 +62,19 @@ class HybridRetriever:
             return wrapped, meta
 
         pre_rerank_k = 20 if enable_rerank else top_k
-        with ThreadPoolExecutor() as executor:
-            dense_future = executor.submit(  # noqa: E501
-                self.dense.query, query, pre_rerank_k
-            )
-            lexical_future = executor.submit(  # noqa: E501
-                self.lexical.query, query, pre_rerank_k
-            )
-            dense_results, _ = dense_future.result()
-            lexical_results, _ = lexical_future.result()
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            dense_future = executor.submit(dense_query_fn, query, pre_rerank_k)
+            lexical_future = executor.submit(self.lexical.query, query, pre_rerank_k)
+            try:
+                dense_results, _ = dense_future.result()
+            except Exception as exc:  # pragma: no cover - logged for observability
+                self._logger.error("Dense retrieval failed: %s", exc)
+                dense_results = []
+            try:
+                lexical_results, _ = lexical_future.result()
+            except Exception as exc:  # pragma: no cover - logged for observability
+                self._logger.error("Lexical retrieval failed: %s", exc)
+                lexical_results = []
         weights, analysis_meta = analyze_query(
             query, self.lexical, w_dense=w_dense, w_lexical=w_lexical
         )
