@@ -112,7 +112,11 @@ class ConfigManager:
         self.validator = ValidationEngine()
         self.tracker = ChangeTracker()
         self.reloader = HotReloader()
-        self.tracker.record(self.chain.resolve())
+        config = self.chain.resolve()
+        valid, _ = self.validator.validate(config)
+        if not valid:
+            raise ValueError("invalid configuration")
+        self.tracker.record(config)
 
     def _load_env(self) -> dict[str, Any]:
         overrides: dict[str, Any] = {}
@@ -120,10 +124,13 @@ class ConfigManager:
             env_key = key.upper()
             value = os.getenv(env_key)
             if value is not None:
-                try:
-                    overrides[key] = int(value)
-                except ValueError:
-                    continue
+                if value == "":
+                    overrides[key] = value
+                else:
+                    try:
+                        overrides[key] = int(value)
+                    except ValueError:
+                        overrides[key] = value
         device_pref = os.getenv("DEVICE_PREFERENCE")
         if device_pref is not None:
             overrides["device_preference"] = device_pref.lower()
@@ -135,17 +142,20 @@ class ConfigManager:
             env_key = f"EVAL_{metric.upper()}"
             value = os.getenv(env_key)
             if value is not None:
-                try:
-                    thresholds[metric] = float(value)
-                except ValueError:
-                    continue
+                if value == "":
+                    thresholds[metric] = value
+                else:
+                    try:
+                        thresholds[metric] = float(value)
+                    except ValueError:
+                        thresholds[metric] = value
         if thresholds:
             overrides["evaluation_thresholds"] = thresholds
         dense_index = os.getenv("PINECONE_DENSE_INDEX")
-        if dense_index:
+        if dense_index is not None:
             overrides["pinecone_dense_index"] = dense_index
         sparse_index = os.getenv("PINECONE_SPARSE_INDEX")
-        if sparse_index:
+        if sparse_index is not None:
             overrides["pinecone_sparse_index"] = sparse_index
         policy: dict[str, Any] = {}
         num_fields = {
@@ -156,10 +166,13 @@ class ConfigManager:
         for field, env_name in num_fields.items():
             value = os.getenv(env_name)
             if value is not None:
-                try:
-                    policy[field] = int(value)
-                except ValueError:
-                    continue
+                if value == "":
+                    policy[field] = value
+                else:
+                    try:
+                        policy[field] = int(value)
+                    except ValueError:
+                        policy[field] = value
         auto = os.getenv("PERF_AUTO_TUNE_ENABLED")
         if auto is not None:
             policy["auto_tune_enabled"] = auto.lower() in {"1", "true", "yes"}

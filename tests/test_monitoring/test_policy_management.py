@@ -13,12 +13,16 @@ def test_policy_threshold_triggers_tuning() -> None:
         base_config={
             "top_k": 5,
             "rrf_k": 60,
-            "performance_policy": {
-                "target_p95_ms": 1000,
-                "auto_tune_enabled": True,
-            },
-        }
-    )
+            "pinecone_dense_index": "base-dense",
+            "pinecone_sparse_index": "base-sparse",
+                "performance_policy": {
+                    "target_p95_ms": 1000,
+                    "auto_tune_enabled": True,
+                    "max_top_k": 50,
+                    "rerank_disable_threshold": 1400,
+                },
+            }
+        )
     tuner = AutoTuner(dashboard, config=cm)
     params = {"top_k": 5, "k": 60, "enable_rerank": True}
     tuned = tuner.tune("hybrid", params)
@@ -32,9 +36,13 @@ def test_policy_disables_auto_tuning() -> None:
         base_config={
             "top_k": 5,
             "rrf_k": 60,
+            "pinecone_dense_index": "base-dense",
+            "pinecone_sparse_index": "base-sparse",
             "performance_policy": {
                 "target_p95_ms": 1000,
                 "auto_tune_enabled": False,
+                "max_top_k": 50,
+                "rerank_disable_threshold": 1500,
             },
         }
     )

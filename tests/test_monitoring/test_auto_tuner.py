@@ -13,9 +13,13 @@ def test_auto_tuner_reduces_top_k() -> None:
         base_config={
             "top_k": 5,
             "rrf_k": 60,
+            "pinecone_dense_index": "base-dense",
+            "pinecone_sparse_index": "base-sparse",
             "performance_policy": {
                 "target_p95_ms": 2000,
                 "auto_tune_enabled": True,
+                "max_top_k": 50,
+                "rerank_disable_threshold": 1500,
             },
         }
     )
@@ -32,6 +36,8 @@ def test_auto_tuner_respects_locks() -> None:
         base_config={
             "top_k": 5,
             "rrf_k": 60,
+            "pinecone_dense_index": "base-dense",
+            "pinecone_sparse_index": "base-sparse",
             "performance_policy": {
                 "target_p95_ms": 2000,
                 "auto_tune_enabled": True,

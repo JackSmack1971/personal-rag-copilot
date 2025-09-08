@@ -148,12 +148,15 @@ def validate_pinecone_indexes(
     errors: dict[str, str] = {}
     for key in ["pinecone_dense_index", "pinecone_sparse_index"]:
         value = settings.get(key)
-        if value is None or value == "":
+        if value is None:
             if require_fields:
                 errors[key] = "missing"
             continue
         if not isinstance(value, str):
             errors[key] = "not_string"
+            continue
+        if value.strip() == "":
+            errors[key] = "blank"
     return errors
 
 
