@@ -34,13 +34,13 @@ def validate_options(
     Parameters
     ----------
     settings:
-        Configuration dictionary to validate.
+        Settings model to validate.
     require_fields:
         When ``True`` missing fields are treated as errors.
 
     Returns
     -------
-    Dict[str, str]
+    dict[str, str]
         Mapping of invalid field names to error messages. An empty dictionary
         indicates that all options are valid.
     """
@@ -59,7 +59,20 @@ def validate_options(
 def validate_thresholds(
     settings: SettingsModel, *, require_fields: bool = False
 ) -> dict[str, str]:
-    """Validate evaluation threshold fields in ``settings``."""
+    """Validate evaluation threshold fields in ``settings``.
+
+    Parameters
+    ----------
+    settings:
+        Settings model to validate.
+    require_fields:
+        When ``True`` missing fields are treated as errors.
+
+    Returns
+    -------
+    dict[str, str]
+        Mapping of invalid field names to error messages.
+    """
     errors: dict[str, str] = {}
     thresholds = settings.evaluation_thresholds
     if thresholds is None:
@@ -83,7 +96,20 @@ def validate_thresholds(
 def validate_performance_policy(
     settings: SettingsModel, *, require_fields: bool = False
 ) -> dict[str, str]:
-    """Validate performance policy fields in ``settings``."""
+    """Validate performance policy fields in ``settings``.
+
+    Parameters
+    ----------
+    settings:
+        Settings model to validate.
+    require_fields:
+        When ``True`` missing fields are treated as errors.
+
+    Returns
+    -------
+    dict[str, str]
+        Mapping of invalid field names to error messages.
+    """
     errors: dict[str, str] = {}
     policy = settings.performance_policy
     if policy is None:
@@ -110,7 +136,20 @@ def validate_performance_policy(
 def validate_pinecone_indexes(
     settings: SettingsModel, *, require_fields: bool = False
 ) -> dict[str, str]:
-    """Validate presence of Pinecone index settings."""
+    """Validate presence of Pinecone index settings.
+
+    Parameters
+    ----------
+    settings:
+        Settings model to validate.
+    require_fields:
+        When ``True`` missing fields are treated as errors.
+
+    Returns
+    -------
+    dict[str, str]
+        Mapping of invalid field names to error messages.
+    """
     errors: dict[str, str] = {}
     for key in ["pinecone_dense_index", "pinecone_sparse_index"]:
         value = getattr(settings, key, None)
