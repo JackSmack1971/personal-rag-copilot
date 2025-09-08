@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import argparse
 import logging
-from dataclasses import dataclass  # noqa: F401
-from typing import Any, Mapping, MutableMapping, TypedDict, TYPE_CHECKING  # noqa: F401
+from typing import Any
 
+from pydantic import BaseModel
+
+from .models import SettingsModel
 from .settings import (
-    Settings,
     load_settings,
     validate_options,
     validate_thresholds,
@@ -28,17 +29,20 @@ BOUNDS: dict[str, tuple[int, int]] = {
 }
 
 
-def _get_nested(settings: Mapping[str, Any], path: str) -> Any:
+def _get_nested(settings: Any, path: str) -> Any:
     parts = path.split(".")
     current: Any = settings
     for part in parts:
-        if not isinstance(current, dict):
+        if isinstance(current, BaseModel):
+            current = getattr(current, part, None)
+        elif isinstance(current, dict):
+            current = current.get(part)
+        else:
             return None
-        current = current.get(part)
     return current
 
 
-def validate_settings(settings: Settings) -> tuple[bool, dict[str, str]]:
+def validate_settings(settings: SettingsModel) -> tuple[bool, dict[str, str]]:
     """Validate configuration ``settings`` against predefined bounds."""
     errors: dict[str, str] = {}
     for key, (low, high) in BOUNDS.items():

@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass  # noqa: F401
-from typing import Any, Mapping, MutableMapping, TypedDict, TYPE_CHECKING  # noqa: F401
+from typing import Any
 
 import gradio as gr
 import pandas as pd
 
-from src.config.settings import Settings, load_settings, save_settings
+from src.config import SettingsModel
+from src.config.settings import load_settings, save_settings
 from src.config.validate import validate_settings
 from src.config.runtime_config import config_manager
 from src.ui.chat import QUERY_SERVICE
@@ -16,10 +16,11 @@ from src.ui.chat import QUERY_SERVICE
 from .navbar import render_navbar
 
 
-def update_field(field: str, value: Any, settings: Settings) -> tuple[Settings, str]:
+def update_field(field: str, value: Any, settings: dict[str, Any]) -> tuple[dict[str, Any], str]:
     """Update a top-level configuration field."""
     new_settings = {**settings, field: value}
-    valid, errors = validate_settings(new_settings)
+    model = SettingsModel.model_validate(new_settings)
+    valid, errors = validate_settings(model)
     if valid:
         config_manager.set_runtime_overrides({field: value})
         return config_manager.as_dict(), ""
@@ -27,13 +28,14 @@ def update_field(field: str, value: Any, settings: Settings) -> tuple[Settings, 
 
 
 def update_policy_field(
-    field: str, value: Any, settings: Settings
-) -> tuple[Settings, str]:
+    field: str, value: Any, settings: dict[str, Any]
+) -> tuple[dict[str, Any], str]:
     """Update a performance policy field."""
     policy = {**settings.get("performance_policy", {})}
     policy[field] = value
     new_settings = {**settings, "performance_policy": policy}
-    valid, errors = validate_settings(new_settings)
+    model = SettingsModel.model_validate(new_settings)
+    valid, errors = validate_settings(model)
     if valid:
         config_manager.set_runtime_overrides({"performance_policy": policy})
         return config_manager.as_dict(), ""
@@ -59,7 +61,7 @@ def settings_page() -> gr.Blocks:
         gr.Markdown("# Settings")
         settings_state = gr.State(defaults)
 
-        def import_settings(file, settings: Settings):
+        def import_settings(file, settings: dict[str, Any]):
             if file is None:
                 return (
                     settings,
@@ -76,21 +78,21 @@ def settings_page() -> gr.Blocks:
                     settings.get("top_k"),
                     settings.get("rrf_k"),
                 )
-            config_manager.set_runtime_overrides(new_settings)
+            config_manager.set_runtime_overrides(new_settings.model_dump())
             cfg = config_manager.as_dict()
             return (cfg, "", cfg.get("top_k"), cfg.get("rrf_k"))
 
-        def reset_defaults() -> tuple[Settings, str, Any, Any]:
+        def reset_defaults() -> tuple[dict[str, Any], str, Any, Any]:
             config_manager.set_runtime_overrides({})
             cfg = config_manager.as_dict()
             return cfg, "", cfg.get("top_k"), cfg.get("rrf_k")
 
-        def rollback_cb() -> tuple[Settings, str, Any, Any]:
+        def rollback_cb() -> tuple[dict[str, Any], str, Any, Any]:
             cfg = config_manager.rollback()
             return cfg, "", cfg.get("top_k"), cfg.get("rrf_k")
 
-        def export_settings_cb(settings: Settings) -> str:
-            meta = save_settings(settings)
+        def export_settings_cb(settings: dict[str, Any]) -> str:
+            meta = save_settings(SettingsModel.model_validate(settings))
             return meta.get("path")
 
         with gr.Tabs():

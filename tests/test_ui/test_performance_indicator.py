@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 import gradio as gr
 
 from src.ui.components.transparency import PerformanceIndicator

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 import gradio as gr
 from gradio.events import EventData
 from unittest.mock import patch
@@ -45,7 +44,7 @@ def test_transparency_panel_update_renders_metadata() -> None:
         panel.bind()
     updates = panel.update(returned_meta)
 
-    assert 'title="Dense rank 1, score 0.42"' in updates[0]["value"]
+    assert 'title="DENSE rank 1, score 0.42"' in updates[0]["value"]
     assert updates[2]["value"][0]["rank"] == 1
     assert updates[2]["value"][0]["score"] == 0.42
     assert "12.30 ms" in updates[1]["value"]

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import math
-import pytest
 
 from src.ranking.rrf_fusion import DEFAULT_RRF_K, rrf_fusion
 from src.retrieval.hybrid import HybridRetriever

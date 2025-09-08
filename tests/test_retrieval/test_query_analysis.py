@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 import types
 
 from src.retrieval.query_analysis import analyze_query
