@@ -5,18 +5,9 @@ from __future__ import annotations
 import datetime
 import shutil
 from pathlib import Path
-from typing import TypedDict
 
 
-class BackupMetadata(TypedDict):
-    source: str
-
-
-class RestoreMetadata(TypedDict):
-    backup: str
-
-
-def backup_config(path: str, backup_dir: str) -> tuple[Path, BackupMetadata]:
+def backup_config(path: str, backup_dir: str) -> tuple[Path, dict[str, str]]:
     """Create a timestamped backup of ``path`` inside ``backup_dir``."""
     source = Path(path)
     dest_dir = Path(backup_dir)
@@ -27,7 +18,7 @@ def backup_config(path: str, backup_dir: str) -> tuple[Path, BackupMetadata]:
     return backup_path, {"source": str(source)}
 
 
-def restore_config(backup_path: str, target_path: str) -> tuple[Path, RestoreMetadata]:
+def restore_config(backup_path: str, target_path: str) -> tuple[Path, dict[str, str]]:
     """Restore configuration from ``backup_path`` to ``target_path"."""
     backup = Path(backup_path)
     target = Path(target_path)
