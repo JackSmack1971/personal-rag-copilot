@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 import datetime
 import gradio as gr
@@ -84,6 +86,51 @@ def test_load_dashboard_filters_and_exports(monkeypatch: pytest.MonkeyPatch) -> 
     assert json_update["value"].startswith(b"[")
     assert "q1" in alerts
     assert "Expand top-K" in recs
+
+
+def test_load_dashboard_summary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Non-empty history should show count and average score."""
+    now = datetime.datetime.now(datetime.UTC)
+    records = [
+        EvaluationResult(
+            timestamp=now.isoformat().replace("+00:00", "Z"),
+            query="q1",
+            answer="a1",
+            contexts=[],
+            score=0.0,
+            rationale="",
+            faithfulness=0.6,
+            relevancy=0.6,
+            precision=0.6,
+        ),
+        EvaluationResult(
+            timestamp=now.isoformat().replace("+00:00", "Z"),
+            query="q2",
+            answer="a2",
+            contexts=[],
+            score=0.0,
+            rationale="",
+            faithfulness=0.9,
+            relevancy=0.9,
+            precision=0.9,
+        ),
+    ]
+
+    monkeypatch.setattr(EVALUATOR, "load_history", lambda s, e: records)
+    history_path = tmp_path / "evaluations" / "history.jsonl"
+    monkeypatch.setattr(EVALUATOR, "history_path", history_path)
+
+    summary, *_ = _load_dashboard(None, None)
+    expected_avg = ((0.6 + 0.6 + 0.6) / 3 + (0.9 + 0.9 + 0.9) / 3) / 2
+    assert summary == (
+        f"**Evaluations:** 2  |  **Avg Score:** {expected_avg:.2f}"
+    )
+
+    if history_path.exists():
+        history_path.unlink()
+        history_path.parent.rmdir()
 
 
 def test_alerts_use_thresholds(monkeypatch: pytest.MonkeyPatch) -> None:
