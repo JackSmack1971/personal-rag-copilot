@@ -3,18 +3,23 @@ from __future__ import annotations
 """Runtime config with validation, history, and hot reload."""
 
 from copy import deepcopy
-from typing import Any, Callable, Dict, List, Tuple
 import os
+from dataclasses import dataclass  # noqa: F401
+from typing import (
+    Any,
+    Callable,
+    Mapping,  # noqa: F401
+    MutableMapping,  # noqa: F401
+    TypedDict,  # noqa: F401
+    TYPE_CHECKING,  # noqa: F401
+)
 
 from src.utils.hardware import detect_device
-from .settings import load_default_settings
+from .settings import Settings, load_default_settings
 from .validate import validate_settings
 
 
-def _deep_merge(
-    base: Dict[str, Any],
-    updates: Dict[str, Any],
-) -> Dict[str, Any]:
+def _deep_merge(base: dict[str, Any], updates: dict[str, Any]) -> dict[str, Any]:
     for key, value in updates.items():
         if isinstance(value, dict) and isinstance(base.get(key), dict):
             base[key] = _deep_merge(base.get(key, {}), value)
@@ -27,16 +32,16 @@ class OverrideChain:
     """Maintain ordered configuration layers with precedence."""
 
     def __init__(self) -> None:
-        self._layers: Dict[str, Dict[str, Any]] = {}
+        self._layers: dict[str, dict[str, Any]] = {}
 
-    def set_layer(self, name: str, values: Dict[str, Any]) -> None:
+    def set_layer(self, name: str, values: dict[str, Any]) -> None:
         self._layers[name] = values
 
-    def get_layer(self, name: str) -> Dict[str, Any]:
+    def get_layer(self, name: str) -> dict[str, Any]:
         return self._layers.get(name, {})
 
-    def resolve(self) -> Dict[str, Any]:
-        result: Dict[str, Any] = {}
+    def resolve(self) -> dict[str, Any]:
+        result: dict[str, Any] = {}
         for name in ["defaults", "environment", "cli", "runtime"]:
             layer = deepcopy(self._layers.get(name, {}))
             result = _deep_merge(result, layer)
@@ -48,13 +53,11 @@ class ValidationEngine:
 
     def __init__(
         self,
-        validator: Callable[
-            [Dict[str, Any]], Tuple[bool, Dict[str, str]]
-        ] = validate_settings,
+        validator: Callable[[Settings], tuple[bool, dict[str, str]]] = validate_settings,
     ) -> None:
         self._validator = validator
 
-    def validate(self, config: Dict[str, Any]) -> Tuple[bool, Dict[str, str]]:
+    def validate(self, config: Settings) -> tuple[bool, dict[str, str]]:
         return self._validator(config)
 
 
@@ -62,12 +65,12 @@ class ChangeTracker:
     """Track configuration history and support rollback."""
 
     def __init__(self) -> None:
-        self._history: List[Dict[str, Any]] = []
+        self._history: list[Settings] = []
 
-    def record(self, config: Dict[str, Any]) -> None:
+    def record(self, config: Settings) -> None:
         self._history.append(deepcopy(config))
 
-    def rollback(self, steps: int = 1) -> Dict[str, Any]:
+    def rollback(self, steps: int = 1) -> Settings:
         if len(self._history) <= steps:
             raise IndexError("no history to rollback")
         for _ in range(steps):
@@ -79,12 +82,12 @@ class HotReloader:
     """Notify listeners when configuration changes."""
 
     def __init__(self) -> None:
-        self._listeners: List[Callable[[Dict[str, Any]], None]] = []
+        self._listeners: list[Callable[[Settings], None]] = []
 
-    def register(self, callback: Callable[[Dict[str, Any]], None]) -> None:
+    def register(self, callback: Callable[[Settings], None]) -> None:
         self._listeners.append(callback)
 
-    def notify(self, config: Dict[str, Any]) -> None:
+    def notify(self, config: Settings) -> None:
         for callback in list(self._listeners):
             callback(config)
 
@@ -92,7 +95,7 @@ class HotReloader:
 class ConfigManager:
     """Central runtime configuration manager."""
 
-    def __init__(self, base_config: Dict[str, Any] | None = None) -> None:
+    def __init__(self, base_config: Settings | None = None) -> None:
         base = base_config or {}
         self.chain = OverrideChain()
         self.chain.set_layer("defaults", base)
@@ -111,8 +114,8 @@ class ConfigManager:
         self.reloader = HotReloader()
         self.tracker.record(self.chain.resolve())
 
-    def _load_env(self) -> Dict[str, Any]:
-        overrides: Dict[str, Any] = {}
+    def _load_env(self) -> dict[str, Any]:
+        overrides: dict[str, Any] = {}
         for key in ["top_k", "rrf_k"]:
             env_key = key.upper()
             value = os.getenv(env_key)
@@ -127,7 +130,7 @@ class ConfigManager:
         precision = os.getenv("PRECISION")
         if precision is not None:
             overrides["precision"] = precision.lower()
-        thresholds: Dict[str, Any] = {}
+        thresholds: dict[str, Any] = {}
         for metric in ["faithfulness", "relevancy", "precision"]:
             env_key = f"EVAL_{metric.upper()}"
             value = os.getenv(env_key)
@@ -144,7 +147,7 @@ class ConfigManager:
         sparse_index = os.getenv("PINECONE_SPARSE_INDEX")
         if sparse_index:
             overrides["pinecone_sparse_index"] = sparse_index
-        policy: Dict[str, Any] = {}
+        policy: dict[str, Any] = {}
         num_fields = {
             "target_p95_ms": "PERF_TARGET_P95_MS",
             "max_top_k": "PERF_MAX_TOP_K",
@@ -164,13 +167,13 @@ class ConfigManager:
             overrides["performance_policy"] = policy
         return overrides
 
-    def as_dict(self) -> Dict[str, Any]:
+    def as_dict(self) -> Settings:
         return self.chain.resolve()
 
     def get(self, key: str, default: Any | None = None) -> Any:
         return self.as_dict().get(key, default)
 
-    def set_cli_overrides(self, overrides: Dict[str, Any]) -> None:
+    def set_cli_overrides(self, overrides: dict[str, Any]) -> None:
         if not overrides:
             self.chain.set_layer("cli", {})
         else:
@@ -178,7 +181,7 @@ class ConfigManager:
             self.chain.set_layer("cli", _deep_merge(current, overrides))
         self._commit()
 
-    def set_runtime_overrides(self, overrides: Dict[str, Any]) -> None:
+    def set_runtime_overrides(self, overrides: dict[str, Any]) -> None:
         if not overrides:
             self.chain.set_layer("runtime", {})
         else:
@@ -194,7 +197,7 @@ class ConfigManager:
         self.tracker.record(config)
         self.reloader.notify(config)
 
-    def rollback(self, steps: int = 1) -> Dict[str, Any]:
+    def rollback(self, steps: int = 1) -> Settings:
         config = self.tracker.rollback(steps)
         self.chain.set_layer("runtime", config)
         self.reloader.notify(config)

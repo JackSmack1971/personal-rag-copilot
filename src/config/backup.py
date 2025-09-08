@@ -2,13 +2,22 @@
 
 from __future__ import annotations
 
-import shutil
 import datetime
+import shutil
+from dataclasses import dataclass  # noqa: F401
 from pathlib import Path
-from typing import Tuple
+from typing import Any, Mapping, MutableMapping, TypedDict, TYPE_CHECKING  # noqa: F401
 
 
-def backup_config(path: str, backup_dir: str) -> Tuple[Path, dict]:
+class BackupMetadata(TypedDict):
+    source: str
+
+
+class RestoreMetadata(TypedDict):
+    backup: str
+
+
+def backup_config(path: str, backup_dir: str) -> tuple[Path, BackupMetadata]:
     """Create a timestamped backup of ``path`` inside ``backup_dir``."""
     source = Path(path)
     dest_dir = Path(backup_dir)
@@ -19,8 +28,8 @@ def backup_config(path: str, backup_dir: str) -> Tuple[Path, dict]:
     return backup_path, {"source": str(source)}
 
 
-def restore_config(backup_path: str, target_path: str) -> Tuple[Path, dict]:
-    """Restore configuration from ``backup_path`` to ``target_path``."""
+def restore_config(backup_path: str, target_path: str) -> tuple[Path, RestoreMetadata]:
+    """Restore configuration from ``backup_path`` to ``target_path"."""
     backup = Path(backup_path)
     target = Path(target_path)
     target.parent.mkdir(parents=True, exist_ok=True)

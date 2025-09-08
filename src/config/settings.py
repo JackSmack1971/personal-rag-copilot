@@ -5,7 +5,8 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Dict, Optional, Tuple
+from dataclasses import dataclass  # noqa: F401
+from typing import Any, Mapping, MutableMapping, TypedDict, TYPE_CHECKING  # noqa: F401
 
 import yaml
 
@@ -23,9 +24,39 @@ PRECISION_OPTIONS = {"fp32", "fp16", "int8"}
 EVAL_METRICS = {"faithfulness", "relevancy", "precision"}
 
 
+class PerformancePolicy(TypedDict, total=False):
+    target_p95_ms: int
+    auto_tune_enabled: bool
+    max_top_k: int
+    rerank_disable_threshold: int
+
+
+class EvaluationThresholds(TypedDict, total=False):
+    faithfulness: float
+    relevancy: float
+    precision: float
+
+
+class Settings(TypedDict, total=False):
+    top_k: int
+    rrf_k: int
+    device_preference: str
+    precision: str
+    evaluation_thresholds: EvaluationThresholds
+    performance_policy: PerformancePolicy
+    pinecone_dense_index: str
+    pinecone_sparse_index: str
+    enable_rerank: bool
+
+
+class Metadata(TypedDict, total=False):
+    path: str
+    error: str
+
+
 def validate_options(
-    settings: Dict[str, Any], *, require_fields: bool = False
-) -> Dict[str, str]:
+    settings: Settings, *, require_fields: bool = False
+) -> dict[str, str]:
     """Validate enumerated option fields in ``settings``.
 
     Parameters
@@ -41,7 +72,7 @@ def validate_options(
         Mapping of invalid field names to error messages. An empty dictionary
         indicates that all options are valid.
     """
-    errors: Dict[str, str] = {}
+    errors: dict[str, str] = {}
     device = settings.get("device_preference")
     if device not in DEVICE_OPTIONS:
         if require_fields or device is not None:
@@ -54,10 +85,10 @@ def validate_options(
 
 
 def validate_thresholds(
-    settings: Dict[str, Any], *, require_fields: bool = False
-) -> Dict[str, str]:
+    settings: Settings, *, require_fields: bool = False
+) -> dict[str, str]:
     """Validate evaluation threshold fields in ``settings``."""
-    errors: Dict[str, str] = {}
+    errors: dict[str, str] = {}
     thresholds = settings.get("evaluation_thresholds")
     if thresholds is None:
         if require_fields:
@@ -81,10 +112,10 @@ def validate_thresholds(
 
 
 def validate_performance_policy(
-    settings: Dict[str, Any], *, require_fields: bool = False
-) -> Dict[str, str]:
+    settings: Settings, *, require_fields: bool = False
+) -> dict[str, str]:
     """Validate performance policy fields in ``settings``."""
-    errors: Dict[str, str] = {}
+    errors: dict[str, str] = {}
     policy = settings.get("performance_policy")
     if policy is None:
         if require_fields:
@@ -111,10 +142,10 @@ def validate_performance_policy(
 
 
 def validate_pinecone_indexes(
-    settings: Dict[str, Any], *, require_fields: bool = False
-) -> Dict[str, str]:
+    settings: Settings, *, require_fields: bool = False
+) -> dict[str, str]:
     """Validate presence of Pinecone index settings."""
-    errors: Dict[str, str] = {}
+    errors: dict[str, str] = {}
     for key in ["pinecone_dense_index", "pinecone_sparse_index"]:
         value = settings.get(key)
         if value is None or value == "":
@@ -126,7 +157,7 @@ def validate_pinecone_indexes(
     return errors
 
 
-def load_settings(path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+def load_settings(path: str) -> tuple[Settings, Metadata]:
     """Load YAML configuration from ``path``.
 
     Returns a tuple of ``(settings, metadata)``. If loading fails an empty
@@ -146,10 +177,10 @@ def load_settings(path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         return {}, {"error": "invalid_yaml", "path": path}
 
 
-def load_default_settings() -> Dict[str, Any]:
+def load_default_settings() -> Settings:
     """Load repository default configuration."""
     settings, _ = load_settings(str(DEFAULT_CONFIG_PATH))
-    errors = {}
+    errors: dict[str, str] = {}
     errors.update(validate_options(settings, require_fields=True))
     errors.update(validate_thresholds(settings, require_fields=True))
     errors.update(validate_performance_policy(settings, require_fields=True))
@@ -159,10 +190,7 @@ def load_default_settings() -> Dict[str, Any]:
     return settings
 
 
-def save_settings(
-    settings: Dict[str, Any],
-    path: Optional[str] = None,
-) -> Dict[str, str]:
+def save_settings(settings: Settings, path: str | None = None) -> dict[str, str]:
     """Persist ``settings`` to ``path``.
 
     If ``path`` is ``None`` a temporary file is created and its path returned
