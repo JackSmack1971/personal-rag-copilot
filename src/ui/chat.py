@@ -11,7 +11,10 @@ import gradio as gr  # type: ignore[import]
 from .components.transparency import TransparencyPanel
 from ..monitoring.performance import PerformanceTracker
 from .navbar import render_navbar
-from ..evaluation.ragas_integration import RagasEvaluator
+from ..evaluation.ragas_integration import (
+    EVALUATION_HISTORY_PATH,
+    RagasEvaluator,
+)
 from ..config.runtime_config import config_manager
 from src.services import get_query_service
 
@@ -19,7 +22,7 @@ from src.services import get_query_service
 QUERY_SERVICE = get_query_service()
 
 HISTORY_PATH = Path("chat_history.jsonl")
-EVALUATOR = RagasEvaluator()
+EVALUATOR = RagasEvaluator(history_path=EVALUATION_HISTORY_PATH)
 
 
 def _sanitize(text: str) -> str:

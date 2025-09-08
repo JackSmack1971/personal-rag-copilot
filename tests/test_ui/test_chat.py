@@ -5,7 +5,10 @@ from pathlib import Path
 
 import gradio as gr
 
-from src.evaluation.ragas_integration import EvaluationResult
+from src.evaluation.ragas_integration import (
+    EVALUATION_HISTORY_PATH,
+    EvaluationResult,
+)
 import src.ui.chat as chat
 from src.ui.chat import (
     _append_history,
@@ -44,7 +47,6 @@ def test_generate_response_streams(tmp_path: Path) -> None:
     file_path = tmp_path / "history.jsonl"
 
     chat.HISTORY_PATH = file_path
-    original_eval_path = chat.EVALUATOR.history_path
     chat.EVALUATOR.history_path = tmp_path / "eval.jsonl"
     original_evaluate = chat.EVALUATOR.evaluate
     chat.EVALUATOR.evaluate = (
@@ -96,7 +98,7 @@ def test_generate_response_streams(tmp_path: Path) -> None:
 
     chat.QUERY_SERVICE = original_service
     chat.HISTORY_PATH = HISTORY_PATH
-    chat.EVALUATOR.history_path = original_eval_path
+    chat.EVALUATOR.history_path = EVALUATION_HISTORY_PATH
     chat.EVALUATOR.evaluate = original_evaluate
 
 
@@ -104,7 +106,6 @@ def test_sparse_badge_display(tmp_path: Path) -> None:
     file_path = tmp_path / "history.jsonl"
 
     chat.HISTORY_PATH = file_path
-    original_eval_path = chat.EVALUATOR.history_path
     chat.EVALUATOR.history_path = tmp_path / "eval.jsonl"
     original_evaluate = chat.EVALUATOR.evaluate
     chat.EVALUATOR.evaluate = (
@@ -139,7 +140,7 @@ def test_sparse_badge_display(tmp_path: Path) -> None:
 
     chat.QUERY_SERVICE = original_service
     chat.HISTORY_PATH = HISTORY_PATH
-    chat.EVALUATOR.history_path = original_eval_path
+    chat.EVALUATOR.history_path = EVALUATION_HISTORY_PATH
     chat.EVALUATOR.evaluate = original_evaluate
 
 
