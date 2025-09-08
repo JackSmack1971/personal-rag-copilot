@@ -24,6 +24,15 @@ def test_missing_file() -> None:
     assert meta["error"] == "file_not_found"
 
 
+def test_validation_error(tmp_path: Path) -> None:
+    config_file = tmp_path / "config.yaml"
+    config_file.write_text("top_k: not_a_number", encoding="utf-8")
+    settings, meta = load_settings(str(config_file))
+    assert settings.model_dump(exclude_none=True) == {}
+    assert meta["error"] == "validation_error"
+    assert "details" in meta
+
+
 def test_save_and_load_roundtrip(tmp_path: Path) -> None:
     data = {"top_k": 10, "rrf_k": 60}
     config_file = tmp_path / "config.yaml"

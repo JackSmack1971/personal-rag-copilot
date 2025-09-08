@@ -8,6 +8,7 @@ from tempfile import NamedTemporaryFile
 from typing import TypedDict
 
 import yaml
+from pydantic import ValidationError
 
 
 _logger = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ from .models import SettingsModel
 class Metadata(TypedDict, total=False):
     path: str
     error: str
+    details: str
 
 
 def validate_options(
@@ -134,15 +136,24 @@ def validate_pinecone_indexes(
 def load_settings(path: str) -> tuple[SettingsModel, Metadata]:
     """Load YAML configuration from ``path``.
 
-    Returns a tuple of ``(settings, metadata)``. If loading fails an empty
-    dictionary is returned for settings and ``metadata`` contains error
-    information.
+    Returns a tuple of ``(settings, metadata)``. If loading or validation fails
+    an empty :class:`SettingsModel` is returned for settings and ``metadata``
+    contains error information.
     """
     try:
         config_path = Path(path)
         with config_path.open("r", encoding="utf-8") as handle:
             data = yaml.safe_load(handle) or {}
-        return SettingsModel.model_validate(data), {"path": str(config_path)}
+        try:
+            model = SettingsModel.model_validate(data)
+        except ValidationError as exc:
+            _logger.error("Configuration validation error: %s", exc)
+            return SettingsModel(), {
+                "error": "validation_error",
+                "path": str(config_path),
+                "details": str(exc),
+            }
+        return model, {"path": str(config_path)}
     except FileNotFoundError as exc:  # pragma: no cover
         _logger.error("Configuration file not found: %s", exc)
         return SettingsModel(), {"error": "file_not_found", "path": path}
@@ -153,7 +164,9 @@ def load_settings(path: str) -> tuple[SettingsModel, Metadata]:
 
 def load_default_settings() -> SettingsModel:
     """Load repository default configuration."""
-    settings, _ = load_settings(str(DEFAULT_CONFIG_PATH))
+    settings, meta = load_settings(str(DEFAULT_CONFIG_PATH))
+    if "error" in meta:
+        raise ValueError(f"invalid default configuration: {meta['error']}")
     errors: dict[str, str] = {}
     errors.update(validate_options(settings, require_fields=True))
     errors.update(validate_thresholds(settings, require_fields=True))
