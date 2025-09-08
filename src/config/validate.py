@@ -6,8 +6,6 @@ import argparse
 import logging
 from typing import Any
 
-from pydantic import BaseModel
-
 from .models import SettingsModel
 from .settings import (
     load_settings,
@@ -29,16 +27,14 @@ BOUNDS: dict[str, tuple[int, int]] = {
 }
 
 
-def _get_nested(settings: Any, path: str) -> Any:
-    parts = path.split(".")
+def _get_nested(settings: SettingsModel, path: str) -> Any:
+    """Retrieve value at ``path`` using attribute access."""
+
     current: Any = settings
-    for part in parts:
-        if isinstance(current, BaseModel):
-            current = getattr(current, part, None)
-        elif isinstance(current, dict):
-            current = current.get(part)
-        else:
-            return None
+    for part in path.split("."):
+        current = getattr(current, part, None)
+        if current is None:
+            break
     return current
 
 
