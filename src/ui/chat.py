@@ -1,9 +1,6 @@
 # pyright: reportUnknownMemberType=false, reportUnknownVariableType=false, reportAttributeAccessIssue=false, reportGeneralTypeIssues=false
 
-import json
-import datetime
 from html import escape
-from pathlib import Path
 from typing import Any, Dict, Generator, List, Tuple
 
 import gradio as gr  # type: ignore[import]
@@ -20,32 +17,12 @@ from src.services import get_query_service
 
 
 QUERY_SERVICE = get_query_service()
-
-HISTORY_PATH = Path("chat_history.jsonl")
 EVALUATOR = RagasEvaluator(history_path=EVALUATION_HISTORY_PATH)
 
 
 def _sanitize(text: str) -> str:
     """Escape HTML and trim whitespace from user inputs."""
     return escape(text.strip())
-
-
-def _append_history(messages: List[Dict[str, str]]) -> None:
-    """Persist the latest user and assistant messages to disk."""
-    user_message = messages[-2]["content"] if len(messages) >= 2 else ""
-    bot_message = messages[-1]["content"] if messages else ""
-    record = {
-        "timestamp": datetime.datetime.now(datetime.UTC)
-        .isoformat()
-        .replace("+00:00", "Z"),
-        "user": user_message,
-        "bot": bot_message,
-    }
-    HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with HISTORY_PATH.open("a", encoding="utf-8") as file:
-        file.write(json.dumps(record) + "\n")
-
-
 def _generate_response(
     messages: List[Dict[str, str]], history: List[Dict[str, str]] | None = None
 ) -> Generator[Tuple[List[Dict[str, str]], Dict[str, Any]], None, None]:
@@ -105,7 +82,6 @@ def _generate_response(
         yield conversation, metadata
 
     assistant_message["content"] = assistant_message["content"].strip()
-    _append_history(conversation)
     EVALUATOR.evaluate(
         sanitized,
         assistant_message["content"],

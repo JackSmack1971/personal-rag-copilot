@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import gradio as gr
@@ -10,43 +9,14 @@ from src.evaluation.ragas_integration import (
     EvaluationResult,
 )
 import src.ui.chat as chat
-from src.ui.chat import (
-    _append_history,
-    _generate_response,
-    _sanitize,
-    chat_page,
-    HISTORY_PATH,
-)
+from src.ui.chat import _generate_response, _sanitize, chat_page
 
 
 def test_sanitize_html() -> None:
     assert _sanitize(" <b>hi</b> ") == "&lt;b&gt;hi&lt;/b&gt;"
 
 
-def test_append_history_writes(tmp_path: Path) -> None:
-    file_path = tmp_path / "history.jsonl"
-    original = HISTORY_PATH
-    try:
-        # patch path
-        chat.HISTORY_PATH = file_path
-        _append_history(
-            [
-                {"role": "user", "content": "u"},
-                {"role": "assistant", "content": "b"},
-            ]
-        )
-        data = file_path.read_text().strip().splitlines()
-        record = json.loads(data[0])
-        assert record["user"] == "u"
-        assert record["bot"] == "b"
-    finally:
-        chat.HISTORY_PATH = original
-
-
 def test_generate_response_streams(tmp_path: Path) -> None:
-    file_path = tmp_path / "history.jsonl"
-
-    chat.HISTORY_PATH = file_path
     chat.EVALUATOR.history_path = tmp_path / "eval.jsonl"
     original_evaluate = chat.EVALUATOR.evaluate
     chat.EVALUATOR.evaluate = (
@@ -97,15 +67,11 @@ def test_generate_response_streams(tmp_path: Path) -> None:
     assert all(m == metadata for _, m in outputs)
 
     chat.QUERY_SERVICE = original_service
-    chat.HISTORY_PATH = HISTORY_PATH
     chat.EVALUATOR.history_path = EVALUATION_HISTORY_PATH
     chat.EVALUATOR.evaluate = original_evaluate
 
 
 def test_sparse_badge_display(tmp_path: Path) -> None:
-    file_path = tmp_path / "history.jsonl"
-
-    chat.HISTORY_PATH = file_path
     chat.EVALUATOR.history_path = tmp_path / "eval.jsonl"
     original_evaluate = chat.EVALUATOR.evaluate
     chat.EVALUATOR.evaluate = (
@@ -139,7 +105,6 @@ def test_sparse_badge_display(tmp_path: Path) -> None:
     assert final_meta["citations"][0]["source"] == "SPARSE"
 
     chat.QUERY_SERVICE = original_service
-    chat.HISTORY_PATH = HISTORY_PATH
     chat.EVALUATOR.history_path = EVALUATION_HISTORY_PATH
     chat.EVALUATOR.evaluate = original_evaluate
 
