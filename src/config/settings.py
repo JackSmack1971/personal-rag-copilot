@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import TypedDict
 
 import yaml
 from pydantic import ValidationError
@@ -25,12 +24,6 @@ EVAL_METRICS = {"faithfulness", "relevancy", "precision"}
 
 
 from .models import SettingsModel
-
-
-class Metadata(TypedDict, total=False):
-    path: str
-    error: str
-    details: str
 
 
 def validate_options(
@@ -133,7 +126,7 @@ def validate_pinecone_indexes(
     return errors
 
 
-def load_settings(path: str) -> tuple[SettingsModel, Metadata]:
+def load_settings(path: str) -> tuple[SettingsModel, dict[str, str]]:
     """Load YAML configuration from ``path``.
 
     Returns a tuple of ``(settings, metadata)``. If loading or validation fails
