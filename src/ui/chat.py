@@ -62,6 +62,8 @@ def _generate_response(
 
     metrics = perf.metrics()
 
+    contexts = [doc.get("text", "") for doc in results]
+
     citations = []
     for rank, doc in enumerate(results, start=1):
         raw_source = doc.get("source", "")
@@ -101,7 +103,12 @@ def _generate_response(
 
     assistant_message["content"] = assistant_message["content"].strip()
     _append_history(conversation)
-    EVALUATOR.evaluate(sanitized, assistant_message["content"], [sanitized])
+    EVALUATOR.evaluate(
+        sanitized,
+        assistant_message["content"],
+        contexts,
+        source=retrieval_meta.get("retrieval_mode", "hybrid"),
+    )
 
 
 def chat_page() -> gr.Blocks:

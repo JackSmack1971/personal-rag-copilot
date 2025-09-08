@@ -5,6 +5,8 @@ from pathlib import Path
 
 import gradio as gr
 
+from src.evaluation.ragas_integration import EvaluationResult
+import src.ui.chat as chat
 from src.ui.chat import (
     _append_history,
     _generate_response,
@@ -23,8 +25,6 @@ def test_append_history_writes(tmp_path: Path) -> None:
     original = HISTORY_PATH
     try:
         # patch path
-        from src.ui import chat
-
         chat.HISTORY_PATH = file_path
         _append_history(
             [
@@ -42,21 +42,34 @@ def test_append_history_writes(tmp_path: Path) -> None:
 
 def test_generate_response_streams(tmp_path: Path) -> None:
     file_path = tmp_path / "history.jsonl"
-    from src.ui import chat
 
     chat.HISTORY_PATH = file_path
     original_eval_path = chat.EVALUATOR.history_path
     chat.EVALUATOR.history_path = tmp_path / "eval.jsonl"
     original_evaluate = chat.EVALUATOR.evaluate
-    chat.EVALUATOR.evaluate = lambda *_, **__: None
+    chat.EVALUATOR.evaluate = (
+        lambda *_, **__: EvaluationResult(
+            timestamp="1970-01-01T00:00:00Z",
+            query="",
+            answer="",
+            contexts=[],
+            score=0.0,
+            rationale="",
+        )
+    )
 
     class DummyQueryService:
         default_mode = "hybrid"
 
         def query(self, query, mode=None, top_k=5, w_dense=1.0, w_lexical=1.0):
             return [
-                {"id": "a", "score": 1.0, "source": "dense"},
-                {"id": "b", "score": 0.5, "source": "dense+lexical"},
+                {"id": "a", "score": 1.0, "source": "dense", "text": "a"},
+                {
+                    "id": "b",
+                    "score": 0.5,
+                    "source": "dense+lexical",
+                    "text": "b",
+                },
             ], {
                 "rrf_weights": {"dense": 1.0, "lexical": 1.0},
                 "component_scores": {
@@ -89,19 +102,29 @@ def test_generate_response_streams(tmp_path: Path) -> None:
 
 def test_sparse_badge_display(tmp_path: Path) -> None:
     file_path = tmp_path / "history.jsonl"
-    from src.ui import chat
 
     chat.HISTORY_PATH = file_path
     original_eval_path = chat.EVALUATOR.history_path
     chat.EVALUATOR.history_path = tmp_path / "eval.jsonl"
     original_evaluate = chat.EVALUATOR.evaluate
-    chat.EVALUATOR.evaluate = lambda *_, **__: None
+    chat.EVALUATOR.evaluate = (
+        lambda *_, **__: EvaluationResult(
+            timestamp="1970-01-01T00:00:00Z",
+            query="",
+            answer="",
+            contexts=[],
+            score=0.0,
+            rationale="",
+        )
+    )
 
     class DummyQueryService:
         default_mode = "hybrid"
 
         def query(self, query, mode=None, top_k=5, w_dense=1.0, w_lexical=1.0):
-            return [{"id": "a", "score": 1.0, "source": "lexical"}], {
+            return [
+                {"id": "a", "score": 1.0, "source": "lexical", "text": "a"}
+            ], {
                 "rrf_weights": {"lexical": 1.0},
                 "component_scores": {"a": {"lexical": {"rank": 1, "score": 1.0}}},
                 "retrieval_mode": "lexical",
@@ -122,4 +145,4 @@ def test_sparse_badge_display(tmp_path: Path) -> None:
 
 def test_chat_page_has_chat_interface() -> None:
     page = chat_page()
-    assert any(isinstance(b, gr.Chatbot) for b in page.blocks.values())
+    assert any(isinstance(b, gr.Chatbot) for b in page.blocks.values())  # type: ignore[attr-defined]
