@@ -5,8 +5,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from dataclasses import dataclass  # noqa: F401
-from typing import Any, Mapping, MutableMapping, TypedDict, TYPE_CHECKING  # noqa: F401
+from typing import TypedDict
 
 import yaml
 
@@ -24,29 +23,7 @@ PRECISION_OPTIONS = {"fp32", "fp16", "int8"}
 EVAL_METRICS = {"faithfulness", "relevancy", "precision"}
 
 
-class PerformancePolicy(TypedDict, total=False):
-    target_p95_ms: int
-    auto_tune_enabled: bool
-    max_top_k: int
-    rerank_disable_threshold: int
-
-
-class EvaluationThresholds(TypedDict, total=False):
-    faithfulness: float
-    relevancy: float
-    precision: float
-
-
-class Settings(TypedDict, total=False):
-    top_k: int
-    rrf_k: int
-    device_preference: str
-    precision: str
-    evaluation_thresholds: EvaluationThresholds
-    performance_policy: PerformancePolicy
-    pinecone_dense_index: str
-    pinecone_sparse_index: str
-    enable_rerank: bool
+from .models import SettingsModel
 
 
 class Metadata(TypedDict, total=False):
@@ -55,7 +32,7 @@ class Metadata(TypedDict, total=False):
 
 
 def validate_options(
-    settings: Settings, *, require_fields: bool = False
+    settings: SettingsModel, *, require_fields: bool = False
 ) -> dict[str, str]:
     """Validate enumerated option fields in ``settings``.
 
@@ -73,11 +50,11 @@ def validate_options(
         indicates that all options are valid.
     """
     errors: dict[str, str] = {}
-    device = settings.get("device_preference")
+    device = settings.device_preference
     if device not in DEVICE_OPTIONS:
         if require_fields or device is not None:
             errors["device_preference"] = "invalid_option"
-    precision = settings.get("precision")
+    precision = settings.precision
     if precision not in PRECISION_OPTIONS:
         if require_fields or precision is not None:
             errors["precision"] = "invalid_option"
@@ -85,20 +62,17 @@ def validate_options(
 
 
 def validate_thresholds(
-    settings: Settings, *, require_fields: bool = False
+    settings: SettingsModel, *, require_fields: bool = False
 ) -> dict[str, str]:
     """Validate evaluation threshold fields in ``settings``."""
     errors: dict[str, str] = {}
-    thresholds = settings.get("evaluation_thresholds")
+    thresholds = settings.evaluation_thresholds
     if thresholds is None:
         if require_fields:
             errors["evaluation_thresholds"] = "missing"
         return errors
-    if not isinstance(thresholds, dict):
-        errors["evaluation_thresholds"] = "not_mapping"
-        return errors
     for metric in EVAL_METRICS:
-        value = thresholds.get(metric)
+        value = getattr(thresholds, metric, None)
         if value is None:
             if require_fields:
                 errors[f"evaluation_thresholds.{metric}"] = "missing"
@@ -112,27 +86,24 @@ def validate_thresholds(
 
 
 def validate_performance_policy(
-    settings: Settings, *, require_fields: bool = False
+    settings: SettingsModel, *, require_fields: bool = False
 ) -> dict[str, str]:
     """Validate performance policy fields in ``settings``."""
     errors: dict[str, str] = {}
-    policy = settings.get("performance_policy")
+    policy = settings.performance_policy
     if policy is None:
         if require_fields:
             errors["performance_policy"] = "missing"
         return errors
-    if not isinstance(policy, dict):
-        errors["performance_policy"] = "not_mapping"
-        return errors
     for field in ["target_p95_ms", "max_top_k", "rerank_disable_threshold"]:
-        value = policy.get(field)
+        value = getattr(policy, field, None)
         if value is None:
             if require_fields:
                 errors[f"performance_policy.{field}"] = "missing"
             continue
         if not isinstance(value, (int, float)):
             errors[f"performance_policy.{field}"] = "not_numeric"
-    auto = policy.get("auto_tune_enabled")
+    auto = policy.auto_tune_enabled
     if auto is None:
         if require_fields:
             errors["performance_policy.auto_tune_enabled"] = "missing"
@@ -142,12 +113,12 @@ def validate_performance_policy(
 
 
 def validate_pinecone_indexes(
-    settings: Settings, *, require_fields: bool = False
+    settings: SettingsModel, *, require_fields: bool = False
 ) -> dict[str, str]:
     """Validate presence of Pinecone index settings."""
     errors: dict[str, str] = {}
     for key in ["pinecone_dense_index", "pinecone_sparse_index"]:
-        value = settings.get(key)
+        value = getattr(settings, key, None)
         if value is None:
             if require_fields:
                 errors[key] = "missing"
@@ -160,7 +131,7 @@ def validate_pinecone_indexes(
     return errors
 
 
-def load_settings(path: str) -> tuple[Settings, Metadata]:
+def load_settings(path: str) -> tuple[SettingsModel, Metadata]:
     """Load YAML configuration from ``path``.
 
     Returns a tuple of ``(settings, metadata)``. If loading fails an empty
@@ -171,16 +142,16 @@ def load_settings(path: str) -> tuple[Settings, Metadata]:
         config_path = Path(path)
         with config_path.open("r", encoding="utf-8") as handle:
             data = yaml.safe_load(handle) or {}
-        return data, {"path": str(config_path)}
+        return SettingsModel.model_validate(data), {"path": str(config_path)}
     except FileNotFoundError as exc:  # pragma: no cover
         _logger.error("Configuration file not found: %s", exc)
-        return {}, {"error": "file_not_found", "path": path}
+        return SettingsModel(), {"error": "file_not_found", "path": path}
     except yaml.YAMLError as exc:  # pragma: no cover
         _logger.error("Invalid YAML configuration: %s", exc)
-        return {}, {"error": "invalid_yaml", "path": path}
+        return SettingsModel(), {"error": "invalid_yaml", "path": path}
 
 
-def load_default_settings() -> Settings:
+def load_default_settings() -> SettingsModel:
     """Load repository default configuration."""
     settings, _ = load_settings(str(DEFAULT_CONFIG_PATH))
     errors: dict[str, str] = {}
@@ -193,7 +164,7 @@ def load_default_settings() -> Settings:
     return settings
 
 
-def save_settings(settings: Settings, path: str | None = None) -> dict[str, str]:
+def save_settings(settings: SettingsModel, path: str | None = None) -> dict[str, str]:
     """Persist ``settings`` to ``path``.
 
     If ``path`` is ``None`` a temporary file is created and its path returned
@@ -201,15 +172,16 @@ def save_settings(settings: Settings, path: str | None = None) -> dict[str, str]
     field.
     """
     try:
+        data = settings.model_dump(exclude_none=True)
         if path is None:
             handle = NamedTemporaryFile(delete=False, suffix=".yaml")
             path = handle.name
             with handle:
-                yaml.safe_dump(settings, handle)
+                yaml.safe_dump(data, handle)
         else:
             config_path = Path(path)
             with config_path.open("w", encoding="utf-8") as handle:
-                yaml.safe_dump(settings, handle)
+                yaml.safe_dump(data, handle)
         return {"path": str(path)}
     except OSError as exc:  # pragma: no cover
         _logger.error("Failed to save configuration: %s", exc)

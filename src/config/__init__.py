@@ -11,6 +11,11 @@ from .runtime_config import (
     ValidationEngine,
     config_manager,
 )
+from .models import (
+    PerformancePolicyModel,
+    EvaluationThresholdsModel,
+    SettingsModel,
+)
 
 __all__ = [
     "load_settings",
@@ -23,4 +28,7 @@ __all__ = [
     "ChangeTracker",
     "HotReloader",
     "config_manager",
+    "PerformancePolicyModel",
+    "EvaluationThresholdsModel",
+    "SettingsModel",
 ]

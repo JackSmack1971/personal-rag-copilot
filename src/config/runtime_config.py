@@ -4,18 +4,11 @@ from __future__ import annotations
 
 from copy import deepcopy
 import os
-from dataclasses import dataclass  # noqa: F401
-from typing import (
-    Any,
-    Callable,
-    Mapping,  # noqa: F401
-    MutableMapping,  # noqa: F401
-    TypedDict,  # noqa: F401
-    TYPE_CHECKING,  # noqa: F401
-)
+from typing import Any, Callable
 
 from src.utils.hardware import detect_device
-from .settings import Settings, load_default_settings
+from .models import SettingsModel
+from .settings import load_default_settings
 from .validate import validate_settings
 
 
@@ -53,11 +46,11 @@ class ValidationEngine:
 
     def __init__(
         self,
-        validator: Callable[[Settings], tuple[bool, dict[str, str]]] = validate_settings,
+        validator: Callable[[SettingsModel], tuple[bool, dict[str, str]]] = validate_settings,
     ) -> None:
         self._validator = validator
 
-    def validate(self, config: Settings) -> tuple[bool, dict[str, str]]:
+    def validate(self, config: SettingsModel) -> tuple[bool, dict[str, str]]:
         return self._validator(config)
 
 
@@ -65,29 +58,29 @@ class ChangeTracker:
     """Track configuration history and support rollback."""
 
     def __init__(self) -> None:
-        self._history: list[Settings] = []
+        self._history: list[SettingsModel] = []
 
-    def record(self, config: Settings) -> None:
-        self._history.append(deepcopy(config))
+    def record(self, config: SettingsModel) -> None:
+        self._history.append(config.model_copy(deep=True))
 
-    def rollback(self, steps: int = 1) -> Settings:
+    def rollback(self, steps: int = 1) -> SettingsModel:
         if len(self._history) <= steps:
             raise IndexError("no history to rollback")
         for _ in range(steps):
             self._history.pop()
-        return deepcopy(self._history[-1])
+        return self._history[-1].model_copy(deep=True)
 
 
 class HotReloader:
     """Notify listeners when configuration changes."""
 
     def __init__(self) -> None:
-        self._listeners: list[Callable[[Settings], None]] = []
+        self._listeners: list[Callable[[SettingsModel], None]] = []
 
-    def register(self, callback: Callable[[Settings], None]) -> None:
+    def register(self, callback: Callable[[SettingsModel], None]) -> None:
         self._listeners.append(callback)
 
-    def notify(self, config: Settings) -> None:
+    def notify(self, config: SettingsModel) -> None:
         for callback in list(self._listeners):
             callback(config)
 
@@ -95,8 +88,8 @@ class HotReloader:
 class ConfigManager:
     """Central runtime configuration manager."""
 
-    def __init__(self, base_config: Settings | None = None) -> None:
-        base = base_config or {}
+    def __init__(self, base_config: SettingsModel | None = None) -> None:
+        base = base_config.model_dump() if base_config else {}
         self.chain = OverrideChain()
         self.chain.set_layer("defaults", base)
         self.chain.set_layer("environment", self._load_env())
@@ -112,7 +105,7 @@ class ConfigManager:
         self.validator = ValidationEngine()
         self.tracker = ChangeTracker()
         self.reloader = HotReloader()
-        config = self.chain.resolve()
+        config = SettingsModel.model_validate(self.chain.resolve())
         valid, _ = self.validator.validate(config)
         if not valid:
             raise ValueError("invalid configuration")
@@ -180,8 +173,11 @@ class ConfigManager:
             overrides["performance_policy"] = policy
         return overrides
 
-    def as_dict(self) -> Settings:
-        return self.chain.resolve()
+    def as_model(self) -> SettingsModel:
+        return SettingsModel.model_validate(self.chain.resolve())
+
+    def as_dict(self) -> dict[str, Any]:
+        return self.as_model().model_dump()
 
     def get(self, key: str, default: Any | None = None) -> Any:
         return self.as_dict().get(key, default)
@@ -203,18 +199,18 @@ class ConfigManager:
         self._commit()
 
     def _commit(self) -> None:
-        config = self.chain.resolve()
+        config = SettingsModel.model_validate(self.chain.resolve())
         valid, _ = self.validator.validate(config)
         if not valid:
             raise ValueError("invalid configuration")
         self.tracker.record(config)
         self.reloader.notify(config)
 
-    def rollback(self, steps: int = 1) -> Settings:
+    def rollback(self, steps: int = 1) -> dict[str, Any]:
         config = self.tracker.rollback(steps)
-        self.chain.set_layer("runtime", config)
+        self.chain.set_layer("runtime", config.model_dump())
         self.reloader.notify(config)
-        return config
+        return config.model_dump()
 
 
 # Global configuration manager instance

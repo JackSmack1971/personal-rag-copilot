@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import datetime
 import shutil
-from dataclasses import dataclass  # noqa: F401
 from pathlib import Path
-from typing import Any, Mapping, MutableMapping, TypedDict, TYPE_CHECKING  # noqa: F401
+from typing import TypedDict
 
 
 class BackupMetadata(TypedDict):

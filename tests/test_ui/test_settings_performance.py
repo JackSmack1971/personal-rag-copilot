@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import pytest
-import gradio as gr
 from gradio.components import JSON
 
 from src.ui.settings import (

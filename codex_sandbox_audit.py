@@ -1,7 +1,13 @@
 # codex_sandbox_audit.py
 # Safe, read-only checks except for tiny temp files under a writable dir.
 
-import os, sys, json, time, socket, platform, pathlib, traceback
+import json
+import os
+import platform
+import socket
+import sys
+import time
+import pathlib
 from contextlib import closing
 
 NOW = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -39,7 +45,9 @@ def try_exec_python(tmpdir: pathlib.Path):
     s = tmpdir / "exec_check.py"
     s.write_text("print('exec-ok')\n", encoding="utf-8")
     try:
-        import subprocess, sys as _sys
+        import subprocess
+        import sys as _sys
+
         cp = subprocess.run([_sys.executable, str(s)], capture_output=True, text=True, timeout=3)
         ok = (cp.returncode == 0 and "exec-ok" in (cp.stdout + cp.stderr))
         return ok, (cp.stdout or cp.stderr).strip()[:120]
@@ -83,7 +91,9 @@ def tcp_check(host, port, timeout=2.0):
 
 def https_head(host, path="/", method="GET", timeout=2.0):
     try:
-        import ssl, http.client
+        import http.client
+        import ssl
+
         ctx = ssl.create_default_context()
         conn = http.client.HTTPSConnection(host, timeout=timeout, context=ctx)
         conn.request(method, path)
