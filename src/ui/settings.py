@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Tuple
+from dataclasses import dataclass  # noqa: F401
+from typing import Any, Mapping, MutableMapping, TypedDict, TYPE_CHECKING  # noqa: F401
 
 import gradio as gr
 import pandas as pd
 
-from src.config.settings import load_settings, save_settings
+from src.config.settings import Settings, load_settings, save_settings
 from src.config.validate import validate_settings
 from src.config.runtime_config import config_manager
 from src.ui.chat import QUERY_SERVICE
@@ -15,9 +16,7 @@ from src.ui.chat import QUERY_SERVICE
 from .navbar import render_navbar
 
 
-def update_field(
-    field: str, value: Any, settings: Dict[str, Any]
-) -> Tuple[Dict[str, Any], str]:
+def update_field(field: str, value: Any, settings: Settings) -> tuple[Settings, str]:
     """Update a top-level configuration field."""
     new_settings = {**settings, field: value}
     valid, errors = validate_settings(new_settings)
@@ -28,8 +27,8 @@ def update_field(
 
 
 def update_policy_field(
-    field: str, value: Any, settings: Dict[str, Any]
-) -> Tuple[Dict[str, Any], str]:
+    field: str, value: Any, settings: Settings
+) -> tuple[Settings, str]:
     """Update a performance policy field."""
     policy = {**settings.get("performance_policy", {})}
     policy[field] = value
@@ -60,7 +59,7 @@ def settings_page() -> gr.Blocks:
         gr.Markdown("# Settings")
         settings_state = gr.State(defaults)
 
-        def import_settings(file, settings: Dict[str, Any]):
+        def import_settings(file, settings: Settings):
             if file is None:
                 return (
                     settings,
@@ -81,16 +80,16 @@ def settings_page() -> gr.Blocks:
             cfg = config_manager.as_dict()
             return (cfg, "", cfg.get("top_k"), cfg.get("rrf_k"))
 
-        def reset_defaults():
+        def reset_defaults() -> tuple[Settings, str, Any, Any]:
             config_manager.set_runtime_overrides({})
             cfg = config_manager.as_dict()
             return cfg, "", cfg.get("top_k"), cfg.get("rrf_k")
 
-        def rollback_cb():
+        def rollback_cb() -> tuple[Settings, str, Any, Any]:
             cfg = config_manager.rollback()
             return cfg, "", cfg.get("top_k"), cfg.get("rrf_k")
 
-        def export_settings_cb(settings: Dict[str, Any]):
+        def export_settings_cb(settings: Settings) -> str:
             meta = save_settings(settings)
             return meta.get("path")
 

@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import argparse
 import logging
-from typing import Any, Dict, Tuple
+from dataclasses import dataclass  # noqa: F401
+from typing import Any, Mapping, MutableMapping, TypedDict, TYPE_CHECKING  # noqa: F401
 
 from .settings import (
+    Settings,
     load_settings,
     validate_options,
     validate_thresholds,
@@ -17,7 +19,7 @@ from .settings import (
 _logger = logging.getLogger(__name__)
 
 # Supported numeric bounds for configuration parameters
-BOUNDS: Dict[str, Tuple[int, int]] = {
+BOUNDS: dict[str, tuple[int, int]] = {
     "top_k": (1, 1000),
     "rrf_k": (1, 1000),
     "performance_policy.target_p95_ms": (1, 10000),
@@ -26,7 +28,7 @@ BOUNDS: Dict[str, Tuple[int, int]] = {
 }
 
 
-def _get_nested(settings: Dict[str, Any], path: str) -> Any:
+def _get_nested(settings: Mapping[str, Any], path: str) -> Any:
     parts = path.split(".")
     current: Any = settings
     for part in parts:
@@ -36,9 +38,9 @@ def _get_nested(settings: Dict[str, Any], path: str) -> Any:
     return current
 
 
-def validate_settings(settings: Dict[str, Any]) -> Tuple[bool, Dict[str, str]]:
+def validate_settings(settings: Settings) -> tuple[bool, dict[str, str]]:
     """Validate configuration ``settings`` against predefined bounds."""
-    errors: Dict[str, str] = {}
+    errors: dict[str, str] = {}
     for key, (low, high) in BOUNDS.items():
         value = _get_nested(settings, key)
         if value is None:
