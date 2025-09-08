@@ -1,15 +1,17 @@
 """Document ingestion UI components."""
 
+# pyright: reportUnknownMemberType=false, reportUnknownVariableType=false, reportAttributeAccessIssue=false, reportGeneralTypeIssues=false
+
 from __future__ import annotations
 
 import json
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, cast
 
-import gradio as gr
+import gradio as gr  # type: ignore[import]
 
-from src.services.document_service import DocumentService
+from src.services import get_document_service
 
 from .navbar import render_navbar
 
@@ -19,33 +21,7 @@ from .navbar import render_navbar
 # ---------------------------------------------------------------------------
 
 
-class _DummyDenseRetriever:
-    """Minimal stub to satisfy DocumentService dependencies."""
-
-    def index_corpus(self, *args, **kwargs):  # pragma: no cover
-        return [], {}
-
-    def update_document(self, *args, **kwargs):  # pragma: no cover
-        return {}
-
-    def delete_document(self, *args, **kwargs):  # pragma: no cover
-        return {}
-
-    def validate_index(self, *args, **kwargs):  # pragma: no cover
-        return True, {}
-
-
-class _DummyLexicalRetriever(_DummyDenseRetriever):
-    bm25 = object()
-
-    def index_documents(self, *args, **kwargs):  # pragma: no cover
-        return [], {}
-
-
-_document_service = DocumentService(
-    _DummyDenseRetriever(),
-    _DummyLexicalRetriever(),
-)
+_document_service = get_document_service()
 
 ALLOWED_SUFFIXES = {".pdf", ".docx", ".txt", ".html", ".htm", ".md"}
 
@@ -66,7 +42,7 @@ def _sanitize_name(name: str) -> str:
 
 
 def _queue_files(
-    files: list[gr.File],
+    files: List[Any],
     table: List[List[Any]] | None,
     contents: Dict[str, str] | None,
 ) -> Tuple[List[List[Any]], Dict[str, str], Dict[str, Any]]:
@@ -76,9 +52,9 @@ def _queue_files(
     if not files:
         return table, contents, gr.update(value="", visible=False)
     for file in files:
-        doc_id = _sanitize_name(file.name)
+        doc_id = _sanitize_name(str(getattr(file, "name", "")))
         try:
-            safe_path = _sanitize_path(file.name)
+            safe_path = _sanitize_path(str(getattr(file, "name", "")))
             text = _document_service.parse_document(str(safe_path))
             contents[doc_id] = text
             table.append([doc_id, "update", "pending", ""])
@@ -137,7 +113,7 @@ def _update_document(table: List[List[Any]], content: str) -> Dict[str, Any]:
     doc_id = str(table[0][0])
     metadata_raw = table[0][1] if len(table[0]) > 1 else "{}"
     try:
-        metadata = json.loads(metadata_raw) if metadata_raw else {}
+        metadata = cast(Dict[str, Any], json.loads(metadata_raw) if metadata_raw else {})
     except Exception:
         metadata = {}
     return _document_service.update_document(doc_id, content, metadata)
@@ -163,7 +139,7 @@ def _health_check() -> Dict[str, Any]:
 
 def ingest_page() -> gr.Blocks:
     """Build the ingest page."""
-    Alert = getattr(gr, "Alert", gr.Markdown)
+    Alert = getattr(gr, "Alert", gr.Markdown)  # type: ignore[attr-defined]
     with gr.Blocks() as demo:
         render_navbar()
         gr.Markdown("# Ingest")

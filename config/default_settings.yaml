@@ -1,5 +1,8 @@
 top_k: 5
 rrf_k: 60
+retrieval_mode: hybrid
+w_dense: 1.0
+w_lexical: 1.0
 
 # Compute device selection: auto chooses best available
 device_preference: auto  # auto, cpu, gpu_openvino, gpu_xpu

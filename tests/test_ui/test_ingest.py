@@ -131,7 +131,9 @@ def test_progress_callback_updates_components(tmp_path: Path) -> None:
     dense.index_corpus.return_value = (["id"], {"count": 1})
     lexical.index_documents.return_value = (["id"], {"count": 1})
 
-    service = ingest_module.DocumentService(dense, lexical)
+    from src.services.document_service import DocumentService
+
+    service = DocumentService(dense, lexical)
 
     progress_bar = gr.Slider(value=0, minimum=0, maximum=1)
     progress_text = gr.Markdown()
