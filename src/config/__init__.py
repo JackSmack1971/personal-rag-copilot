@@ -1,6 +1,6 @@
 """Configuration package."""
 
-from .settings import load_settings
+from .settings import Metadata, load_settings
 from .validate import validate_settings
 from .backup import backup_config, restore_config
 from .runtime_config import (
@@ -19,6 +19,7 @@ from .models import (
 
 __all__ = [
     "load_settings",
+    "Metadata",
     "validate_settings",
     "backup_config",
     "restore_config",

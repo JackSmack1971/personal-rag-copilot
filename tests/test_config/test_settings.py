@@ -12,6 +12,8 @@ def test_load_settings(tmp_path: Path) -> None:
     config_file.write_text(data, encoding="utf-8")
 
     settings, meta = load_settings(str(config_file))
+    assert isinstance(settings, SettingsModel)
+    assert isinstance(meta, dict)
     data = settings.model_dump()
     assert data["key"] == "value"
     assert data["number"] == 1
@@ -20,6 +22,7 @@ def test_load_settings(tmp_path: Path) -> None:
 
 def test_missing_file() -> None:
     settings, meta = load_settings("nonexistent.yaml")
+    assert isinstance(settings, SettingsModel)
     assert settings.model_dump(exclude_none=True) == {}
     assert meta["error"] == "file_not_found"
 
@@ -28,6 +31,7 @@ def test_validation_error(tmp_path: Path) -> None:
     config_file = tmp_path / "config.yaml"
     config_file.write_text("top_k: not_a_number", encoding="utf-8")
     settings, meta = load_settings(str(config_file))
+    assert isinstance(settings, SettingsModel)
     assert settings.model_dump(exclude_none=True) == {}
     assert meta["error"] == "validation_error"
     assert "details" in meta
@@ -39,6 +43,7 @@ def test_save_and_load_roundtrip(tmp_path: Path) -> None:
     meta = save_settings(SettingsModel.model_validate(data), str(config_file))
     assert "error" not in meta
     loaded, _ = load_settings(meta["path"])
+    assert isinstance(loaded, SettingsModel)
     assert loaded.model_dump(exclude_none=True) == data
 
 
