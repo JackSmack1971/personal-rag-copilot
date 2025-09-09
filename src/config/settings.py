@@ -7,10 +7,20 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 import yaml
+from typing import TypedDict
+
 from pydantic import ValidationError
 
 
 _logger = logging.getLogger(__name__)
+
+
+class Metadata(TypedDict, total=False):
+    """Lightweight metadata returned from configuration operations."""
+
+    path: str
+    error: str
+    details: str
 
 # Path to repository default configuration
 DEFAULT_CONFIG_PATH = (
@@ -165,12 +175,14 @@ def validate_pinecone_indexes(
     return errors
 
 
-def load_settings(path: str) -> tuple[SettingsModel, dict[str, str]]:
+def load_settings(path: str) -> tuple[SettingsModel, Metadata]:
     """Load YAML configuration from ``path``.
 
-    Returns a tuple of ``(settings, metadata)``. If loading or validation fails
-    an empty :class:`SettingsModel` is returned for settings and ``metadata``
-    contains error information.
+    Returns a tuple of ``(settings, metadata)`` where ``metadata`` contains
+    contextual information such as the source ``path``. If loading or
+    validation fails an empty :class:`SettingsModel` is returned and
+    ``metadata`` includes ``error`` and ``details`` fields describing the
+    failure.
     """
     try:
         config_path = Path(path)
@@ -180,18 +192,22 @@ def load_settings(path: str) -> tuple[SettingsModel, dict[str, str]]:
             model = SettingsModel.model_validate(data)
         except ValidationError as exc:
             _logger.error("Configuration validation error: %s", exc)
-            return SettingsModel(), {
-                "error": "validation_error",
-                "path": str(config_path),
-                "details": str(exc),
-            }
-        return model, {"path": str(config_path)}
+            return SettingsModel(), Metadata(
+                error="validation_error",
+                path=str(config_path),
+                details=str(exc),
+            )
+        return model, Metadata(path=str(config_path))
     except FileNotFoundError as exc:  # pragma: no cover
         _logger.error("Configuration file not found: %s", exc)
-        return SettingsModel(), {"error": "file_not_found", "path": path}
+        return SettingsModel(), Metadata(
+            error="file_not_found", path=str(path), details=str(exc)
+        )
     except yaml.YAMLError as exc:  # pragma: no cover
         _logger.error("Invalid YAML configuration: %s", exc)
-        return SettingsModel(), {"error": "invalid_yaml", "path": path}
+        return SettingsModel(), Metadata(
+            error="invalid_yaml", path=str(path), details=str(exc)
+        )
 
 
 def load_default_settings() -> SettingsModel:
@@ -209,7 +225,7 @@ def load_default_settings() -> SettingsModel:
     return settings
 
 
-def save_settings(settings: SettingsModel, path: str | None = None) -> dict[str, str]:
+def save_settings(settings: SettingsModel, path: str | None = None) -> Metadata:
     """Persist ``settings`` to ``path``.
 
     If ``path`` is ``None`` a temporary file is created and its path returned
@@ -227,7 +243,7 @@ def save_settings(settings: SettingsModel, path: str | None = None) -> dict[str,
             config_path = Path(path)
             with config_path.open("w", encoding="utf-8") as handle:
                 yaml.safe_dump(data, handle)
-        return {"path": str(path)}
+        return Metadata(path=str(path))
     except OSError as exc:  # pragma: no cover
         _logger.error("Failed to save configuration: %s", exc)
-        return {"error": "write_failed", "path": str(path)}
+        return Metadata(error="write_failed", path=str(path), details=str(exc))
