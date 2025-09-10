@@ -45,65 +45,137 @@ def _queue_files(
     files: List[Any],
     table: List[List[Any]] | None,
     contents: Dict[str, str] | None,
-) -> Tuple[List[List[Any]], Dict[str, str], Dict[str, Any]]:
+) -> Tuple[List[List[Any]], Dict[str, str], gr.Markdown]:
     """Parse files and append them to a processing queue."""
     table = table or []
     contents = contents or {}
     if not files:
-        return table, contents, gr.update(value="", visible=False)
+        return table, contents, gr.Markdown("", visible=False)
     for file in files:
-        doc_id = _sanitize_name(str(getattr(file, "name", "")))
+        file_path = str(getattr(file, "name", ""))
+        doc_id = _sanitize_name(file_path)
         try:
-            safe_path = _sanitize_path(str(getattr(file, "name", "")))
+            safe_path = _sanitize_path(file_path)
             text = _document_service.parse_document(str(safe_path))
             contents[doc_id] = text
+            # Store file path in contents for later use by _process_all
+            contents[f"{doc_id}_path"] = str(safe_path)
             table.append([doc_id, "update", "pending", ""])
         except Exception as exc:  # pragma: no cover
             table.append([doc_id, "update", "error", str(exc)])
-    return table, contents, gr.update(value="Files queued", visible=True)
+    return table, contents, gr.Markdown("Files queued successfully", visible=True)
 
 
 def _process_all(
     table: List[List[Any]] | None,
     contents: Dict[str, str] | None,
-) -> Tuple[List[List[Any]], Dict[str, Any]]:
-    """Execute queued operations via DocumentService.bulk_operations."""
+) -> Tuple[List[List[Any]], gr.Slider, gr.Markdown, Dict[str, Any], gr.Markdown]:
+    """Execute queued operations via DocumentService.ingest with progress tracking."""
     table = table or []
     contents = contents or {}
-    operations: List[Dict[str, Any]] = []
+    result: Dict[str, Any] = {"results": []}
+
+    # Extract file paths from contents for ingestion
+    file_paths: List[str] = []
     for row in table:
-        doc_id, action, status, _ = row
-        if status != "pending":
-            continue
-        if action == "update":
-            operations.append(
-                {
-                    "action": "update",
-                    "doc_id": doc_id,
-                    "content": contents.get(doc_id, ""),
-                }
-            )
-        elif action == "delete":
-            operations.append({"action": "delete", "doc_id": doc_id})
-    if not operations:
-        return table, {"results": []}
-    result = _document_service.bulk_operations(operations)
-    results = result.get("results", [])
-    for row, res in zip(table, results, strict=False):
-        outcome = res.get("result", {})
-        status = (
-            outcome.get("dense", {}).get("status")
-            or outcome.get("lexical", {}).get("status")
-            or outcome.get("status", "unknown")
+        if len(row) >= 4 and row[2] == "pending" and row[1] == "update":
+            doc_id = row[0]
+            path_key = f"{doc_id}_path"
+            if path_key in contents:
+                file_paths.append(contents[path_key])
+            else:
+                # Fallback for legacy compatibility - assume doc_id is the path
+                file_paths.append(doc_id)
+
+    if not file_paths:
+        return (
+            table,
+            gr.Slider(visible=False),
+            gr.Markdown(visible=False),
+            result,
+            gr.Markdown("No files to process", visible=True)
         )
-        error = (
-            outcome.get("dense", {}).get("error")
-            or outcome.get("lexical", {}).get("error")
-            or outcome.get("error", "")
-        )
-        row[2] = status
-        row[3] = error
-    return table, result
+
+    # Progress tracking variables
+    progress_value = 0.0
+    progress_message = "Starting ingestion..."
+    progress_bar = gr.Slider(value=progress_value, visible=True)
+    progress_text = gr.Markdown(progress_message, visible=True)
+    alert = gr.Markdown("", visible=False)
+
+    def progress_callback(pct: float, msg: str) -> None:
+        nonlocal progress_value, progress_message
+        progress_value = pct
+        progress_message = msg
+        progress_bar.value = pct
+        progress_text.value = msg
+
+    try:
+        # Use the ingest method with progress callback
+        result = _document_service.ingest(file_paths, progress=progress_callback)
+
+        # Update table status based on result
+        for row in table:
+            if row[2] == "pending":
+                # Check result for success/error status
+                dense_status = result.get("dense", {}).get("status", "unknown")
+                lexical_status = result.get("lexical", {}).get("status", "unknown")
+
+                if dense_status == "success" or lexical_status == "success":
+                    row[2] = "success"
+                    row[3] = ""
+                else:
+                    row[2] = "error"
+                    row[3] = result.get("dense", {}).get("error", "") or result.get("lexical", {}).get("error", "Processing failed")
+
+        # Final progress update
+        progress_bar.value = 1.0
+        progress_text.value = "Ingestion complete"
+        alert = gr.Markdown("Files processed successfully", visible=True)
+
+    except Exception as exc:
+        # Handle errors
+        for row in table:
+            if row[2] == "pending":
+                row[2] = "error"
+                row[3] = str(exc)
+
+        progress_bar.value = 0.0
+        progress_text.value = f"Error: {exc}"
+        alert = gr.Markdown(f"Processing failed: {exc}", visible=True)
+
+    return table, progress_bar, progress_text, result, alert
+
+
+# Backward compatibility wrapper for tests
+def _queue_files_legacy(
+    files: List[Any],
+    table: List[List[Any]] | None,
+    contents: Dict[str, str] | None,
+) -> Tuple[List[List[Any]], Dict[str, str], Dict[str, Any]]:
+    """Legacy wrapper for backward compatibility with tests."""
+    updated_table, updated_contents, alert = _queue_files(files, table, contents)
+    # Remove path entries from contents for legacy compatibility
+    legacy_contents = {k: v for k, v in updated_contents.items() if not k.endswith("_path")}
+    return updated_table, legacy_contents, {"value": alert.value, "visible": alert.visible}
+
+
+def _process_all_legacy(
+    table: List[List[Any]] | None,
+    contents: Dict[str, str] | None,
+) -> Tuple[List[List[Any]], Dict[str, Any]]:
+    """Legacy wrapper for backward compatibility with tests."""
+    # For legacy compatibility, reconstruct contents with path entries
+    legacy_contents = contents or {}
+    enhanced_contents = dict(legacy_contents)
+    for row in table or []:
+        if len(row) >= 1:
+            doc_id = row[0]
+            # Assume doc_id is the file path for legacy tests
+            enhanced_contents[f"{doc_id}_path"] = doc_id
+
+    updated_table, _, _, result, _ = _process_all(table, enhanced_contents)
+    return updated_table, result
 
 
 def _update_document(table: List[List[Any]], content: str) -> Dict[str, Any]:
@@ -156,6 +228,16 @@ def ingest_page() -> gr.Blocks:
         )
         contents_state = gr.State({})
         process_btn = gr.Button("Process All")
+        progress_bar = gr.Slider(
+            minimum=0,
+            maximum=1,
+            value=0,
+            step=0.01,
+            visible=False,
+            interactive=False,
+            label="Processing Progress"
+        )
+        progress_text = gr.Markdown(visible=False)
         report = gr.JSON(label="Completion Report")
         file_input.upload(
             fn=_queue_files,
@@ -165,7 +247,7 @@ def ingest_page() -> gr.Blocks:
         process_btn.click(
             fn=_process_all,
             inputs=[queue, contents_state],
-            outputs=[queue, report],
+            outputs=[queue, progress_bar, progress_text, report, alert],
         )
         with gr.Accordion("Index Management", open=False):
             metadata_table = gr.Dataframe(

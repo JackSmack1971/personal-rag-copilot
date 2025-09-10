@@ -1,13 +1,25 @@
 """Gradio multipage application with dynamic configuration support."""
 
+import logging
 from fastapi import FastAPI
 from gradio.routes import mount_gradio_app
 
+from src.config.dependency_check import verify_critical_dependencies
 from src.ui import chat_page, ingest_page, evaluate_page, settings_page
+
+logger = logging.getLogger(__name__)
 
 
 def create_app() -> FastAPI:
     """Create the FastAPI application and mount Gradio routes."""
+    # Verify critical dependencies on startup
+    try:
+        verify_critical_dependencies()
+        logger.info("✓ All critical dependencies verified successfully")
+    except RuntimeError as e:
+        logger.error(f"✗ Dependency verification failed: {e}")
+        raise
+
     app = FastAPI()
     mount_gradio_app(app, chat_page(), path="/")
     mount_gradio_app(app, ingest_page(), path="/ingest")

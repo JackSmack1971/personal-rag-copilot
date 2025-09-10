@@ -1,0 +1,6 @@
+﻿sprint: 1
+dates: { start: 2025-08-25, end: 2025-09-05 }
+stories: ["US-101"]
+policy:
+  dor: ["spec.ready","risks.known"]
+  dod: ["tests.green","security.ok","docs.updated","pipelines.pass","slo.targets.present"]

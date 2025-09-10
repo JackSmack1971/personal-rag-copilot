@@ -1,0 +1,8 @@
+﻿epics:
+  - id: E-100
+    name: Onboarding
+    stories:
+      - id: US-101
+        title: As a user, I can sign up with email
+        priority: High
+        acceptance: ["email verification", "rate-limited", "audit log"]

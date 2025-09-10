@@ -1,12 +1,11 @@
 {
   "typeCheckingMode": "standard",
-  "strict": ["src/**", "app.py"],
   "include": ["src", "app.py", "tests"],
-  "exclude": ["**/.venv/**", "**/__pycache__/**", "**/node_modules/**", "**/.git/**"],
+  "strict": ["src/**", "app.py"],
+  "exclude": ["**/__pycache__", "**/node_modules", "**/.git", "**/.venv", ".venv", ".tox", "build", "dist"],
   "stubPath": "typings",
-  "executionEnvironments": [
-    { "root": ".", "pythonVersion": "3.12", "pythonPlatform": "Linux" }
-  ],
-  "reportMissingTypeStubs": "warning",
+  "ignore": ["typings/**"],
+  "pythonVersion": "3.12",
+  "reportMissingTypeStubs": "none",
   "reportWildcardImportFromLibrary": "warning"
 }

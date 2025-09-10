@@ -1,0 +1,12 @@
+{"detected": {"python": {"present": true, "pytest": true, "unittest": true, "coverage_cfg": true, "pyright": true, "mypy": false, "ruff": true, "flake8": true}, "javascript": {"present": false, "jest": false, "vitest": false, "mocha": false}, "go": {"present": false}, "rust": {"present": false}, "java": {"present": false}}, "commands": {"python": ["pytest -q -ra -W default --junitxml=.ai/artifacts/diagnostics/pytest/junit.xml"], "javascript": [], "typecheck": ["pyright --outputjson > .ai/artifacts/diagnostics/pyright/report.json"], "coverage": ["coverage xml -o .ai/artifacts/diagnostics/coverage/coverage.xml"]}}
+
+    ],
+    "javascript": [],
+    "typecheck": [
+      "pyright --outputjson > .ai/artifacts/diagnostics/pyright/report.json"
+    ],
+    "coverage": [
+      "coverage xml -o .ai/artifacts/diagnostics/coverage/coverage.xml"
+    ]
+  }
+}

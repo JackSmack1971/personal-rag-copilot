@@ -6,6 +6,7 @@ from typing import Any, Dict, Generator, List, Tuple
 import gradio as gr  # type: ignore[import]
 
 from .components.transparency import TransparencyPanel
+from .components.badges import get_source_badge
 from ..monitoring.performance import PerformanceTracker
 from .navbar import render_navbar
 from ..evaluation.ragas_integration import (
@@ -14,6 +15,7 @@ from ..evaluation.ragas_integration import (
 )
 from ..config.runtime_config import config_manager
 from src.services import get_query_service
+from src.services.llm_service import get_llm_service
 
 
 QUERY_SERVICE = get_query_service()
@@ -38,7 +40,13 @@ def _generate_response(
             w_dense=w_dense,
             w_lexical=w_lexical,
         )
-        reply = f"You said: {sanitized}"
+
+        # Extract contexts from results for LLM synthesis
+        contexts = [doc.get("text", "") for doc in results]
+
+        # Generate response using LLM service with context synthesis
+        llm_service = get_llm_service()
+        reply = llm_service.generate_response(sanitized, contexts)
 
     metrics = perf.metrics()
 
@@ -47,12 +55,8 @@ def _generate_response(
     citations = []
     for rank, doc in enumerate(results, start=1):
         raw_source = doc.get("source", "")
-        if "+" in raw_source:
-            source = "FUSED"
-        elif raw_source == "lexical":
-            source = "SPARSE"
-        else:
-            source = raw_source.upper()
+        # Use the centralized badge function for consistent labeling
+        source = get_source_badge(raw_source)
         citations.append(
             {
                 "label": doc.get("id", ""),
@@ -82,10 +86,12 @@ def _generate_response(
         yield conversation, metadata
 
     assistant_message["content"] = assistant_message["content"].strip()
+    # Extract context strings for evaluation
+    context_strings = [doc.get("text", "") for doc in results]
     EVALUATOR.evaluate(
         sanitized,
         assistant_message["content"],
-        contexts,
+        context_strings,
         source=retrieval_meta.get("retrieval_mode", "hybrid"),
     )
 

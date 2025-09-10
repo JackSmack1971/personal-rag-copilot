@@ -1,0 +1,68 @@
+# Version control
+.git
+.gitignore
+
+# Python bytecode
+__pycache__
+*.py[cod]
+*$py.class
+
+# Testing
+.pytest_cache
+.coverage
+htmlcov
+.tox
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis
+
+# IDEs
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Documentation build
+docs/_build
+
+# Temporary files
+*.tmp
+*.temp
+
+# Development tools
+Makefile
+pyrightconfig.json
+.pre-commit-config.yaml
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# Reports
+reports/
+
+# Benchmarks
+.benchmarks/
+
+# Optional dependencies not needed in container
+requirements/constraints.txt
+requirements/gpu-cu12.txt
+
+# Test directories (exclude if not needed in production)
+tests/

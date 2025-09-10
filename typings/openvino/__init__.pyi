@@ -1,0 +1,6 @@
+from typing import Any
+
+class runtime:
+    class Core:
+        def __init__(self) -> None: ...
+        def compile_model(self, model: Any, device_name: str = ...) -> Any: ...

@@ -498,6 +498,119 @@ User Query → Retrieval Engine → RRF Fusion → [Optional Reranking] → LLM 
 - AC-CFG-001-3: Invalid configurations prevented with clear error messages
 - AC-CFG-001-4: Configuration backup and restore capabilities
 
+---
+
+### 3.7 Infrastructure and Quality Assurance Functions
+
+#### FR-INF-001: Dependency Management and Installation
+**Priority:** Must
+**Source:** [PRD-2.7]
+
+**Description:** The system shall ensure all critical dependencies are installed and available to prevent import errors and enable full functionality.
+
+**Detailed Specifications:**
+- Dependencies: ragas, rank-bm25, pyright
+- Installation: pip install command during setup
+- Verification: Import testing and module availability checks
+
+**Acceptance Criteria:**
+- AC-INF-001-1: All specified dependencies install successfully
+- AC-INF-001-2: System verifies module imports without errors
+- AC-INF-001-3: Test suite runs without import-related failures
+- AC-INF-001-4: Dependencies are documented in requirements files
+
+**Dependencies:** None
+
+---
+
+#### FR-INF-002: Type-Checking Integration
+**Priority:** Must
+**Source:** [PRD-2.8]
+
+**Description:** The system shall integrate pyright for static type checking to catch type errors early in development.
+
+**Detailed Specifications:**
+- Tool: pyright static type checker
+- Configuration: pyrightconfig.json file
+- Integration: CI/CD pipeline inclusion
+- Diagnostics: IDE integration for real-time feedback
+
+**Acceptance Criteria:**
+- AC-INF-002-1: pyright is installed and configured
+- AC-INF-002-2: Type checking runs without fatal errors
+- AC-INF-002-3: Configuration file matches project structure
+- AC-INF-002-4: Type diagnostics available in development environment
+
+**Dependencies:** FR-INF-001
+
+---
+
+#### FR-INF-003: Chat Response Generation Fix
+**Priority:** Must
+**Source:** [PRD-2.9]
+
+**Description:** The system shall generate meaningful responses from retrieved contexts instead of echoing user input.
+
+**Detailed Specifications:**
+- Response generation: Use LLM with retrieved contexts
+- Context processing: Synthesize answers from multiple sources
+- Fallback handling: Error handling for retrieval failures
+- Quality validation: Ensure responses differ from input
+
+**Acceptance Criteria:**
+- AC-INF-003-1: Chat responses use retrieved document contexts
+- AC-INF-003-2: Responses differ from user input (no echo)
+- AC-INF-003-3: System handles retrieval failures gracefully
+- AC-INF-003-4: Response quality meets minimum standards
+
+**Dependencies:** FR-RET-003, FR-UI-002
+
+---
+
+#### FR-INF-004: UI Badge Corrections
+**Priority:** Must
+**Source:** [PRD-2.10]
+
+**Description:** The system shall display accurate retrieval source badges in the user interface.
+
+**Detailed Specifications:**
+- Badge labels: DENSE, LEXICAL, FUSED
+- Consistency: All UI components use correct labels
+- Source identification: Accurate representation of retrieval method
+- User clarity: Clear visual distinction between sources
+
+**Acceptance Criteria:**
+- AC-INF-004-1: Lexical results show "LEXICAL" badge
+- AC-INF-004-2: All badge labels match defined standards
+- AC-INF-004-3: UI components consistently use correct badges
+- AC-INF-004-4: Users can identify retrieval source from badges
+
+**Dependencies:** FR-UI-003
+
+---
+
+#### FR-INF-005: Evaluation Framework Completion
+**Priority:** Must
+**Source:** [PRD-2.11]
+
+**Description:** The system shall complete Ragas integration for evaluation metrics without import failures.
+
+**Detailed Specifications:**
+- Framework: Ragas evaluation library
+- Dependencies: Ensure ragas is available
+- Error handling: Clear messages for missing dependencies
+- Metrics: Faithfulness and related scores
+
+**Acceptance Criteria:**
+- AC-INF-005-1: Ragas evaluation runs without import errors
+- AC-INF-005-2: Evaluate tab functions properly
+- AC-INF-005-3: Clear error messages for dependency issues
+- AC-INF-005-4: Evaluation metrics computed accurately
+
+**Dependencies:** FR-INF-001, FR-EVAL-001
+
+---
+
 **Dependencies:** None
 
 ---

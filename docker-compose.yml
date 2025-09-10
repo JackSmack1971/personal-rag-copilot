@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "7860:7860"
+    volumes:
+      # Mount configuration directory for persistent settings
+      - ./config:/app/config:ro
+      # Mount data directory for persistent application data
+      - ./data:/app/data
+      # Mount logs directory for persistent logs
+      - ./logs:/app/logs
+    environment:
+      # Environment configuration
+      - APP_ENV=development
+      - PYTHONPATH=/app
+      # Gradio configuration
+      - GRADIO_SERVER_NAME=0.0.0.0
+      - GRADIO_SERVER_PORT=7860
+      # Add other environment variables as needed
+      # - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # - PINECONE_API_KEY=${PINECONE_API_KEY}
+    env_file:
+      - .env  # Optional: for sensitive environment variables
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - rag-network
+
+networks:
+  rag-network:
+    driver: bridge
+
+volumes:
+  app-data:
+    driver: local
+  app-logs:
+    driver: local

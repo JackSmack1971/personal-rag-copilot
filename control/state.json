@@ -1,0 +1,27 @@
+﻿{
+  "schema": "STATE/V1",
+  "version": "1.0.0",
+  "project_id": "personal-rag-copilot",
+  "updated_at": "2025-09-10T00:21:25Z",
+  "current": "ui-completed",
+  "nodes": {
+    "diagnostics": { "mode": "sparc-diagnostics-collector", "status": "completed" },
+    "platform":    { "mode": "sparc-platform-engineer",     "status": "completed" },
+    "spec":        { "mode": "sparc-specification-writer",  "status": "completed" },
+    "research":    { "mode": "data-researcher",             "status": "pending" },
+    "factcheck":   { "mode": "rapid-fact-checker",          "status": "pending" },
+    "architect":   { "mode": "sparc-architect",             "status": "completed" },
+    "tdd":         { "mode": "sparc-tdd-engineer",           "status": "completed" },
+    "implement":   { "mode": "sparc-code-implementer",       "status": "completed" },
+    "type-fixes":  { "mode": "sparc-code-implementer",       "status": "completed" },
+    "ci-cd":       { "mode": "sparc-platform-engineer",      "status": "completed" },
+    "docker":      { "mode": "sparc-platform-engineer",      "status": "completed" },
+    "ui":          { "mode": "sparc-code-implementer",       "status": "completed" },
+    "integrate":   { "mode": "sparc-integrator",             "status": "pending" },
+    "qa":          { "mode": "sparc-qa-analyst",             "status": "pending" },
+    "audit":       { "mode": "sparc-orchestrator",           "status": "completed" }
+  },
+  "active": [],
+  "completed": ["audit", "diagnostics", "type-fixes", "ci-cd", "docker", "ui"],
+  "failed": []
+}

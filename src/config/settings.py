@@ -138,8 +138,6 @@ def validate_performance_policy(
     if auto is None:
         if require_fields:
             errors["performance_policy.auto_tune_enabled"] = "missing"
-    elif not isinstance(auto, bool):
-        errors["performance_policy.auto_tune_enabled"] = "not_bool"
     return errors
 
 

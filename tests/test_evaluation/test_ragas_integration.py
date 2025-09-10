@@ -39,3 +39,43 @@ def test_evaluate_records_history(tmp_path: Path) -> None:
         history[0].timestamp.replace("Z", "+00:00")
     )
     assert loaded_ts.tzinfo is datetime.UTC
+
+
+def test_evaluate_handles_exceptions_gracefully(tmp_path: Path) -> None:
+    """Test that evaluate method handles Ragas exceptions gracefully."""
+    file_path = tmp_path / "history.jsonl"
+    evaluator = RagasEvaluator(history_path=file_path)
+
+    with patch("src.evaluation.ragas_integration.evaluate") as mock_eval:
+        # Simulate Ragas evaluation failure
+        mock_eval.side_effect = Exception("Ragas evaluation failed")
+
+        result = evaluator.evaluate("test query", "test answer", ["context1", "context2"])
+
+    # Verify fallback behavior
+    assert result.faithfulness == 0.0
+    assert result.relevancy == 0.0
+    assert result.precision == 0.0
+    assert result.score == 0.0
+    assert "Evaluation failed" in result.rationale
+    assert result.query == "test query"
+    assert result.answer == "test answer"
+    assert result.contexts == ["context1", "context2"]
+
+
+def test_evaluate_with_missing_ragas_import(tmp_path: Path) -> None:
+    """Test behavior when Ragas import fails."""
+    file_path = tmp_path / "history.jsonl"
+    evaluator = RagasEvaluator(history_path=file_path)
+
+    # Mock import failure
+    with patch.dict('sys.modules', {'ragas': None}):
+        with patch.dict('sys.modules', {'ragas.evaluate': None}):
+            with patch("src.evaluation.ragas_integration.evaluate") as mock_eval:
+                mock_eval.side_effect = ImportError("No module named 'ragas'")
+
+                result = evaluator.evaluate("q", "a", ["c"])
+
+    # Should still handle gracefully
+    assert result.score == 0.0
+    assert "Evaluation failed" in result.rationale

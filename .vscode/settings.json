@@ -1,0 +1,43 @@
+{
+  "python.analysis.diagnosticMode": "openFilesOnly",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.venv": true,
+    "**/.pytest_cache": true,
+    "**/.ai": true,
+    "**/reports": true,
+    "**/control": true,
+    "**/typings": true,
+    "**/*.egg-info": true
+  },
+  "python.analysis.exclude": [
+    "**/__pycache__",
+    "**/.venv",
+    "**/reports",
+    "**/control",
+    "**/typings"
+  ],
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/__pycache__": true,
+    "**/.venv": true,
+    "**/.pytest_cache": true,
+    "**/.ai": true,
+    "**/reports": true,
+    "**/control": true
+  },
+  "python.analysis.typeCheckingMode": "basic",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintArgs": ["--disable=C0114,C0115,C0116"],
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "boundary",
+  "workbench.editor.enablePreview": false,
+  "workbench.statusBar.visible": true,
+  "extensions.ignoreRecommendations": true,
+  "python.analysis.inlayHints.enabled": false,
+  "python.analysis.autoImportCompletions": false
+}

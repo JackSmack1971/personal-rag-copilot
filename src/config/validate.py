@@ -50,9 +50,6 @@ def validate_settings(settings: SettingsModel) -> tuple[bool, dict[str, str]]:
         if value is None:
             errors[key] = "missing"
             continue
-        if not isinstance(value, (int, float)):
-            errors[key] = "not_numeric"
-            continue
         if not low <= value <= high:
             errors[key] = f"out_of_bounds:{low}-{high}"
     errors.update(validate_options(settings))

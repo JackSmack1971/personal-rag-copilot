@@ -1,0 +1,132 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install pip-tools and dev dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pip-tools ruff flake8
+
+    - name: Install base dependencies
+      run: |
+        pip install -r requirements/base.txt
+
+    - name: Run Ruff linting
+      run: |
+        ruff check --select E,F,B --ignore E402,E501 src/ app.py tests/
+      continue-on-error: false
+
+    - name: Run Flake8 linting
+      run: |
+        flake8 --max-line-length=90 --extend-ignore=E402,E501 src/ app.py tests/
+      continue-on-error: false
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install pip-tools and dev dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pip-tools pyright
+
+    - name: Install base dependencies
+      run: |
+        pip install -r requirements/base.txt
+
+    - name: Run Pyright type checking
+      run: |
+        pyright --verifyconfig
+        pyright --outputjson reports/pyright/pyright-report.json
+        # Note: Baseline comparison can be added later if needed
+        python tools/ci/pyright_json_to_md.py reports/pyright/pyright-report.json > reports/pyright/pyright-summary.md
+      continue-on-error: false
+
+    - name: Upload Pyright report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: pyright-report
+        path: reports/pyright/pyright-report.json
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install pip-tools and dev dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pip-tools pytest pytest-cov pytest-asyncio pytest-benchmark
+
+    - name: Validate lockfiles
+      run: |
+        pip-compile --quiet requirements/base.in
+        pip-compile --quiet --extra-index-url https://pypi.nvidia.com requirements/gpu-cu12.in requirements/constraints.in
+        git diff --exit-code requirements/ || (echo "Lockfiles are not up to date. Run 'make lockfiles' to update." && exit 1)
+
+    - name: Install base dependencies
+      run: |
+        pip install -r requirements/base.txt
+
+    - name: Install GPU dependencies (Linux only)
+      run: |
+        pip install --extra-index-url https://pypi.nvidia.com -r requirements/gpu-cu12.txt
+
+    - name: Check dependency conflicts
+      run: |
+        pip check
+
+    - name: Run tests with coverage
+      run: |
+        pytest --cov=src --cov-report=xml --cov-report=html --cov-report=term-missing --tb=short
+      continue-on-error: false
+
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: |
+          coverage.xml
+          htmlcov/
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: |
+          .pytest_cache/
+          reports/  # if any test reports are generated
+
+    - name: Validate NVIDIA packages (Linux)
+      run: |
+        python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
+        python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" || echo "CUDA not available in CI (expected)"

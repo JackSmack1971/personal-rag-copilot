@@ -1,0 +1,46 @@
+# Core dependencies for personal-rag-copilot
+# This file contains the main runtime dependencies
+
+# Web framework and API
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# UI and visualization
+gradio>=5.0.0
+plotly==6.3.0
+
+# ML and NLP
+sentence-transformers>=2.2.2
+transformers>=4.35.0
+torch>=2.0.0
+numpy>=1.24.0
+
+# Search and ranking
+rank-bm25>=0.2.2
+
+# Vector database
+pinecone-client>=2.2.0
+
+# Evaluation and metrics
+ragas>=0.1.0
+
+# Data processing
+datasets>=2.14.0
+pypdf>=3.16.0
+python-docx>=0.8.11
+beautifulsoup4>=4.12.0
+
+# Text processing
+markdown>=3.5.0
+nltk>=3.8.0
+
+# Data validation
+pydantic>=2.4.0
+typing-extensions>=4.8.0
+
+# Configuration and environment
+python-dotenv>=1.0.0
+structlog>=23.2.0
+
+# Include constraints
+-c constraints.txt

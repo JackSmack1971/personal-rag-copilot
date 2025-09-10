@@ -28,7 +28,7 @@ class MemoryMonitor:
         self._start, _ = tracemalloc.get_traced_memory()
         return self
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> None:
         self._end, self._peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
         if self.threshold_mb and self.usage_mb > self.threshold_mb:
@@ -72,7 +72,7 @@ class PerformanceTracker:
         self._mem.__enter__()
         return self
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> None:
         end = time.perf_counter()
         self.latency_ms = (end - self._start) * 1000
         if self._mem:

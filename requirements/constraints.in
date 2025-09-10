@@ -1,0 +1,4 @@
+# Python version constraints
+# Constrain Python to 3.12.x to avoid compatibility issues with 3.13+
+
+python>=3.12,<3.13

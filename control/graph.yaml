@@ -1,0 +1,36 @@
+﻿version: 1
+project_id: sample-app
+handoff_contract: HANDOFF/V1
+orchestrator: sparc-orchestrator
+
+nodes:
+  spec:           { mode: sparc-specification-writer,  desc: "Write specification.md + acceptance-criteria.md" }
+  research:       { mode: data-researcher,             desc: "Collect decision-grade sources & claims" }
+  factcheck:      { mode: rapid-fact-checker,          desc: "Verify claims (â‰¥95% for autonomy-critical)" }
+  arch:           { mode: sparc-architect,             desc: "Architecture.md, components & interfaces" }
+  sec-arch:       { mode: sparc-security-architect,    desc: "Threat-model.md, security-architecture.md" }
+  pseudo:         { mode: sparc-pseudocode-designer,   desc: "pseudocode.md, function specs" }
+  tdd:            { mode: sparc-tdd-engineer,          desc: "Failing tests â†’ coverage targets" }
+  impl:           { mode: sparc-code-implementer,      desc: "Code implementation per pseudo + tests" }
+  qa:             { mode: sparc-qa-analyst,            desc: "QA plan, acceptance-test-results.md" }
+  adversary:      { mode: sparc-autonomous-adversary,  desc: "Adversarial/risk assessment + evidence" }
+  reviewer:       { mode: security-reviewer,           desc: "Security audit reports + SARIF" }
+  integrate:      { mode: sparc-integrator,            desc: "Integration-report.md, delivery checks" }
+  platform:       { mode: sparc-platform-engineer,     desc: "IaC/CI/CD/observability configs" }
+  sre:            { mode: sparc-sre-engineer,          desc: "SLI/SLOs, alerts, runbooks" }
+  ux:             { mode: sparc-ux-architect,          desc: "UX strategy, journeys, wireframes" }
+
+edges:
+  - { from: spec,       to: research }
+  - { from: research,   to: factcheck }
+  - { from: factcheck,  to: arch }
+  - { from: arch,       to: sec-arch }
+  - { from: sec-arch,   to: pseudo }
+  - { from: pseudo,     to: tdd }
+  - { from: tdd,        to: impl }
+  - { from: impl,       to: qa }
+  - { from: qa,         to: adversary }
+  - { from: adversary,  to: reviewer }
+  - { from: reviewer,   to: integrate }
+  - { from: integrate,  to: platform }
+  - { from: platform,   to: sre }

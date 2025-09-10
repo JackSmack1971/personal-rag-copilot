@@ -81,10 +81,24 @@ The user interface provides four main workflows: querying the knowledge base, in
 
 ### Prerequisites
 
-- Python 3.12 [[EVID: requirements.txt:1-48 | Python dependencies specified]]
+- Python 3.12+ [[EVID: pyproject.toml:10 | requires-python = ">=3.12,<3.13"]]
 - Pinecone API account and API key
 - 8GB+ RAM for model loading
+- (Optional) NVIDIA GPU with CUDA 12.8+ for GPU acceleration
 - (Optional) Intel Iris Xe drivers and OpenVINO runtime for GPU acceleration (see [GPU Support Guide](docs/gpu_support.md))
+
+### GPU Support
+
+**NVIDIA CUDA Support:**
+- Requires Linux with NVIDIA GPU and CUDA 12.8+ drivers
+- Uses NVIDIA PyPI index (`https://pypi.nvidia.com`) for CUDA packages
+- Includes `nvidia-cufile-cu12==1.13.1.3` for optimized file I/O operations
+- All CUDA packages are constrained to `sys_platform == "linux"` for platform compatibility
+
+**Intel GPU Support:**
+- Intel Iris Xe and newer GPUs via OpenVINO runtime
+- Automatic detection and fallback to CPU if not available
+- See [GPU Support Guide](docs/gpu_support.md) for detailed configuration
 
 ### Setup
 
@@ -92,21 +106,47 @@ The user interface provides four main workflows: querying the knowledge base, in
 ```bash
 git clone <repository-url>
 cd personal-rag-copilot
-python3.12 -m venv .venv
-source .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install --upgrade pip
-pip install setuptools wheel pip-tools
-pip-compile requirements.in  # generates requirements.txt
-pip-sync requirements.txt
+pip install pip-tools
 ```
 
-2. **Configure environment**:
+2. **Install dependencies**:
+
+   **Using Makefile (recommended):**
+   ```bash
+   make install          # CPU-only installation
+   make install-gpu      # NVIDIA GPU acceleration (Linux only)
+   make install-dev      # Development with all tools
+   ```
+
+   **Manual installation:**
+
+   **For CPU-only installation:**
+   ```bash
+   pip install -r requirements/base.txt
+   ```
+
+   **For NVIDIA GPU acceleration (Linux only):**
+   ```bash
+   pip install --extra-index-url https://pypi.nvidia.com -r requirements/gpu-cu12.txt
+   ```
+
+   **For development with all tools:**
+   ```bash
+   pip install -e ".[dev]"
+   # For GPU support, also install GPU extras:
+   pip install -e ".[dev,gpu-cu12]" --extra-index-url https://pypi.nvidia.com
+   ```
+
+3. **Configure environment**:
 ```bash
 export PINECONE_API_KEY="your-api-key"
 export PINECONE_ENVIRONMENT="your-environment"
 ```
 
-3. **Verify installation**:
+4. **Verify installation**:
 ```bash
 python app.py
 # Server should start on http://0.0.0.0:7860
@@ -209,15 +249,23 @@ personal-rag-copilot/
 ├── src/                          # Main source code
 │   ├── retrieval/               # Hybrid search implementation
 │   ├── ranking/                 # RRF fusion and reranking
-│   ├── ui/                      # Gradio interface pages  
+│   ├── ui/                      # Gradio interface pages
 │   ├── evaluation/              # Ragas quality assessment
 │   ├── integrations/            # External service clients
 │   ├── services/                # Business logic layer
 │   └── config/                  # Configuration management
 ├── tests/                       # Test suite with pytest
 ├── config/                      # YAML configuration files
+├── requirements/                # Dependency management with pip-tools
+│   ├── base.in                  # Core dependencies specification
+│   ├── base.txt                 # Core dependencies lockfile
+│   ├── gpu-cu12.in              # NVIDIA CUDA dependencies specification
+│   ├── gpu-cu12.txt             # NVIDIA CUDA dependencies lockfile
+│   ├── constraints.in           # Python version constraints specification
+│   └── constraints.txt          # Python version constraints lockfile
+├── pyproject.toml               # Python project metadata and optional dependencies
 ├── app.py                       # FastAPI + Gradio entry point
-└── requirements.txt             # Python dependencies
+└── README.md                    # This file
 ```
 
 ## Development Guide
@@ -226,12 +274,25 @@ personal-rag-copilot/
 
 ```bash
 # Create virtual environment
-python3.12 -m venv .venv
-source .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install --upgrade pip
-pip install setuptools wheel pip-tools
-pip-compile requirements.in  # generates requirements.txt
-pip-sync requirements.txt
+pip install pip-tools
+
+# Install base dependencies
+make install
+
+# For GPU support (Linux only)
+make install-gpu
+
+# For development
+make install-dev
+
+# To regenerate lockfiles after dependency changes:
+make lockfiles
+
+# To sync dependencies with lockfiles:
+make sync-deps
 
 # Run tests with coverage
 python -m pytest tests/ --cov=src --cov-report=html

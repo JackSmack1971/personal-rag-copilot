@@ -48,6 +48,31 @@
 * **Flow:** From the last turn, pass `(question, answer, contexts)` to Ragas; render scores & a short rationale.
 * **\[Inference] Guardrails:** If faithfulness < threshold (e.g., 0.7), flag the turn and suggest “Expand top-K” or “Rerank”.
 
+### 2.7 Dependency Management and Installation
+* **Critical Dependencies:** Ensure installation of **ragas**, **rank-bm25**, and **pyright** to resolve import errors and enable full functionality.
+* **Installation Process:** Automated dependency resolution via `pip install ragas rank-bm25 pyright` during setup.
+* **Validation:** Post-installation verification that all modules import successfully and tests pass.
+
+### 2.8 Type-Checking Integration
+* **Pyright Setup:** Install and configure **pyright** for static type checking across the codebase.
+* **Diagnostics:** Enable type-checking diagnostics in the development environment to catch type errors early.
+* **Integration:** Run pyright as part of CI/CD pipeline for continuous type validation.
+
+### 2.9 Chat Response Generation Fix
+* **Real Response Generation:** Replace stubbed chat response logic with actual synthesis from retrieved contexts using the configured LLM.
+* **Context Integration:** Modify `_generate_response` to process retrieved documents and generate meaningful answers instead of echoing user input.
+* **Fallback Handling:** Implement error handling for cases where retrieval fails or contexts are insufficient.
+
+### 2.10 UI Badge Corrections
+* **Lexical Source Badge:** Correct citation badges to display "LEXICAL" instead of "SPARSE" for lexical retrieval results.
+* **Consistency:** Ensure all UI components use consistent badge labels matching the defined retrieval modes (DENSE, LEXICAL, FUSED).
+* **User Clarity:** Maintain transparency by accurately representing the retrieval source in the interface.
+
+### 2.11 Evaluation Framework Completion
+* **Ragas Integration:** Complete integration of **Ragas** for evaluation metrics, ensuring dependency availability enables full functionality.
+* **UI Evaluation:** Enable the Evaluate tab to successfully run faithfulness and related checks without import failures.
+* **Error Handling:** Provide clear error messages when evaluation dependencies are missing or evaluation fails.
+
 ---
 
 ## 3) Acceptance Criteria (additions)
@@ -58,6 +83,11 @@
 * **AC-RER-01 (Toggle):** With **Rerank** off, fused results go straight to LLM; with **Rerank** on, top-20 are reranked using **BGE-Reranker-v2-m3** to a final 5; latency overhead is displayed. ([Hugging Face][11])
 * **AC-MP-01 (Multipage):** The app exposes four routes using **`Blocks.route()`** with a navbar: `/` Chat, `/ingest`, `/evaluate`, `/settings`. ([Gradio][6])
 * **AC-EVAL-01 (Faithfulness):** The **Evaluate** page computes **Faithfulness** per Ragas definition (fraction of answer claims supported by context ∈\[0,1]) and shows the score with a brief rationale. ([Ragas][4])
+* **AC-DEP-01 (Dependency Installation):** After `pip install ragas rank-bm25 pyright`, all critical modules import successfully and test failures are resolved. **Success Metric:** Test failure count: 0 (from 21).
+* **AC-TYP-01 (Type-Checking Setup):** Pyright is installed and configured to run type checking across the codebase without errors. **Success Metric:** Type-checking error count: 0.
+* **AC-CHA-01 (Chat Response Generation):** Chat responses are generated from retrieved contexts using the LLM, not echoing user input. **Success Metric:** Response similarity to input: <0.5 (cosine similarity).
+* **AC-BAD-01 (UI Badge Correction):** All lexical retrieval results display "LEXICAL" badge instead of "SPARSE". **Success Metric:** Badge accuracy: 100% (all lexical results correctly labeled).
+* **AC-EVA-02 (Evaluation Framework):** The Evaluate tab successfully runs Ragas metrics without import failures. **Success Metric:** Evaluation success rate: 100% (no import errors).
 
 ---
 

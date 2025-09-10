@@ -44,7 +44,7 @@ class PineconeClient:
 
     # ------------------------------------------------------------------
     # internal helpers
-    def _with_retries(self, func: Callable, *args, **kwargs):
+    def _with_retries(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
         """Execute ``func`` with basic exponential backoff retry logic."""
 
         delay = BACKOFF_FACTOR
@@ -100,7 +100,7 @@ class PineconeClient:
             return
         self._with_retries(pinecone.delete_index, index_name)
 
-    def get_index(self, index_name: str):
+    def get_index(self, index_name: str) -> Any:
         return pinecone.Index(index_name)
 
     def validate_index(self, index_name: str, dimension: int) -> bool:
